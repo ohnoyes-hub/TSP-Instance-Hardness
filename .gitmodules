@@ -1,0 +1,3 @@
+[submodule "ATSP_hillForHard"]
+	path = ATSP_hillForHard
+	url = https://github.com/WouterKnibbe/ATSP_hillForHard
