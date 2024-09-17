@@ -45,8 +45,6 @@ def permute_matrix(matrix, _print) -> np.ndarray:
     ----------
     matrix : np.ndarray
         The distance matrix to permute.
-    upper : int
-        The upper bound for cost values in the matrix.
     _print : bool
         Print results in the console if True.
     """
@@ -57,7 +55,8 @@ def permute_matrix(matrix, _print) -> np.ndarray:
     
     permuted_matrix = matrix.copy()
     
-    # Create a list of indices excluding the diagonal
+    # TODO: find a faster way to permute the matrix. This is essentially brute force O(n^2 - n) where we shuffle list of n^2 - n elements in n x n matrix.
+    # List of indices excluding the diagonal
     indices = [(i, j) for i in range(n) for j in range(n) if i != j]
     
     # Shuffle the indices
@@ -78,6 +77,58 @@ def permute_matrix(matrix, _print) -> np.ndarray:
     
     return permuted_matrix
 
+def permute_symmetric_matrix(matrix: np.ndarray, _print) -> np.ndarray:
+    """
+    Generate a random permutation of the given symmetric cost matrix.
+    
+    Parameters:
+    ----------
+    matrix : np.ndarray
+        The distance matrix to permute.
+    _print : bool
+        Print results in the console if True.
+    """
+    n = len(matrix)
+    
+    if _print:
+        print(f"Original matrix:\n{matrix.round(1)}")
+    
+    permuted_matrix = matrix.copy()
+
+    # list of indices in the upper triangle excluding the diagonal
+    indices = [(i, j) for i in range(n) for j in range(i + 1, n)]
+
+    # upper triangle values excluding the diagonal
+    values = [matrix[i, j] for i, j in indices]
+
+    # Shuffle the values to randomize their order
+    np.random.shuffle(values)
+
+    # Assign the shuffled values back to the upper triangle
+    for (i, j), value in zip(indices, values):
+        permuted_matrix[i, j] = value
+        permuted_matrix[j, i] = value  # Mirror the value in the lower triangle
+    
+    if _print:
+        print(f"Permuted matrix:\n{permuted_matrix.round(1)}")
+    
+    return permuted_matrix
+
+
+# def save_partial_results(matrix, filename):
+    """
+    Save the partial results of hardest found matrix to a JSON file.
+
+    Parameters:
+    ----------
+    matrix : np.ndarray
+        The distance matrix to save.
+    filename : str
+        The name of the file to save the matrix.
+    """
+
+
+    
 # Less agressive mutation. Permute only two elements in the matrix.
 def mutate_elements_together(matrix, _print):
     """
@@ -110,28 +161,33 @@ def experiment(_is_atsp, upperbound_cost, mutations, _continue):
     """
     if _is_atsp:
         matrix = generate_asymmetric_tsp(n=10, upper=upperbound_cost)
-        print("Matrix:", matrix)
-        permute_matrix(matrix, True)
+        #print("Matrix:", matrix)
+        #permute_matrix(matrix, True)
     else:
         matrix = generate_symmetric_matrix(n=10, upper=upperbound_cost)
         print("Matrix:", matrix)
     
-    #iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
+    iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
     # Woulter only consider's interations, I will also investigate the optimal cost
+    #print("Interations:", iterations, "Optimal cost:", optimal_cost)
+    #print("Interations:", iterations, "Optimal cost:", optimal_cost)
+    #iterations, optimal_tour, optimal_cost = get_minimal_route(permute_matrix(matrix, False))
     #print("Interations:", iterations, "Optimal cost:", optimal_cost)
 
     hardest = 0
-    # for mutation in range(mutations):
-    #     # Find the minimal route with Little's algorithm
-    #     iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
-    #     if iterations >= hardest: # New hardest instance
-    #         hardest_matrix = matrix
-    #         print("New hardest instance found with", iterations, "iterations.")
-    #         matrix = permute_matrix(hardest_matrix, False)
-    #         print("New matrix:", matrix)
-    #         hardest = iterations
-    #     else: # Try another permutation
-    #         matrix = permute_matrix(hardest_matrix, False)
+    for mutation in range(mutations):
+        # Find the minimal route with Little's algorithm
+        iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
+
+        # New hardest instance found
+        if iterations >= hardest: 
+            hardest_matrix = matrix
+            print("New hardest instance found with", iterations, "iterations.")
+            matrix = permute_matrix(hardest_matrix, False)
+            #print("New matrix:", matrix)
+            hardest = iterations
+        else: # Try another permutation
+            matrix = permute_matrix(hardest_matrix, False)
 
 
 if __name__ == "__main__":
