@@ -51,31 +51,32 @@ def permute_matrix(matrix, _print) -> np.ndarray:
         Print results in the console if True.
     """
     n = len(matrix)
-
+    
     if _print:
-        print(f"Original matrix:\n{matrix.round(1)}" + " becomes: ", end="")
-
-    for i in range(n -1):
-        for j in range(n - 1):
-            # skip the diagonal elements
-            if i == j:
-                continue
-            
-            # Choose a random row and column, ensuring they are not diagonal elements
-            # Choose a random row and column, ensuring they are not diagonal elements
-            while True:
-                r = np.random.randint(0, n)
-                c = np.random.randint(0, n)
-                if r != c and r != i and c != j:
-                    break
-            
-            # Swap elements in the matrix
-            matrix[i][j], matrix[r][j] = matrix[r][j], matrix[i][j]
-            matrix[i][j], matrix[i][c] = matrix[i][c], matrix[i][j]
-
+        print(f"Original matrix:\n{matrix.round(1)}")
+    
+    permuted_matrix = matrix.copy()
+    
+    # Create a list of indices excluding the diagonal
+    indices = [(i, j) for i in range(n) for j in range(n) if i != j]
+    
+    # Shuffle the indices
+    np.random.shuffle(indices)
+    
+    # Create a flattened list of values excluding the diagonal
+    values = [matrix[i, j] for i, j in indices]
+    
+    # Shuffle the values
+    np.random.shuffle(values)
+    
+    # Assign the shuffled values back to the matrix
+    for (i, j), value in zip(indices, values):
+        permuted_matrix[i, j] = value
+    
     if _print:
-        print(f"\n{matrix.round(1)}")
-    return matrix
+        print(f"Permuted matrix:\n{permuted_matrix.round(1)}")
+    
+    return permuted_matrix
 
 # Less agressive mutation. Permute only two elements in the matrix.
 def mutate_elements_together(matrix, _print):
@@ -115,9 +116,9 @@ def experiment(_is_atsp, upperbound_cost, mutations, _continue):
         matrix = generate_symmetric_matrix(n=10, upper=upperbound_cost)
         print("Matrix:", matrix)
     
-    iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
+    #iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
     # Woulter only consider's interations, I will also investigate the optimal cost
-    print("Interations:", iterations, "Optimal cost:", optimal_cost)
+    #print("Interations:", iterations, "Optimal cost:", optimal_cost)
 
     hardest = 0
     # for mutation in range(mutations):
@@ -134,5 +135,5 @@ def experiment(_is_atsp, upperbound_cost, mutations, _continue):
 
 
 if __name__ == "__main__":
-    experiment(False, 100, 10, False)
+    experiment(False, 100, 5, False)
     experiment(True, 100, 5, False)
