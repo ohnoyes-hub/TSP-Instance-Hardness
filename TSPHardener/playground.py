@@ -137,3 +137,18 @@ if __name__ == "__main__":
     mutate_matrix(arr_numpy_2d, 10, True)
     mutate_matrix_optimize(arr_numpy_2d, 10, True)
 
+    matrix = np.array([[0, 1, 2],
+                   [1, 0, 3],
+                   [2, 3, 0]])
+
+    print("Original matrix:")
+    print(matrix)
+
+    result1 = mutate_off_diagonal_symmetric(matrix.copy(), 999)
+    print("\nMatrix after mutation with value 999:")
+    print(result1)
+
+    result2 = mutate_off_diagonal_symmetric(matrix.copy(), -1)
+print("\nMatrix after mutation with value -1:")
+print(result2)
+

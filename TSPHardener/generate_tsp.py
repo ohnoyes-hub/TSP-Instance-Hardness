@@ -33,3 +33,6 @@ def generate_symmetric_matrix(n: int, upper: int) -> np.ndarray:
     np.fill_diagonal(matrix, np.inf)  # Set diagonal to infinity
     return matrix
 
+    # Generate a random symmetric matrix but doesn't follow the triangule inequality
+    # matrix = np.random.randint(0, 10, size=(5, 5))
+    # matrix = (matrix + matrix.T) // 2
