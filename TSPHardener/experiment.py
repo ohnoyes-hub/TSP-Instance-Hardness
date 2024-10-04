@@ -1,6 +1,6 @@
 from algorithm import get_minimal_route
 from generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp
-from mutate_tsp import permute_matrix, permute_symmetric_matrix, swap_mutate, mutate_matrix, mutate_matrix_symmetric
+from mutate_tsp import shuffle, mutate, swap
 import numpy as np
 import json
 import os
@@ -14,43 +14,36 @@ import time
 import argparse
 import ast 
 
-# Copied from Woulter's experiment.py
+# Added some extra arguments to Wouter's experiment
 # Initialize the parser
 parser = argparse.ArgumentParser(description='Run the experiment with provided parameters.')
 
 # Add arguments
-# Add arguments
-parser.add_argument('--variant', type=str, default="atsp", help='atsp if the TSP is asymmetric, etsp if Euclidean.')
-parser.add_argument('--is_uniform', type=str, default="true", help='True if the matrix is generated with uniform distribution, False if lognormal.')
-parser.add_argument('--sizes', type=str, default="[15,20]", help='A list of city sizes, e.g., "[10,12]"')
-parser.add_argument('--control', type=str, default="[10, 50]", help='A list of control parameter ranges, e.g., "[10,1000]"')
-parser.add_argument('--mutation_strategy', type=str, default="swap", help='The mutation strategy to use, "inplace", "swap", "shuffle"')
-parser.add_argument('--mutations', type=int, default=300, help='An integer number of mutations, e.g., 500')
-parser.add_argument('--continue_', type=str, default="false", help='True if the experiment should continue from a partial experiment.')
+parser.add_argument('sizes', type=str, help='A list of city sizes, e.g., "[10,12]"')
+parser.add_argument('ranges', type=str, help='A list of value ranges, e.g., "[10,1000]"')
+parser.add_argument('mutations', type=int, help='An integer number of mutations, e.g., 500')
+parser.add_argument('continuation', type=str, default="", nargs='?', help='A list of matrix continuations, e.g., "[(7,10),(50,10)]". Corresponding matrices must be in "Progress" folder')
+parser.add_argument('--tsp_type', type=str, choices=['euclidean', 'asymmetric'], required=True, help='Type of TSP to generate: symmetric or asymmetric.')
+parser.add_argument('--distribution', type=str, choices=['uniform', 'lognormal'], required=True, help='Distribution to use for generating the TSP instance.')
+parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble', 'wouter'], required=True, help='Mutation strategy to use.')
 
+# Parse arguments
 args = parser.parse_args()
 
-# Parsing the arguments to the appropriate types
-variant = args.variant
-is_uniform = args.is_uniform.lower() == "true"
+# Convert string representations of lists to actual lists
 sizes = ast.literal_eval(args.sizes)
-control = ast.literal_eval(args.control)
-mutation_strategy = args.mutation_strategy
-mutations = args.mutations
-continue_ = args.continue_.lower() == "true"
+ranges = ast.literal_eval(args.ranges)
+if args.continuation == "":
+    continuations = []
+else:
+    continuations = [",".join(map(str, tup)) for tup in ast.literal_eval(args.continuation)]
 
-print("Variant:", variant)
-print("Is Uniform:", is_uniform)
-print("Sizes:", sizes)
-print("Control:", control)
-print("Mutation Strategy:", mutation_strategy)
-print("Mutations:", mutations)
-print("Continue:", continue_)
 
 # if args.continuation == "":
 #     continuations = []
 # else:
 #     continuations = [",".join(map(str, tup)) for tup in ast.literal_eval(args.continuation)] 
+
 
 def custom_encoder(obj):
     """
@@ -104,9 +97,53 @@ def load_result(file_path):
       loaded_results = json.load(json_file, object_hook=custom_decoder)
 
   return loaded_results
-# Stopped copying here
 
+# using Wouter's version of the save_partial function to match his plotting function
+def save_partial(results, citysize, range, time, contin):
+    base_file_path = f"results{citysize}_{range}"
+    file_extension = ".json"
+    file_index = 0
+    file_path = f"{base_file_path}{file_extension}"
 
+    # Continue mode adds a suffix '_c'
+    if contin:
+        file_path = f"{base_file_path}_c{file_extension}"
+
+    # Function to generate new file path with incrementing index
+    def get_new_file_path():
+        nonlocal file_index
+        while True:
+            new_file_path = f"{base_file_path}_{file_index}{file_extension}"
+            if contin:
+                new_file_path = f"{base_file_path}_c_{file_index}{file_extension}"
+            if not os.path.exists(new_file_path):
+                break
+            elif os.path.getsize(new_file_path) <= 50 * 1024 * 1024:
+                break
+            file_index += 1
+        return new_file_path
+
+    # Check if the file exists and its size
+    if os.path.exists(file_path) and os.path.getsize(file_path) >= 50 * 1024 * 1024:
+        file_path = get_new_file_path()  # Get a new file path if current is too large
+
+    # Check if the file exists to append or create new data structure
+    if os.path.exists(file_path):
+        with open(file_path, "r") as json_file:
+            try:
+                existing_data = json.load(json_file)
+            except json.decoder.JSONDecodeError:
+                existing_data = []
+        existing_data.append((time, results))
+        data_to_write = existing_data
+    else:
+        data_to_write = [(time, results)]
+
+    # Write the data to the file with custom encoding
+    with open(file_path, "w") as json_file:
+        json.dump(data_to_write, json_file, default=custom_encoder)
+
+''' My version of the save_result function
 def save_result(original_matrix, number_of_mutations, hardest_matrix, hardest_iterations, iteration_count, tsp_type, time_elapsed, filename):
     """
     Save the results to a JSON file.
@@ -149,6 +186,7 @@ def save_result(original_matrix, number_of_mutations, hardest_matrix, hardest_it
     # Save the data to a JSON file
     with open(filename, "w") as file:
         json.dump(data, file)
+'''
 
 '''
 Experiment is defined as follows:
@@ -167,172 +205,106 @@ flowchart TD
     F -- No --> H[Mutate the current hardest matrix with choosen mutation strategy]
     H --> C
 '''
-def experiment(tsp_variant, is_uniform, sizes, control, mutation_strategy, mutations, continue_):
-    """
-    Defines the experiment setup for creating harder TSP instances.
 
+def generate_tsp_instance(city_size, generation_type, distribution, upper_bound):
+    """
+    Generate a TSP instance with the specified parameters.
+    
     Parameters:
     ----------
-    tsp_variant : str
-        atsp if the TSP is asymmetric, etsp if Euclidean.
-    is_uniform : bool
-        True if the matrix is generated with uniform distribution, False if lognormal.
-    sizes : list
-        A list of city sizes.
-    control : list
-        A list of control parameter ranges.
-    mutation_strategy : str
-        The mutation strategy to use, "inplace", "swap", "shuffle".
-    mutations : int
-        The number of mutations to perform.
-    continue_
-        True if the experiment should continue from a previous matrix. 
+    city_size : int
+        The number of cities in the TSP instance.
+    generation_type : str
+        The type of TSP instance to generate (symmetric or asymmetric).
+    distribution : str
+        The distribution to use for generating the TSP instance (uniform or lognormal).
+    upper_bound : int
+        The upper bound for cost values in the matrix.
+        
+    Returns:
+    -------
+    np.ndarray
+        The generated TSP instance.
     """
+    if generation_type == "euclidean":
+        return generate_euclidean_tsp(city_size, distribution, upper_bound)
+    elif generation_type == "asymmetric":
+        return generate_asymmetric_tsp(city_size, distribution, upper_bound)
+    else:
+        raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
 
-    iteration_counter = []
+def apply_mutation(matrix, mutation_type, upper):
+    """
+    Apply a mutation to the given TSP instance.
+    
+    Parameters:
+    ----------
+    matrix : np.ndarray
+        The TSP instance to mutate.
+    mutation_type : str
+        The mutation strategy to apply (swap, scramble, or Wouter's mutation).
+    upper : int
+        The upper bound for cost values in the matrix.
+        
+    Returns:
+    -------
+    np.ndarray
+        The mutated TSP instance.
+    """
+    if mutation_type == "swap":
+        return swap(mutation_type, matrix)
+    elif mutation_type == "scramble":
+        return shuffle(mutation_type, matrix)
+    elif mutation_type == "wouter":
+        return mutate(mutation_type, matrix, upper)
+    else:
+        raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
 
-    for size in sizes:
-        for range in control:
-            if tsp_variant == "atsp":    
-                matrix = generate_asymmetric_tsp(n=size, isUniform=is_uniform, dimensions=size)
-            elif tsp_variant == "etsp":
-                matrix = generate_euclidean_tsp(n=size, isUniform=is_uniform, dimensions=size)
-            else:
-                raise ValueError("Invalid TSP variant. Choose 'atsp' or 'etsp'.")   
+def experiment(_cities, _ranges, _mutations, _continuations, generation_type, distribution, mutation_type):
+    for citysize in _cities:
+        for rang in _ranges:
+            range_results = {}
 
-            # Start timer
+            # Record the start time
             start_time = time.time()
 
-            # Initialize the numer of solutions found:    
-            iterations, _, _ = get_minimal_route(matrix) # optimal_tour, optimal_cost are not used
-            hardest = 0
-            for mutation in range(mutations):
-                # Find the minimal route with Little's algorithm
-                iterations, _, _ = get_minimal_route(matrix)
-                iteration_counter.append(iterations)
+            # Generate or load the matrix
+            if f"{citysize},{rang}" in _continuations:
+                try:
+                    hardest, matrix = load_result(f"Progress/continue{citysize}_{rang}.json")
+                    matrix = np.array(matrix)
+                except Exception as e:
+                    print(f"{e}\n {citysize}_{rang} matrix not loaded, generating random matrix", flush=True)
+                    matrix = generate_tsp_instance(citysize, generation_type, distribution, rang)
+                    hardest = 0
+            else:
+                matrix = generate_tsp_instance(citysize, generation_type, distribution, rang)
+                hardest = 0
 
-                # New hardest instance found or no difference found in mutation
-                if iterations >= hardest: 
+            hardest_matrix = matrix
+
+            for j in range(_mutations):
+                iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
+                range_results[j] = (iterations, hardest, optimal_tour, optimal_cost, matrix)
+
+                # Apply the selected mutation strategy
+                if iterations >= hardest:
                     hardest_matrix = matrix
+                    matrix = apply_mutation(hardest_matrix, mutation_type, rang)
                     hardest = iterations
-                    # print("New hardest instance found with", iterations, "Lital's recursions.")
-                    # Do the appropriate mutation for the TSP type
-                    if mutation_strategy == "swap" and tsp_variant == "atsp":
-                        matrix = swap_mutate(hardest_matrix)
-                    elif mutation_strategy == "inplace" and tsp_variant == "atsp":
-                        matrix = mutate_matrix(hardest_matrix, range)
-                    elif mutation_strategy == "shuffle" and tsp_variant == "atsp":
-                        matrix = permute_matrix(hardest_matrix)
-                    elif mutation_strategy == "shuffle" and tsp_variant == "etsp":
-                        matrix = permute_symmetric_matrix(hardest_matrix)
-                    elif mutation_strategy == "inplace" and tsp_variant == "etsp":
-                        matrix = mutate_matrix_symmetric(hardest_matrix, range)
-                    #elif mutation_strategy == "swap" and tsp_variant == "etsp":
-                        #matrix = swap_mutate_symmetric(hardest_matrix, False) # TODO: implement swap_mutate_symmetric
-                    else:
-                        raise ValueError("Invalid mutation strategy. Choose 'inplace', 'swap', or 'shuffle'.")
-                else: # Try another permutation
-                    if mutation_strategy == "swap" and tsp_variant == "atsp":
-                        matrix = swap_mutate(hardest_matrix)
-                    elif mutation_strategy == "inplace" and tsp_variant == "atsp":
-                        matrix = mutate_matrix(hardest_matrix, range)
-                    elif mutation_strategy == "shuffle" and tsp_variant == "atsp":
-                        matrix = permute_matrix(hardest_matrix)
-                    elif mutation_strategy == "shuffle" and tsp_variant == "etsp":
-                        matrix = permute_symmetric_matrix(hardest_matrix)
-                    elif mutation_strategy == "inplace" and tsp_variant == "etsp":
-                        matrix = mutate_matrix_symmetric(hardest_matrix, range)
-                    # elif mutation_strategy == "swap" and tsp_variant == "etsp":
-                        # matrix = swap_mutate_symmetric(hardest_matrix, False) # TODO: implement swap_mutate_symmetric
-                    else:
-                        raise ValueError("Invalid mutation strategy. Choose 'inplace', 'swap', or 'shuffle'.")
-          
-                if mutation > 0 and mutation % 100 == 0:
-                    print(f"Mutation {mutation} completed.")
+                else:
+                    matrix = apply_mutation(hardest_matrix, mutation_type, rang)
+
+                if j > 0 and (j + 1) % 100 == 0:
                     # Calculate elapsed time
                     elapsed_time = time.time() - start_time
-                    # save to json file
-                    if elapsed_time > 5*24*60*60 or mutation > 4000:
-                        filename = f"results_{size}_{range}.json"
-                        save_result(matrix, mutations, hardest_matrix, hardest, iteration_counter, tsp_variant, elapsed_time, filename)
-                        break # Stop the experiment
-                    else:
-                        # experiment did not finish, give filename with continue_ flag
-                        filename = f"results_{size}_{range}_continue.json"
-                        save_result(matrix, mutations, hardest_matrix, hardest, iteration_counter, tsp_variant, elapsed_time, filename)
-                    # save_result(matrix, mutations, hardest_matrix, hardest, iteration_counter, tsp_variant, elapsed_time, "")
-                    
-                        
+                    # Save to json file
+                    save_partial(range_results, citysize, rang, elapsed_time, f"{citysize},{rang}" in _continuations)
+                    range_results = {}
 
-# TODO: read the matrix from the JSON file
-# def experiment(_is_atsp, upperbound_cost, mutations, _continue):
-#     """
-#     Defines the experiment setup for creating harder TSP instances.
+    elapsed_time = time.time() - start_time
+    print(f"Done with cities = {citysize}, randMax = {rang}\nElapsed Time: {elapsed_time:.2f} seconds", flush=True)
 
-#     Parameters:
-#     ----------
-#     _is_atsp : bool
-#         True if the TSP is asymmetric, False if Euclidean.
-#     upperbound_costs : int
-#         The upper bound for cost values in the matrix.
-#     mutations : int
-#         The number of mutations to perform.
-#     _continue : bool
-#         True if the experiment should continue from a previous matrix.
-#     """
-#     hardest = 0
-#     hardness_counter = []
-#     optimal_cost_counter = []
-#     iteration_counter = []
-#     if _is_atsp:
-#         matrix = generate_asymmetric_tsp(n=20, upper=upperbound_cost)
-#     else:
-#         matrix = generate_symmetric_matrix(n=20, upper=upperbound_cost)
-
-#     # Start timer
-#     start_time = time.time()
-
-#     # Initialize the numer of solutions found:    
-#     iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
-
-#     for mutation in range(mutations):
-#         # Find the minimal route with Little's algorithm
-#         iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
-#         iteration_counter.append(iterations)
-#         # New hardest instance found or no difference found in mutation
-#         if iterations >= hardest: 
-#             hardest_matrix = matrix
-#             print("New hardest instance found with", iterations, "Lital's recursions.")
-#             # Do the appropriate muation for the TSP type
-#             if _is_atsp:
-#                 #matrix = swap_mutate(hardest_matrix, False) # swap mutate generally creates more instances with higher iterations.
-#                 matrix = permute_matrix(hardest_matrix, False) # permute matrix creates harder instances but with less instances.
-#             else:
-#                 matrix = permute_symmetric_matrix(hardest_matrix, False)
-#                 # matrix = swap_mutate_symmetric(matrix, False)
-#             hardest = iterations
-#             # Save to plot the results
-#             hardness_counter.append(hardest)
-#             optimal_cost_counter.append(optimal_cost)
-#         else: # Try another permutation
-#             matrix = permute_matrix(hardest_matrix, False)
-    
-#     # End timer
-#     end_time = time.time()
-
-#     # It sometimes prints even if Little's algorithm is still running? Might be some python parallelism thing?
-#     print("Tracking hardness:", hardness_counter) 
-#     print("Optimal cost:", optimal_cost_counter)
-#     print("Iterations:", iteration_counter)
-#     print("Time elapsed:", end_time - start_time)
-
-#     # Save the results to a JSON file
-#     filename = f"initial_results_save.json"
-
-#     save_result(matrix, mutations, hardest_matrix, hardest, optimal_cost_counter, iteration_counter, "ATSP" if _is_atsp else "TSP", end_time - start_time, filename)
-
-if __name__ == "__main__":
-    matrix = generate_euclidean_tsp(10, True, 15)
-    mutate_matrix_symmetric(matrix, True)
-
+# if __name__ == "__main__":
+#     experiment(sizes, ranges, args.mutations, continuations, args.tsp_type, args.distribution, args.mutation_strategy)
     

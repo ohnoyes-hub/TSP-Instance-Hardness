@@ -13,7 +13,6 @@ def permute_matrix(matrix) -> np.ndarray:
     
     permuted_matrix = matrix.copy()
     
-    # TODO: find a faster way to permute the matrix. This is essentially brute force O(n^2 - n) where we shuffle list of n^2 - n elements in n x n matrix.
     # List of indices excluding the diagonal
     indices = [(i, j) for i in range(n) for j in range(n) if i != j]
     
@@ -155,8 +154,58 @@ def mutate_matrix_symmetric(_matrix, _upper):
     
     return matrix
 
-from generate_tsp import generate_euclidean_distance_matrix
-matrix = generate_euclidean_distance_matrix(5, True, 10)
-print(matrix.round(1))
-swap_matrix = swap_mutate_symmetric(matrix)
-print(swap_matrix.round(1))
+def shuffle(tsp_type, matrix):
+    """
+    Shuffle the elements of either a symmetric or asymmetric TSP matrix.
+
+    Parameters:
+    ----------
+    tsp_type : str
+        The type of TSP matrix ('euclidean' or 'asymmetric').
+    matrix : np.ndarray
+        The distance matrix to shuffle.
+    """
+    if tsp_type == 'euclidean':
+        return permute_symmetric_matrix(matrix)
+    elif tsp_type == 'asymmetric':
+        return permute_matrix(matrix)
+    else:
+        raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
+    
+def mutate(tsp_type, matrix, upper):
+    """
+    Mutate the elements of either a euclidean or asymmetric TSP matrix.
+
+    Parameters:
+    ----------
+    tsp_type : str
+        The type of TSP matrix ('euclidean' or 'asymmetric').
+    matrix : np.ndarray
+        The distance matrix to mutate.
+    upper : int
+        The upper bound for the random mutation.
+    """
+    if tsp_type == 'euclidean':
+        return mutate_matrix_symmetric(matrix, upper)
+    elif tsp_type == 'asymmetric':
+        return mutate_matrix(matrix, upper)
+    else:
+        raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
+
+def swap(tsp_type, matrix):
+    """
+    Swap two random elements in either a euclidean or asymmetric TSP matrix.
+
+    Parameters:
+    ----------
+    tsp_type : str
+        The type of TSP matrix ('euclidean' or 'asymmetric').
+    matrix : np.ndarray
+        The distance matrix to mutate.
+    """
+    if tsp_type == 'euclidean':
+        return swap_mutate_symmetric(matrix)
+    elif tsp_type == 'asymmetric':
+        return swap_mutate(matrix)
+    else:
+        raise ValueError("Invalid TSP type. Choose either 'symmetric' or 'asymmetric'.")

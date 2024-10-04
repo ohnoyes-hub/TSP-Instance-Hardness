@@ -1,6 +1,6 @@
 import numpy as np
 
-def generate_asymmetric_tsp(n: int, isUniform: bool, upper: int) -> np.ndarray:
+def generate_asymmetric_tsp(n: int, distribution: str, upper: int) -> np.ndarray:
     """
     Generate a random cost matrix of size n x n with values in the range [1, upper) for a asymmetric TSP.
     
@@ -8,15 +8,23 @@ def generate_asymmetric_tsp(n: int, isUniform: bool, upper: int) -> np.ndarray:
     ----------
     n : int
         The size of the square matrix.
+    distribution : str
+        The distribution to sample the costs from (either 'uniform' or 'lognormal').
     upper : int
         The upper bound for cost values in the matrix.
     """
-    matrix = np.random.random((n, n)) * upper
+    if distribution == 'uniform':
+        matrix = np.random.random((n, n)) * upper
+    elif distribution == 'lognormal':
+        matrix = np.random.lognormal(mean=0, sigma=1, size=(n, n)) * upper # TODO: sigma is is a control parameter and should be passed as an argument
+    else:
+        raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
+    
     for i in range(n):
         matrix[i, i] = np.inf
     return matrix
 
-def generate_euclidean_tsp(n: int, isUniform: bool, dimensions: int = 100) -> np.ndarray:
+def generate_euclidean_tsp(n: int, distribution: str, dimensions: int = 100) -> np.ndarray:
     """
     Generate a Euclidean distance matrix for n points in a specified number of dimensions.
     
@@ -24,11 +32,10 @@ def generate_euclidean_tsp(n: int, isUniform: bool, dimensions: int = 100) -> np
     ----------
     n : int
         The number of points.
+    distribution : str
+        The distribution to sample the points from (either 'uniform' or 'lognormal').
     dimensions : int
         The dimensionality of the Euclidean space (default is 10).
-    isUniform : bool
-        If True, the matrix is generated with uniform 
-        Else, the matrix is generated with random.lognormal
         
     Returns:
     -------
@@ -36,10 +43,12 @@ def generate_euclidean_tsp(n: int, isUniform: bool, dimensions: int = 100) -> np
         A symmetric distance matrix of size n x n.
     """
     # Generate random coordinates for n points in the given dimension
-    if isUniform:
+    if distribution == 'uniform':
         points = np.random.random((n, dimensions))
-    else: # lognormal
+    elif distribution == 'lognormal':
         points = np.random.lognormal(mean=0, sigma=1, size=(n, dimensions))
+    else:
+        raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     # points = np.random.random((n, dimensions))
     
     # Calculate the pairwise Euclidean distance matrix

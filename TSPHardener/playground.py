@@ -1,5 +1,8 @@
 from typing import List
 
+# This file is where I write and test code snippets that I want to use in the main codebase.
+
+
 def permutations(A: List[int]) -> List[List[int]]:
     def directed_permutations(i):
         if i == len(A) - 1:
