@@ -11,7 +11,7 @@ def permute_matrix(matrix) -> np.ndarray:
     """
     n = len(matrix)
     
-    permuted_matrix = matrix.copy()
+    matrix = matrix.copy()
     
     # List of indices excluding the diagonal
     indices = [(i, j) for i in range(n) for j in range(n) if i != j]
@@ -27,9 +27,9 @@ def permute_matrix(matrix) -> np.ndarray:
     
     # Assign the shuffled values back to the matrix
     for (i, j), value in zip(indices, values):
-        permuted_matrix[i, j] = value
+        matrix[i, j] = value
     
-    return permuted_matrix
+    return matrix
 
 def permute_symmetric_matrix(matrix: np.ndarray) -> np.ndarray:
     """
@@ -39,12 +39,10 @@ def permute_symmetric_matrix(matrix: np.ndarray) -> np.ndarray:
     ----------
     matrix : np.ndarray
         The distance matrix to permute.
-    _print : bool
-        Print results in the console if True.
     """
     n = len(matrix)
     
-    permuted_matrix = matrix.copy()
+    matrix = matrix.copy()
 
     # list of indices in the upper triangle excluding the diagonal
     indices = [(i, j) for i in range(n) for j in range(i + 1, n)]
@@ -57,14 +55,14 @@ def permute_symmetric_matrix(matrix: np.ndarray) -> np.ndarray:
 
     # Assign the shuffled values back to the upper triangle
     for (i, j), value in zip(indices, values):
-        permuted_matrix[i, j] = value
-        permuted_matrix[j, i] = value  # Mirror the value in the lower triangle
+        matrix[i, j] = value
+        matrix[j, i] = value  # Mirror the value in the lower triangle
     
     
-    return permuted_matrix
+    return matrix
 
 
-def swap_mutate(matrix, _print) -> np.ndarray:
+def swap_mutate(matrix) -> np.ndarray:
     """
     Swap two random elements in the cost matrix excluding the diagonal.
     
@@ -72,9 +70,8 @@ def swap_mutate(matrix, _print) -> np.ndarray:
     ----------
     matrix : np.ndarray
         The distance matrix to mutate.
-    _print : bool
-        Print results in the console if True.
     """
+    matrix = matrix.copy()
     
     n = len(matrix)
     # swap index (i,j) with (k, l)
@@ -103,7 +100,7 @@ def swap_mutate_symmetric(matrix) -> np.ndarray:
     matrix : np.ndarray
         The distance matrix to mutate.
     """
-    
+    matrix = matrix.copy()
     
     n = len(matrix)
     
@@ -125,7 +122,7 @@ def swap_mutate_symmetric(matrix) -> np.ndarray:
     # Swap the elements
     matrix[i, j], matrix[k, l] = matrix[k, l], matrix[i, j]
     matrix[j, i], matrix[l, k] = matrix[l, k], matrix[j, i]  # Mirror the value in the lower triangle
-    print(f"Swapped ({i}, {j}) with ({k}, {l})")
+    # print(f"Swapped ({i}, {j}) with ({k}, {l})")
     return matrix
  
 
@@ -203,9 +200,9 @@ def swap(tsp_type, matrix):
     matrix : np.ndarray
         The distance matrix to mutate.
     """
-    if tsp_type == 'euclidean':
+    if tsp_type == "euclidean":
         return swap_mutate_symmetric(matrix)
-    elif tsp_type == 'asymmetric':
-        return swap_mutate(matrix)
+    elif tsp_type == "asymmetric":
+        return swap_mutate(matrix, )
     else:
-        raise ValueError("Invalid TSP type. Choose either 'symmetric' or 'asymmetric'.")
+        raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")

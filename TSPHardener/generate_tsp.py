@@ -16,7 +16,7 @@ def generate_asymmetric_tsp(n: int, distribution: str, upper: int) -> np.ndarray
     if distribution == 'uniform':
         matrix = np.random.random((n, n)) * upper
     elif distribution == 'lognormal':
-        matrix = np.random.lognormal(mean=0, sigma=1, size=(n, n)) * upper # TODO: sigma is is a control parameter and should be passed as an argument
+        matrix = (np.random.lognormal(mean=0, sigma=1, size=(n, n)) * upper).astype(float) # TODO: sigma is is a control parameter and should be passed as an argument
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     
@@ -81,3 +81,15 @@ def triangle_inequality(matrix: np.ndarray) -> bool:
                         return False
 
         return True
+
+
+# matrix = generate_asymmetric_tsp(10, 'lognormal', 100)
+# from algorithm import get_minimal_route
+# from mutate_tsp import mutate, swap, shuffle
+# iterions, _, _ = get_minimal_route(matrix)
+# print(iterions)
+# #mutated_matrix = mutate("asymmetric", matrix, 100)
+# for i in range(10):
+#     mutated_matrix = mutate("asymmetric", matrix, 100)
+#     iterions, _, _ = get_minimal_route(mutated_matrix)
+#     # print(iterions)

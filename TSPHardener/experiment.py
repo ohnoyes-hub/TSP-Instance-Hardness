@@ -134,9 +134,17 @@ def save_partial(results, citysize, range, time, contin):
                 existing_data = json.load(json_file)
             except json.decoder.JSONDecodeError:
                 existing_data = []
-        existing_data.append((time, results))
+        existing_data = {
+            "time": time,
+            "configurations": results
+        }
+        #existing_data.append((time, results))
         data_to_write = existing_data
     else:
+        existing_data = {
+            "time": time,
+            "configurations": results
+        }
         data_to_write = [(time, results)]
 
     # Write the data to the file with custom encoding
@@ -233,7 +241,7 @@ def generate_tsp_instance(city_size, generation_type, distribution, upper_bound)
     else:
         raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
 
-def apply_mutation(matrix, mutation_type, upper):
+def apply_mutation(matrix, mutation_type, tsp_type, upper):
     """
     Apply a mutation to the given TSP instance.
     
@@ -243,6 +251,8 @@ def apply_mutation(matrix, mutation_type, upper):
         The TSP instance to mutate.
     mutation_type : str
         The mutation strategy to apply (swap, scramble, or Wouter's mutation).
+    tsp_type : str
+        The type of TSP instance (euclidean or asymmetric).
     upper : int
         The upper bound for cost values in the matrix.
         
@@ -252,18 +262,24 @@ def apply_mutation(matrix, mutation_type, upper):
         The mutated TSP instance.
     """
     if mutation_type == "swap":
-        return swap(mutation_type, matrix)
+        return swap(tsp_type, matrix)
     elif mutation_type == "scramble":
-        return shuffle(mutation_type, matrix)
+        return shuffle(tsp_type, matrix)
     elif mutation_type == "wouter":
-        return mutate(mutation_type, matrix, upper)
+        return mutate(tsp_type, matrix, upper)
     else:
         raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
 
 def experiment(_cities, _ranges, _mutations, _continuations, generation_type, distribution, mutation_type):
     for citysize in _cities:
         for rang in _ranges:
-            range_results = {}
+            range_results = {
+                "city_size": citysize,
+                "range": rang,
+                "mutation_type": mutation_type,
+                "generation_type": generation_type,
+                "distribution": distribution,
+            }
 
             # Record the start time
             start_time = time.time()
@@ -281,19 +297,32 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                 matrix = generate_tsp_instance(citysize, generation_type, distribution, rang)
                 hardest = 0
 
-            hardest_matrix = matrix
-
             for j in range(_mutations):
-                iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
-                range_results[j] = (iterations, hardest, optimal_tour, optimal_cost, matrix)
+                try:
+                    # Run Lital's algorithm on swap and scramble mutation has a chance to throw RecursionError
+                    iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
+                except RecursionError:
+                    save_partial(range_results, citysize, rang, time.time() - start_time, f"{citysize},{rang}" in _continuations)
+                    print(f"RecursionError occurred on matrix {j} with shape {matrix.shape}. Retrying with another mutation", flush=True)
+                    matrix = apply_mutation(matrix, mutation_type, generation_type, rang)
+                    continue
+
+                #range_results[j] = (iterations, hardest, optimal_tour, optimal_cost, matrix)
+                range_results[j] = {
+                    "iterations": iterations,
+                    "hardest": hardest,
+                    "optimal_tour": optimal_tour,
+                    "optimal_cost": optimal_cost,
+                    "matrix": matrix.tolist()
+                }
 
                 # Apply the selected mutation strategy
                 if iterations >= hardest:
                     hardest_matrix = matrix
-                    matrix = apply_mutation(hardest_matrix, mutation_type, rang)
+                    matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang)
                     hardest = iterations
                 else:
-                    matrix = apply_mutation(hardest_matrix, mutation_type, rang)
+                    matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang)
 
                 if j > 0 and (j + 1) % 100 == 0:
                     # Calculate elapsed time
@@ -305,6 +334,10 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
     elapsed_time = time.time() - start_time
     print(f"Done with cities = {citysize}, randMax = {rang}\nElapsed Time: {elapsed_time:.2f} seconds", flush=True)
 
+
+
+
+experiment(sizes, ranges, args.mutations, continuations, args.tsp_type, args.distribution, args.mutation_strategy)
 # if __name__ == "__main__":
 #     experiment(sizes, ranges, args.mutations, continuations, args.tsp_type, args.distribution, args.mutation_strategy)
     
