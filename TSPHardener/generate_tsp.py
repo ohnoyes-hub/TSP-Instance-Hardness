@@ -1,6 +1,6 @@
 import numpy as np
 
-def generate_asymmetric_tsp(n: int, distribution: str, upper: int) -> np.ndarray:
+def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """
     Generate a random cost matrix of size n x n with values in the range [1, upper) for a asymmetric TSP.
     
@@ -10,13 +10,15 @@ def generate_asymmetric_tsp(n: int, distribution: str, upper: int) -> np.ndarray
         The size of the square matrix.
     distribution : str
         The distribution to sample the costs from (either 'uniform' or 'lognormal').
-    upper : int
-        The upper bound for cost values in the matrix.
+    control : float
+        The control parameter for the distribution.
+        - For 'uniform', this is the upper bound for the random values.
+        - For 'lognormal', this is the sigma parameter.
     """
     if distribution == 'uniform':
-        matrix = np.random.random((n, n)) * upper
+        matrix = np.random.random((n, n)) * int(control)
     elif distribution == 'lognormal':
-        matrix = (np.random.lognormal(mean=0, sigma=1, size=(n, n)) * upper).astype(float) # TODO: sigma is is a control parameter and should be passed as an argument
+        matrix = (np.random.lognormal(mean=10, sigma=control, size=(n, n))).astype(float) # TODO: sigma is is a control parameter and should be passed as an argument
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     
@@ -24,7 +26,7 @@ def generate_asymmetric_tsp(n: int, distribution: str, upper: int) -> np.ndarray
         matrix[i, i] = np.inf
     return matrix
 
-def generate_euclidean_tsp(n: int, distribution: str, dimensions: int = 100) -> np.ndarray:
+def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions: int = 100) -> np.ndarray:
     """
     Generate a Euclidean distance matrix for n points in a specified number of dimensions.
     
@@ -34,9 +36,12 @@ def generate_euclidean_tsp(n: int, distribution: str, dimensions: int = 100) -> 
         The number of points.
     distribution : str
         The distribution to sample the points from (either 'uniform' or 'lognormal').
+    control : int
+        The control parameter for the distribution.
+        - For 'uniform', this is the upper bound for the random values.
+        - For 'lognormal', this is the sigma parameter.
     dimensions : int
         The dimensionality of the Euclidean space (default is 10).
-        
     Returns:
     -------
     np.ndarray
@@ -44,9 +49,9 @@ def generate_euclidean_tsp(n: int, distribution: str, dimensions: int = 100) -> 
     """
     # Generate random coordinates for n points in the given dimension
     if distribution == 'uniform':
-        points = np.random.random((n, dimensions))
+        points = np.random.random((n, dimensions)) * int(control)
     elif distribution == 'lognormal':
-        points = np.random.lognormal(mean=0, sigma=1, size=(n, dimensions))
+        points = np.random.lognormal(mean=10, sigma=control, size=(n, dimensions))
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     # points = np.random.random((n, dimensions))
@@ -81,15 +86,3 @@ def triangle_inequality(matrix: np.ndarray) -> bool:
                         return False
 
         return True
-
-
-# matrix = generate_asymmetric_tsp(10, 'lognormal', 100)
-# from algorithm import get_minimal_route
-# from mutate_tsp import mutate, swap, shuffle
-# iterions, _, _ = get_minimal_route(matrix)
-# print(iterions)
-# #mutated_matrix = mutate("asymmetric", matrix, 100)
-# for i in range(10):
-#     mutated_matrix = mutate("asymmetric", matrix, 100)
-#     iterions, _, _ = get_minimal_route(mutated_matrix)
-#     # print(iterions)

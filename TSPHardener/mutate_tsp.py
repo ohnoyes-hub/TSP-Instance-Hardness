@@ -126,7 +126,7 @@ def swap_mutate_symmetric(matrix) -> np.ndarray:
     return matrix
  
 
-def mutate_matrix(_matrix, _upper):
+def mutate_matrix(distribution, _matrix, _control):
     matrix = _matrix.copy()
     number1, number2 = 0, 0
 
@@ -134,11 +134,15 @@ def mutate_matrix(_matrix, _upper):
         number1, number2 = np.random.randint(0,matrix.shape[0]), np.random.randint(0,matrix.shape[0])
     previous_number = matrix[number1,number2]
     while matrix[number1,number2] == previous_number:
-        matrix[number1,number2] = np.random.randint(1,_upper)
-   
+        if distribution == "uniform":
+            matrix[number1,number2] = np.random.randint(1,_control)
+        elif distribution == "lognormal":
+            matrix[number1,number2] = np.random.lognormal(mean=10, sigma=_control)
+        else:
+            raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     return matrix
 
-def mutate_matrix_symmetric(_matrix, _upper):
+def mutate_matrix_symmetric(distribution, _matrix, _upper):
     matrix = _matrix.copy()
     number1, number2 = 0, 0
 
@@ -146,9 +150,14 @@ def mutate_matrix_symmetric(_matrix, _upper):
         number1, number2 = np.random.randint(0,matrix.shape[0]), np.random.randint(0,matrix.shape[0])
     previous_number = matrix[number1,number2]
     while matrix[number1,number2] == previous_number:
-        matrix[number1,number2] = np.random.randint(1,_upper)
-        matrix[number2,number1] = matrix[number1,number2] # Mirror the value in the lower triangle
-    
+        if distribution == "uniform":
+            matrix[number1,number2] = np.random.randint(1,_upper)
+            matrix[number2,number1] = matrix[number1,number2] # Mirror the value in the lower triangle
+        elif distribution == "lognormal":
+            matrix[number1,number2] = np.random.lognormal(mean=10, sigma=_upper)
+            matrix[number2,number1] = matrix[number1,number2]
+        else:
+            raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     return matrix
 
 def shuffle(tsp_type, matrix):
@@ -169,12 +178,14 @@ def shuffle(tsp_type, matrix):
     else:
         raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
     
-def mutate(tsp_type, matrix, upper):
+def mutate(distribution, tsp_type, matrix, upper):
     """
     Mutate the elements of either a euclidean or asymmetric TSP matrix.
 
     Parameters:
     ----------
+    distribution : str
+        The distribution to sample the points from (either 'uniform' or 'lognormal').
     tsp_type : str
         The type of TSP matrix ('euclidean' or 'asymmetric').
     matrix : np.ndarray
@@ -183,9 +194,9 @@ def mutate(tsp_type, matrix, upper):
         The upper bound for the random mutation.
     """
     if tsp_type == 'euclidean':
-        return mutate_matrix_symmetric(matrix, upper)
+        return mutate_matrix_symmetric(distribution, matrix, upper)
     elif tsp_type == 'asymmetric':
-        return mutate_matrix(matrix, upper)
+        return mutate_matrix(distribution, matrix, upper)
     else:
         raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
 
@@ -206,3 +217,4 @@ def swap(tsp_type, matrix):
         return swap_mutate(matrix, )
     else:
         raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
+    

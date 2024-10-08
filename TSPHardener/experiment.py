@@ -20,9 +20,9 @@ parser = argparse.ArgumentParser(description='Run the experiment with provided p
 
 # Add arguments
 parser.add_argument('sizes', type=str, help='A list of city sizes, e.g., "[10,12]"')
-parser.add_argument('ranges', type=str, help='A list of value ranges, e.g., "[10,1000]"')
+parser.add_argument('ranges', type=str, help='A list of value ranges, e.g., "[10,1000]"') # control parameter
 parser.add_argument('mutations', type=int, help='An integer number of mutations, e.g., 500')
-parser.add_argument('continuation', type=str, default="", nargs='?', help='A list of matrix continuations, e.g., "[(7,10),(50,10)]". Corresponding matrices must be in "Progress" folder')
+parser.add_argument('continuation', type=str, default="", nargs='?', help='A list of matrix continuations, e.g., "[(7,10),(50,10)]". Corresponding matrices must be in "Progress" folder') # tuple of city size and range
 parser.add_argument('--tsp_type', type=str, choices=['euclidean', 'asymmetric'], required=True, help='Type of TSP to generate: symmetric or asymmetric.')
 parser.add_argument('--distribution', type=str, choices=['uniform', 'lognormal'], required=True, help='Distribution to use for generating the TSP instance.')
 parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble', 'wouter'], required=True, help='Mutation strategy to use.')
@@ -214,7 +214,7 @@ flowchart TD
     H --> C
 '''
 
-def generate_tsp_instance(city_size, generation_type, distribution, upper_bound):
+def generate_tsp_instance(city_size, generation_type, distribution, control):
     """
     Generate a TSP instance with the specified parameters.
     
@@ -226,22 +226,23 @@ def generate_tsp_instance(city_size, generation_type, distribution, upper_bound)
         The type of TSP instance to generate (symmetric or asymmetric).
     distribution : str
         The distribution to use for generating the TSP instance (uniform or lognormal).
-    upper_bound : int
-        The upper bound for cost values in the matrix.
-        
+    control : float
+        The control parameter for the distribution.
+        - For the uniform , this is the upper bound for cost values in the matrix.
+        - For the lognormal, this is the sigma parameter.
     Returns:
     -------
     np.ndarray
         The generated TSP instance.
     """
     if generation_type == "euclidean":
-        return generate_euclidean_tsp(city_size, distribution, upper_bound)
+        return generate_euclidean_tsp(city_size, distribution, control) # dimension of grid is 100 default
     elif generation_type == "asymmetric":
-        return generate_asymmetric_tsp(city_size, distribution, upper_bound)
+        return generate_asymmetric_tsp(city_size, distribution, control)
     else:
         raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
 
-def apply_mutation(matrix, mutation_type, tsp_type, upper):
+def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
     """
     Apply a mutation to the given TSP instance.
     
@@ -253,7 +254,7 @@ def apply_mutation(matrix, mutation_type, tsp_type, upper):
         The mutation strategy to apply (swap, scramble, or Wouter's mutation).
     tsp_type : str
         The type of TSP instance (euclidean or asymmetric).
-    upper : int
+    control : float
         The upper bound for cost values in the matrix.
         
     Returns:
@@ -266,7 +267,7 @@ def apply_mutation(matrix, mutation_type, tsp_type, upper):
     elif mutation_type == "scramble":
         return shuffle(tsp_type, matrix)
     elif mutation_type == "wouter":
-        return mutate(tsp_type, matrix, upper)
+        return mutate(distribution, tsp_type, matrix, control)
     else:
         raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
 
@@ -304,7 +305,7 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                 except RecursionError:
                     save_partial(range_results, citysize, rang, time.time() - start_time, f"{citysize},{rang}" in _continuations)
                     print(f"RecursionError occurred on matrix {j} with shape {matrix.shape}. Retrying with another mutation", flush=True)
-                    matrix = apply_mutation(matrix, mutation_type, generation_type, rang)
+                    matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
                     continue
 
                 #range_results[j] = (iterations, hardest, optimal_tour, optimal_cost, matrix)
@@ -319,10 +320,10 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                 # Apply the selected mutation strategy
                 if iterations >= hardest:
                     hardest_matrix = matrix
-                    matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang)
+                    matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang, distribution)
                     hardest = iterations
                 else:
-                    matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang)
+                    matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang, distribution)
 
                 if j > 0 and (j + 1) % 100 == 0:
                     # Calculate elapsed time
