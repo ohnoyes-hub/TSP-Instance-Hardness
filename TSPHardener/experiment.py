@@ -1,6 +1,6 @@
 from algorithm import get_minimal_route
-from generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp
-from mutate_tsp import shuffle, mutate, swap
+from generate_tsp import generate_tsp
+from mutate_tsp import apply_mutation
 import numpy as np
 import json
 import os
@@ -120,70 +120,6 @@ def save_partial(configuration, results, citysize, range, time, contin):
     print(f"Partial results saved to {filename}", flush=True)
                     
 
-
-def save_results(time, results, contin):
-    """
-    Save only the results 
-    """
-
-
-def generate_tsp_instance(city_size, generation_type, distribution, control):
-    """
-    Generate a TSP instance with the specified parameters.
-    
-    Parameters:
-    ----------
-    city_size : int
-        The number of cities in the TSP instance.
-    generation_type : str
-        The type of TSP instance to generate (symmetric or asymmetric).
-    distribution : str
-        The distribution to use for generating the TSP instance (uniform or lognormal).
-    control : float
-        The control parameter for the distribution.
-        - For the uniform , this is the upper bound for cost values in the matrix.
-        - For the lognormal, this is the sigma parameter.
-    Returns:
-    -------
-    np.ndarray
-        The generated TSP instance.
-    """
-    if generation_type == "euclidean":
-        return generate_euclidean_tsp(city_size, distribution, control) # dimension of grid is 100 unless state otherwise
-    elif generation_type == "asymmetric":
-        return generate_asymmetric_tsp(city_size, distribution, control)
-    else:
-        raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
-
-def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
-    """
-    Apply a mutation to the given TSP instance.
-    
-    Parameters:
-    ----------
-    matrix : np.ndarray
-        The TSP instance to mutate.
-    mutation_type : str
-        The mutation strategy to apply (swap, scramble, or Wouter's mutation).
-    tsp_type : str
-        The type of TSP instance (euclidean or asymmetric).
-    control : float
-        The upper bound for cost values in the matrix.
-        
-    Returns:
-    -------
-    np.ndarray
-        The mutated TSP instance.
-    """
-    if mutation_type == "swap":
-        return swap(tsp_type, matrix)
-    elif mutation_type == "scramble":
-        return shuffle(tsp_type, matrix)
-    elif mutation_type == "wouter":
-        return mutate(distribution, tsp_type, matrix, control)
-    else:
-        raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
-
 '''
 Experiment is defined as follows:
 flowchart TD
@@ -247,10 +183,10 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                     matrix = np.array(matrix)
                 except Exception as e:
                     print(f"{e}\n {citysize}_{rang} matrix not loaded for {distribution}_{generation_type}_{mutation_type}, generating a TSP instance", flush=True)
-                    matrix = generate_tsp_instance(citysize, generation_type, distribution, rang)
+                    matrix = generate_tsp(citysize, generation_type, distribution, rang)
                     hardest = 0
             else:
-                matrix = generate_tsp_instance(citysize, generation_type, distribution, rang)
+                matrix = generate_tsp(citysize, generation_type, distribution, rang)
                 hardest = 0
 
             for j in range(_mutations):
@@ -265,13 +201,14 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                     continue
 
                 #range_results[j] = (iterations, hardest, optimal_tour, optimal_cost, matrix)
-                range_results[j] = {
-                    "iterations": iterations,
-                    "hardest": hardest,
-                    "optimal_tour": optimal_tour,
-                    "optimal_cost": optimal_cost,
-                    "matrix": matrix.tolist()
-                }
+                # Following saves all the results in the dictionary which is not efficient
+                # range_results[j] = {
+                #     "iterations": iterations,
+                #     "hardest": hardest,
+                #     "optimal_tour": optimal_tour,
+                #     "optimal_cost": optimal_cost,
+                #     "matrix": matrix.tolist()
+                # }
 
                 # Apply the selected mutation strategy
                 if iterations >= hardest:

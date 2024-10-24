@@ -1,4 +1,5 @@
 import numpy as np
+from icecream import ic
 
 def permute_matrix(matrix) -> np.ndarray:
     """
@@ -218,3 +219,32 @@ def swap(tsp_type, matrix):
     else:
         raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
     
+
+def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
+    """
+    Apply a mutation to the given TSP instance.
+    
+    Parameters:
+    ----------
+    matrix : np.ndarray
+        The TSP instance to mutate.
+    mutation_type : str
+        The mutation strategy to apply (swap, scramble, or Wouter's mutation).
+    tsp_type : str
+        The type of TSP instance (euclidean or asymmetric).
+    control : float
+        The upper bound for cost values in the matrix.
+        
+    Returns:
+    -------
+    np.ndarray
+        The mutated TSP instance.
+    """
+    if mutation_type == "swap":
+        return swap(tsp_type, matrix)
+    elif mutation_type == "scramble":
+        return shuffle(tsp_type, matrix)
+    elif mutation_type == "wouter":
+        return mutate(distribution, tsp_type, matrix, control)
+    else:
+        raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")

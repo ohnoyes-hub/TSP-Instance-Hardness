@@ -1,4 +1,5 @@
 import numpy as np
+from icecream import ic
 
 def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """
@@ -18,7 +19,7 @@ def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.nda
     if distribution == 'uniform':
         matrix = np.random.random((n, n)) * int(control)
     elif distribution == 'lognormal':
-        matrix = (np.random.lognormal(mean=10, sigma=control, size=(n, n))).astype(float) # TODO: sigma is is a control parameter and should be passed as an argument
+        matrix = (np.random.lognormal(mean=10, sigma=control, size=(n, n))).astype(float) # mean = 10 always in experiments
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     
@@ -82,7 +83,42 @@ def triangle_inequality(matrix: np.ndarray) -> bool:
                         continue
                     # Check if the triangle inequality holds
                     if matrix[i, j] + matrix[j, k] < matrix[i, k]:
-                        print(f"Triangle inequality failed for indices ({i}, {j}, {k})")
+                        ic(f"Triangle inequality failed for indices ({i}, {j}, {k})")
                         return False
 
         return True
+
+
+def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarray:
+    """
+    Generate a TSP instance with the specified parameters.
+    
+    Parameters:
+    ----------
+    city_size : int
+        The number of cities in the TSP instance.
+    generation_type : str
+        The type of TSP instance to generate (symmetric or asymmetric).
+    distribution : str
+        The distribution to use for generating the TSP instance (uniform or lognormal).
+    control : float
+        The control parameter for the distribution.
+        - For the uniform , this is the upper bound for cost values in the matrix.
+        - For the lognormal, this is the sigma parameter.
+    Returns:
+    -------
+    np.ndarray
+        The generated TSP instance.
+    """
+    if generation_type == "euclidean":
+        return generate_euclidean_tsp(city_size, distribution, control) # dimension of grid is 100x100 unless stated otherwise
+    elif generation_type == "asymmetric":
+        return generate_asymmetric_tsp(city_size, distribution, control)
+    else:
+        raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
+    
+
+# matrix = generate_asymmetric_tsp(5, 'uniform', 100)
+# ic(matrix)
+
+# ic(generate_euclidean_tsp(5, 'uniform', 100, 2))
