@@ -6,7 +6,6 @@ import json
 import os
 import glob
 import time
-# from icecream import ic
 
 # Possible optimizations:
 # import itertools
@@ -193,55 +192,42 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                 range_results['initial_matrix'] = {
                     "iterations": 0,
                     "hardest": hardest,
-                    "optimal_tour": None,
-                    "optimal_cost": None,
-                    "matrix": matrix.tolist(),
-                    "is_hardest": True  # Mark initial matrix as hardest
+                    "optimal_tour": [],
+                    "optimal_cost": 0,
+                    "matrix": matrix.tolist()
                 }
-                # Save to json file
-                save_partial(configuration, range_results, citysize, rang, 0, f"{citysize},{rang}" in _continuations)
-                range_results = {}
 
-            hardest_matrix = matrix
+            hardest_matrix = None
 
             for j in range(_mutations):
                 try:
-                    # Run Lital's algorithm, may raise RecursionError on swap
+                    # Run Lital's algorithm on swap mutation has a chance to throw RecursionError
                     iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
                 except RecursionError:
+                    #save_partial(configuration,range_results, citysize, rang, time.time() - start_time, f"{citysize},{rang}" in _continuations)
                     print(f"RecursionError occurred on matrix {j} with shape {matrix.shape}. Retrying with another mutation", flush=True)
                     matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
                     continue
+                
 
-                # Track the current iteration's results
-                range_results[f'iteration_{j}'] = {
-                    "iterations": iterations,
-                    "hardest": hardest,
-                    "optimal_tour": optimal_tour,
-                    "optimal_cost": optimal_cost,
-                    "matrix": matrix.tolist(),
-                    "is_hardest": False  # Default value
-                }
-
-                # Update if this matrix is the hardest found so far
                 if iterations > hardest:
+                    # Update hardest value and save the harder matrix
                     hardest = iterations
                     hardest_matrix = matrix
-                    range_results[f'iteration_{j}']["is_hardest"] = True
-
-                # Apply the selected mutation strategy
-                matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
-
-                # Save incrementally every 100 iterations or when a new hardest matrix is found
-                if j % 100 == 0 or range_results[f'iteration_{j}']["is_hardest"]:
+                    range_results[f'hard_matrix_{j}'] = {
+                        "iterations": iterations,
+                        "hardest": hardest,
+                        "optimal_tour": optimal_tour,
+                        "optimal_cost": optimal_cost,
+                        "matrix": matrix.tolist()
+                    }
+                    # Save to json file
                     elapsed_time = time.time() - start_time
                     save_partial(configuration, range_results, citysize, rang, elapsed_time, f"{citysize},{rang}" in _continuations)
                     range_results = {}  # Clear the results to save incrementally
 
-            # Final save for any remaining iteration results
-            if range_results:
-                elapsed_time = time.time() - start_time
-                save_partial(configuration, range_results, citysize, rang, elapsed_time, f"{citysize},{rang}" in _continuations)
+                # Apply the selected mutation strategy
+                matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
 
     elapsed_time = time.time() - run_time
     print(f"Done with cities = {citysize}, randMax = {rang}\nElapsed Time: {elapsed_time:.2f} seconds", flush=True)
