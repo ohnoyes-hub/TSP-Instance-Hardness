@@ -15,5 +15,5 @@ for run in {1..5}; do
     run_dir="/gpfs/home3/tsijpkens/project/TSPHardener/${SLURM_JOB_ID}_run${run}"
     mkdir -p "$run_dir" && cd "$run_dir" || { echo "Failed to create or enter directory $run_dir"; exit 1; }
 
-    srun --exclusive python -u /gpfs/home3/tsijpkens/project/TSPHardener/experiment.py "[20]" "[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]" 10000 "" --tsp_type "asymmetric" --distribution "uniform" --mutation_strategy "scramble"
+    srun --exclusive python -u /gpfs/home3/tsijpkens/project/TSPHardener/experiment.py "[20]" "[0, 0.2, 0.4, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0]" 10000 "" --tsp_type "asymmetric" --distribution "lognormal" --mutation_strategy "scramble"
 done

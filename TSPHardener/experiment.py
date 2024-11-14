@@ -206,31 +206,39 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
 
             for j in range(_mutations):
                 try:
-                    # Run Lital's algorithm, may raise RecursionError on swap
+                    # Attempt to run Lital's algorithm
                     iterations, optimal_tour, optimal_cost = get_minimal_route(matrix)
+
+                    # Track the current iteration's results
+                    range_results[f'iteration_{j}'] = {
+                        "iterations": iterations,
+                        "hardest": hardest,
+                        "optimal_tour": optimal_tour,
+                        "optimal_cost": optimal_cost,
+                        "matrix": matrix.tolist(),
+                        "is_hardest": False  # Default value
+                    }
+
+                    # Update if this matrix is the hardest found so far
+                    if iterations > hardest:
+                        hardest = iterations
+                        hardest_matrix = matrix
+                        range_results[f'iteration_{j}']["is_hardest"] = True
+
+                    # Apply the selected mutation strategy
+                    matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
+
+                # Handle exceptions gracefully
+                except IndexError as e:
+                    print(f"IndexError: {e} occurred during iteration {j}, skipping this mutation.", flush=True)
+                    continue
                 except RecursionError:
-                    print(f"RecursionError occurred on matrix {j} with shape {matrix.shape}. Retrying with another mutation", flush=True)
+                    print(f"RecursionError occurred during iteration {j} with matrix shape {matrix.shape}. Retrying with another mutation.", flush=True)
                     matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
                     continue
-
-                # Track the current iteration's results
-                range_results[f'iteration_{j}'] = {
-                    "iterations": iterations,
-                    "hardest": hardest,
-                    "optimal_tour": optimal_tour,
-                    "optimal_cost": optimal_cost,
-                    "matrix": matrix.tolist(),
-                    "is_hardest": False  # Default value
-                }
-
-                # Update if this matrix is the hardest found so far
-                if iterations > hardest:
-                    hardest = iterations
-                    hardest_matrix = matrix
-                    range_results[f'iteration_{j}']["is_hardest"] = True
-
-                # Apply the selected mutation strategy
-                matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
+                except Exception as e:
+                    print(f"Unexpected error: {e} during iteration {j}. Skipping this mutation.", flush=True)
+                    continue
 
                 # Save incrementally every 100 iterations or when a new hardest matrix is found
                 if j % 100 == 0 or range_results[f'iteration_{j}']["is_hardest"]:

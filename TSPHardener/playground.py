@@ -156,12 +156,119 @@ print("\nMatrix after mutation with value -1:")
 print(result2)
 
 class Solution:
-    def removeElement(self, nums: List[int], val: int) -> int:
-        k = 0
+    def getConcatenation(self, nums: List[int]) -> List[int]:
+        ans = []
 
-        for i in range(len(nums)):
-            if nums[i] != val:
-                # partition
-                nums[k] = nums[i]
-                k += 1
-        return k
+        for i in range(2):
+            for n in nums:
+                ans.append(n)
+                
+        return ans  
+
+    def isValid(self, s: str) -> bool:
+        stack = []
+        closeToOpen = { ")" : "(", "]" : "[", "}" : "{" }
+
+        for c in s:
+            if c in closeToOpen:
+                if stack and stack[-1] == closeToOpen[c]:
+                    stack.pop()
+                else:
+                    return False
+            else:
+                stack.append(c)
+        
+        return True if not stack else False
+
+# Stack problems
+   
+class MinStack:
+
+    def __init__(self):
+        self.stack = []
+        self.minStack = []
+
+    def push(self, val: int) -> None:
+        self.stack.append(val)
+        val = min(val, self.minStack[-1] if self.minStack else val)
+        self.minStack.append(val)
+
+    def pop(self) -> None:
+        self.stack.pop()
+        self.minStack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1]
+        
+    def getMin(self) -> int:
+        return self.minStack[-1]
+    
+
+class ListNode:
+    def __init__(self, val, prev = None, next=None):
+        self.val = val
+        self.prev = prev
+        self.next = next
+
+class BrowserHistory:
+
+    def __init__(self, homepage: str):
+        self.cur = ListNode(homepage)
+
+    def visit(self, url: str) -> None:
+        self.cur.next = ListNode(url, self.cur)
+        self.cur = self.cur.next
+
+    def back(self, steps: int) -> str:
+        while self.cur.prev and steps > 0:
+            self.cur = self.cur.prev
+            steps -= 1
+        return self.cur.val
+
+    def forward(self, steps: int) -> str:
+        while self.cur.next and steps > 0:
+            self.cur = self.cur.next
+            steps -= 1
+        return self.cur.val
+    
+
+# more efficient solution
+class BrowserHistory:
+    def __init__(self, homepage: str):
+        self.cur = 0
+        self.len = 1
+        self.history = [homepage]
+
+    def visit(self, url: str) -> None:
+        if len(self.history) < self.cur + 2:
+            self.history.append(url)
+        else: # initialize the next page to the new url
+            self.history[self.cur + 1] = url
+        self.cur += 1
+        # update the length of the history, because the the forward() method. We deleting the old forward history
+        self.len = self.cur + 1 
+
+    def back(self, steps: int) -> str:
+        self.cur = max(0, self.cur - steps) # max is used to avoid negative index and go to the start of the history
+        return self.history[self.cur]
+    
+    def forward(self, steps: int) -> str:
+        self.cur = min(self.len - 1, self.cur + steps) # min is used to avoid going beyond the last page visited
+        return self.history[self.cur]
+
+# Stack problems
+class Solution:
+    def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
+        res = len(students)
+        cnt = Counter(students) # Counter counts the frequency of each element in the list as a hashmap
+        for s in sandwiches:
+            if cnt[s] > 0:
+                res -= 1
+                cnt[s] -= 1
+            else:
+                return res
+        # for s in students:
+        #     if s not in cnt:
+        #         cnt[s] = 0
+        #     cnt[s] += 1
+        return res
