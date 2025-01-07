@@ -122,3 +122,48 @@ def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarra
 # ic(matrix)
 
 # ic(generate_euclidean_tsp(5, 'uniform', 100, 2))
+
+
+import numpy as np
+
+def calculate_tiq_violations(distance_matrix):
+    """
+    Calculate the degree and severity of triangle inequality violations in a distance matrix.
+
+    Parameters:
+        distance_matrix (numpy.ndarray): A 2D numpy array representing distances between nodes (asymmetric or symmetric).
+
+    Returns:
+        tuple:
+            - degree_of_violation (int): Number of triangle inequality violations.
+            - severity_of_violations (float): Sum of all TIQ violation magnitudes.
+    """
+    # Ensure the input is a numpy array
+    distance_matrix = np.array(distance_matrix)
+    
+    n = distance_matrix.shape[0]
+    degree_of_violation = 0
+    severity_of_violations = 0.0
+
+    # Iterate over all possible triplets (i, j, k)
+    for i in range(n):
+        for j in range(n):
+            for k in range(n):
+                if i != j and j != k and i != k:
+                    # Check if the triangle inequality is violated: d(i, j) > d(i, k) + d(k, j)
+                    if distance_matrix[i, j] > distance_matrix[i, k] + distance_matrix[k, j]:
+                        degree_of_violation += 1
+                        severity_of_violations += distance_matrix[i, j] - (distance_matrix[i, k] + distance_matrix[k, j])
+
+    return degree_of_violation, severity_of_violations
+
+euclidean_tsp = generate_euclidean_tsp(5, 'uniform', 100, 2)
+degree, severity = calculate_tiq_violations(euclidean_tsp)
+ic(f"Degree of Violations: {degree}")
+ic(f"Average Severity: {severity}")
+
+asymmetric_tsp = generate_asymmetric_tsp(4, 'uniform', 100)
+ic(asymmetric_tsp)
+degree, severity = calculate_tiq_violations(euclidean_tsp)
+print(f"Degree of Violations: {degree}")
+print(f"Average Severity: {severity}")

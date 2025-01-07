@@ -248,3 +248,4 @@ def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
         return mutate(distribution, tsp_type, matrix, control)
     else:
         raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
+    

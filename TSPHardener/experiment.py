@@ -225,10 +225,8 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
                         hardest_matrix = matrix
                         range_results[f'iteration_{j}']["is_hardest"] = True
 
-                    # Apply the selected mutation strategy
                     matrix = apply_mutation(matrix, mutation_type, generation_type, rang, distribution)
 
-                # Handle exceptions gracefully
                 except IndexError as e:
                     print(f"IndexError: {e} occurred during iteration {j}, skipping this mutation.", flush=True)
                     continue
@@ -255,8 +253,7 @@ def experiment(_cities, _ranges, _mutations, _continuations, generation_type, di
     print(f"Done with cities = {citysize}, randMax = {rang}\nElapsed Time: {elapsed_time:.2f} seconds", flush=True)
 
 
-experiment(sizes, ranges, args.mutations, continuations, args.tsp_type, args.distribution, args.mutation_strategy)
-# if __name__ == "__main__":
-#     experiment(sizes, ranges, args.mutations, continuations, args.tsp_type, args.distribution, args.mutation_strategy)
+# Run the experiment with args provided
+experiment(sizes, ranges, args.mutations, continuations, args.tsp_type, args.distribution, args.mutation_strategy) 
 
 

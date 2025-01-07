@@ -242,3 +242,10 @@ fabric.properties
 # Data folders
 Data/
 CleanData/
+CombinedData/
+UnrealiableRuns/
+output/
+IncompleteRuns/
+FirstRuns/
+data/
+Littles-Algorithm-Sleegers-et-al.-master/
