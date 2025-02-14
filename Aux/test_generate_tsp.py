@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp, triangle_inequality
+from TSPHardener.core.generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp, triangle_inequality
 
 class TestGenerateTSP(unittest.TestCase):
 

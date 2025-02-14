@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from mutate_tsp import permute_matrix, permute_symmetric_matrix, swap_mutate, mutate_matrix, mutate_matrix_symmetric, swap_mutate_symmetric
+from TSPHardener.core.mutate_tsp import permute_matrix, permute_symmetric_matrix, swap_mutate, mutate_matrix, mutate_matrix_symmetric, swap_mutate_symmetric
 
 class TestMutateTSP(unittest.TestCase):
 
