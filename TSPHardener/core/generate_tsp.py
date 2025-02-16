@@ -1,4 +1,5 @@
 import numpy as np
+from icecream import ic
 
 def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """

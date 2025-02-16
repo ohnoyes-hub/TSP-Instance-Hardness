@@ -110,7 +110,7 @@ def save_partial(configuration, results, citysize, rang, time_spent,
         "last_matrix": <the *current* matrix as a 2D list>
       }
     """
-    base_name = f"result{citysize}_{rang}_{mutation_strategy}.json"
+    base_name = f"city{citysize}_range{rang}_{mutation_strategy}.json"
     folder = f"Results/{distribution}_{tsp_type}" if is_final else f"Continuation/{distribution}_{tsp_type}"
     
     if not os.path.exists(folder):
@@ -144,7 +144,10 @@ def save_partial(configuration, results, citysize, rang, time_spent,
     with open(full_path, "w") as f:
         json.dump(existing_data, f, indent=2, default=custom_encoder)
 
-    ic(f"Saved partial results to {full_path}")
+    if is_final:
+        ic(f"Saved final results to: {full_path}")
+    else:
+        ic(f"Saved partial results to: {full_path}")
 
     #If final => remove from Continuation
     if is_final:

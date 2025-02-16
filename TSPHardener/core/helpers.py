@@ -12,7 +12,7 @@ def initialize_matrix_and_hardest(citysize, rang, config):
     """Check if we have partial data; else generate new TSP."""
     cont_file = os.path.join("Continuation",
                              f"{config['distribution']}_{config['generation_type']}",
-                             f"result{citysize}_{rang}_{config['mutation_type']}.json")
+                             f"city{citysize}_range{rang}_{config['mutation_type']}.json")
     if os.path.exists(cont_file):
         try:
             hardest, matrix = load_partial(cont_file)

@@ -44,7 +44,7 @@ def main():
 
             # otherwise, load continuation file if it exists
             continuation_file = os.path.join("Continuation", f"{args.distribution}_{args.tsp_type}", 
-                                            f"result{citysize}_{rang}_{args.mutation_strategy}.json")
+                                            f"city{citysize}_range{rang}_{args.mutation_strategy}.json")
             if os.path.exists(continuation_file):
                 continuations.append(f"{citysize},{rang}") # partial results exist for this configuration
 
@@ -55,6 +55,7 @@ def main():
 
     experiment(
         sizes, ranges, args.mutations,
+        continuations=continuations,
         distribution=args.distribution,
         tsp_type=args.tsp_type,
         mutation_strategy=args.mutation_strategy

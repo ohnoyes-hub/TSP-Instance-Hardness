@@ -5,5 +5,5 @@ def get_result_path(citysize, rang, distribution, tsp_type, mutation_strategy, i
     folder = "Results" if is_final else "Continuation"
     return os.path.join(
         f"{folder}/{distribution}_{tsp_type}",
-        f"result{citysize}_{rang}_{mutation_strategy}.json"
+        f"city{citysize}_range{rang}_{mutation_strategy}.json"
     )

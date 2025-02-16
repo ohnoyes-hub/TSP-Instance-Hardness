@@ -1,6 +1,6 @@
 import numpy as np
 from icecream import ic
-from generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp, triangle_inequality
+from TSPHardener.core.generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp, triangle_inequality
 
 matrix = generate_asymmetric_tsp(5, 'uniform', 100)
 ic(matrix)

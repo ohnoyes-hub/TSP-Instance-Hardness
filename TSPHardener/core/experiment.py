@@ -1,13 +1,13 @@
 import time
 from icecream import ic
 import os
-# helpers
+
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
-# utils
+from .mutate_tsp import apply_mutation
+
 from utils.json_utils import save_partial
 from utils.file_utils import get_result_path
 
-from .mutate_tsp import apply_mutation
 
 def run_single_experiment(configuration, citysize, rang, mutations):
     """
@@ -34,7 +34,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     # If no partial file existed => store the initial as iteration_0
     cont_file = os.path.join("Continuation",
                              f"{configuration['distribution']}_{configuration['generation_type']}",
-                             f"result{citysize}_{rang}_{configuration['mutation_type']}.json"
+                             f"city{citysize}_range{rang}_{configuration['mutation_type']}.json"
                             )
     if not os.path.exists(cont_file):
         # treat the initial matrix as a "hard" instance (iteration=0)
@@ -90,7 +90,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         
         # If it's a newly hardest, store it
         if is_hardest:
-            iteration_key = f"iteration_{j+1}"  # or j, your choice
+            iteration_key = f"iteration_{j+1}"
             partial_results["hard_instances"][iteration_key] = {
                 "iterations": iterations,
                 "hardest": hardest,
@@ -101,8 +101,8 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             }
 
         # Periodically (or when new hardest) do a partial save
-        # For big runs, you might want to do e.g. j % 100 == 0
-        # or simply rely on the "is_hardest" scenario:
+        # j % 100 == 0
+        # or "is_hardest" scenario:
         if (j % 100 == 0) or is_hardest:
             elapsed = time.time() - start_time
             save_partial(
@@ -120,17 +120,20 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     if partial_results["hard_instances"] or partial_results["last_matrix"]:
         elapsed = time.time() - start_time
         save_partial(
-            configuration, partial_results, citysize, rang,
-            time_spent=0,
+            configuration, 
+            partial_results, 
+            citysize, 
+            rang,
+            time_spent=elapsed,
             distribution=configuration["distribution"],
             tsp_type=configuration["generation_type"],
             mutation_strategy=configuration["mutation_type"],
-            is_final=False
+            is_final=True
         )
 
     ic(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
 
-def experiment(_cities, _ranges, _mutations, distribution, tsp_type, mutation_strategy):    
+def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_type, mutation_strategy):    
     """
     Orchestrate experiments
     """ 
@@ -142,8 +145,12 @@ def experiment(_cities, _ranges, _mutations, distribution, tsp_type, mutation_st
     }
     for citysize in _cities:
         for rang in _ranges:
+            if f"{citysize},{rang}" in continuations:
+                run_single_experiment(config, citysize, rang, _mutations)
+                continue
+
             results_file = os.path.join("Results", f"{distribution}_{tsp_type}",
-                                        f"result{citysize}_{rang}_{mutation_strategy}.json")
+                                        f"city{citysize}_range{rang}_{mutation_strategy}.json")
             if os.path.exists(results_file):
                 ic(f"Skipping citysize={citysize}, range={rang}, already in Results.")
                 continue
