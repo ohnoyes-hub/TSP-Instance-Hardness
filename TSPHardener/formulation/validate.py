@@ -1,4 +1,3 @@
-# experiment_config.py
 from dataclasses import dataclass
 from typing import List, Union
 import ast
@@ -19,7 +18,7 @@ class ExperimentConfig:
         if self.size not in {20, 30}:
             raise ValueError(f"Invalid size: {self.size}. Only testing 20 or 30 for now")
             
-        if self.mutations != 15000:
+        if self.mutations != 23:
             raise ValueError(f"Unexpected mutation count: {self.mutations}")
 
         # Validate categorical values
@@ -50,12 +49,12 @@ def load_configs(csv_path: str) -> List[ExperimentConfig]:
                 # Convert string representations to Python objects
                 config = ExperimentConfig(
                     size=int(row['size']),
-                    ranges=ast.literal_eval(row['range']),
+                    ranges=ast.literal_eval(row['range'].strip('"')),
                     mutations=int(row['mutations']),
                     continuation=row['continuation'],
                     tsp_type=row['tsp type'].lower(),
                     distribution=row['distribution'].lower(),
-                    mutation_strategy=row['mutation type'].lower()
+                    mutation_strategy=row['mutation strategy'].lower()
                 )
                 configs.append(config)
             except (ValueError, SyntaxError, KeyError) as e:
