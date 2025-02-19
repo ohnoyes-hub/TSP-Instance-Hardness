@@ -1,9 +1,7 @@
 import json
 import numpy as np
 import os
-import logging
-
-logger = logging.getLogger(__name__)
+from icecream import ic
 
 def custom_decoder(obj):
     """
@@ -147,13 +145,13 @@ def save_partial(configuration, results, citysize, rang, time_spent,
         json.dump(existing_data, f, indent=2, default=custom_encoder)
 
     if is_final:
-        logger.info(f"Saved final results to: {full_path}")
+        ic(f"Saved final results to: {full_path}")
     else:
-        logger.info(f"Saved partial results to: {full_path}")
+        ic(f"Saved partial results to: {full_path}")
 
     #If final => remove from Continuation
     if is_final:
         cont_path = os.path.join("Continuation", f"{distribution}_{tsp_type}", base_name)
         if os.path.exists(cont_path):
             os.remove(cont_path)
-            logger.info(f"Removed continuation file {cont_path}")
+            ic(f"Removed continuation file {cont_path}")

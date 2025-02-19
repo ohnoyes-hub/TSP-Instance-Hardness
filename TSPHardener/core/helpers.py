@@ -8,8 +8,6 @@ from .algorithm import get_minimal_route
 from utils.json_utils import save_partial
 from utils.json_utils import load_partial
 
-logger = logging.getLogger(__name__)
-
 def initialize_matrix_and_hardest(citysize, rang, config):
     """Check if we have partial data; else generate new TSP."""
     cont_file = os.path.join("Continuation",
@@ -20,7 +18,7 @@ def initialize_matrix_and_hardest(citysize, rang, config):
             hardest, matrix = load_partial(cont_file)
             return hardest, matrix
         except Exception as e:
-            logger.error(f"Error loading partial: {e}")
+            logging.error(f"Error loading partial: {e}")
     
     # fallback => new matrix
     matrix = generate_tsp(citysize, config["generation_type"],
@@ -33,7 +31,7 @@ def process_mutation_iteration(j, matrix, hardest, hardest_matrix,
     """Process a single mutation iteration and return updated state."""
     iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
     if error:
-        logger.error(f"Error in iteration {j}: {error}")
+        logging.error(f"Error in iteration {j}: {error}")
         return hardest, hardest_matrix, matrix, None  # No results to record
     
     iteration_result = {
