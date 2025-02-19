@@ -1,6 +1,6 @@
 import time
-from icecream import ic
 import os
+import logging
 
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
 from .mutate_tsp import apply_mutation
@@ -62,7 +62,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         prev_hardest = hardest
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
-            ic(f"Error in iteration {j}: {error}")
+            logging.error(f"Error in iteration {j}: {error}")
             continue
 
         # Compare vs. hardest
@@ -77,7 +77,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
         # Early stop if 10k consecutive non-improving
         if non_improved_iterations >= 10000:
-            ic(f"Stopping early after {j} consecutive non-improving mutations.")
+            logging.info(f"Stopping early after {j} consecutive non-improving mutations.")
             break
 
         # Now mutate from the hardest matrix
@@ -131,7 +131,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_final=True
         )
 
-    ic(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
+    logging.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
 
 def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_type, mutation_strategy):    
     """
@@ -152,7 +152,7 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
             results_file = os.path.join("Results", f"{distribution}_{tsp_type}",
                                         f"city{citysize}_range{rang}_{mutation_strategy}.json")
             if os.path.exists(results_file):
-                ic(f"Skipping citysize={citysize}, range={rang}, already in Results.")
+                logging.debug(f"Skipping citysize={citysize}, range={rang}, already in Results.")
                 continue
             conf_with_params = {
                 **config,
@@ -160,4 +160,4 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
                 "range": rang
             }
             run_single_experiment(conf_with_params, citysize, rang, _mutations)
-    ic(f"Total experiment duration: {time.time() - t0:.2f}s")
+    logging.debug(f"Total experiment duration: {time.time() - t0:.2f}s")

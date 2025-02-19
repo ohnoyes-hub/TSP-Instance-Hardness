@@ -5,10 +5,10 @@ import json
 import os
 import glob
 import time
-from icecream import ic # debugging
-# job scripts stuff
-import argparse # for parsing arguments
-import ast # for converting string to list
+import logging
+from utils.log_util import init_logger
+import argparse
+import ast
 
 parser = argparse.ArgumentParser(description='Run the experiment with provided parameters.')
 
@@ -29,6 +29,7 @@ parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble'
 
 
 def main():
+    init_logger('experiment.log') 
     args = parser.parse_args()
     sizes = ast.literal_eval(args.sizes)
     ranges = ast.literal_eval(args.ranges)

@@ -1,5 +1,5 @@
 import numpy as np
-from icecream import ic
+import logging
 
 def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """
@@ -83,7 +83,7 @@ def triangle_inequality(matrix: np.ndarray) -> bool:
                         continue
                     # Check if the triangle inequality holds
                     if matrix[i, j] + matrix[j, k] < matrix[i, k]:
-                        ic(f"Triangle inequality failed for indices ({i}, {j}, {k})")
+                        logging.error(f"Triangle inequality failed for indices ({i}, {j}, {k})")
                         return False
 
         return True

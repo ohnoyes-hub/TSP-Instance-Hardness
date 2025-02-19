@@ -1,5 +1,4 @@
 import numpy as np
-from icecream import ic
 
 def permute_matrix(matrix) -> np.ndarray:
     """
@@ -215,7 +214,7 @@ def swap(tsp_type, matrix):
     if tsp_type == "euclidean":
         return swap_mutate_symmetric(matrix)
     elif tsp_type == "asymmetric":
-        return swap_mutate(matrix, )
+        return swap_mutate(matrix)
     else:
         raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
     

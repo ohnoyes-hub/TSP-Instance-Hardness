@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import time
-from icecream import ic
+import logging
 from .generate_tsp import generate_tsp
 from .mutate_tsp import apply_mutation
 from .algorithm import get_minimal_route
@@ -18,7 +18,7 @@ def initialize_matrix_and_hardest(citysize, rang, config):
             hardest, matrix = load_partial(cont_file)
             return hardest, matrix
         except Exception as e:
-            ic(f"Error loading partial: {e}")
+            logging.error(f"Error loading partial: {e}")
     
     # fallback => new matrix
     matrix = generate_tsp(citysize, config["generation_type"],
@@ -31,7 +31,7 @@ def process_mutation_iteration(j, matrix, hardest, hardest_matrix,
     """Process a single mutation iteration and return updated state."""
     iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
     if error:
-        ic(f"Error in iteration {j}: {error}")
+        logging.error(f"Error in iteration {j}: {error}")
         return hardest, hardest_matrix, matrix, None  # No results to record
     
     iteration_result = {
