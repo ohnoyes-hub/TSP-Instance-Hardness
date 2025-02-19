@@ -8,6 +8,7 @@ from .mutate_tsp import apply_mutation
 from utils.json_utils import save_partial
 from utils.file_utils import get_result_path
 
+logger = logging.getLogger(__name__)
 
 def run_single_experiment(configuration, citysize, rang, mutations):
     """
@@ -62,7 +63,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         prev_hardest = hardest
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
-            logging.error(f"Error in iteration {j}: {error}")
+            logger.error(f"Error in iteration {j}: {error}")
             continue
 
         # Compare vs. hardest
@@ -77,7 +78,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
         # Early stop if 10k consecutive non-improving
         if non_improved_iterations >= 10000:
-            logging.info(f"Stopping early after {j} consecutive non-improving mutations.")
+            logger.info(f"Stopping early after {j} consecutive non-improving mutations.")
             break
 
         # Now mutate from the hardest matrix
@@ -131,7 +132,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_final=True
         )
 
-    logging.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
+    logger.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
 
 def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_type, mutation_strategy):    
     """
@@ -152,7 +153,7 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
             results_file = os.path.join("Results", f"{distribution}_{tsp_type}",
                                         f"city{citysize}_range{rang}_{mutation_strategy}.json")
             if os.path.exists(results_file):
-                logging.debug(f"Skipping citysize={citysize}, range={rang}, already in Results.")
+                logger.debug(f"Skipping citysize={citysize}, range={rang}, already in Results.")
                 continue
             conf_with_params = {
                 **config,
@@ -160,4 +161,4 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
                 "range": rang
             }
             run_single_experiment(conf_with_params, citysize, rang, _mutations)
-    logging.debug(f"Total experiment duration: {time.time() - t0:.2f}s")
+    logger.debug(f"Total experiment duration: {time.time() - t0:.2f}s")

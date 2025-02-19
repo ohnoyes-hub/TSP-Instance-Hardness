@@ -30,9 +30,11 @@ parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble'
 
 def main():
     init_logger('experiment.log') 
+
     args = parser.parse_args()
     sizes = ast.literal_eval(args.sizes)
     ranges = ast.literal_eval(args.ranges)
+    logging.info(f"Started Experiment: {sizes} cities, {ranges} ranges, {args.mutations} mutations")
 
     # auto-detect continuation
     continuations = []
