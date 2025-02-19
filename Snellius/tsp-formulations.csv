@@ -1,0 +1,25 @@
+City Size,TSP Variant,Cost Distribution,Mutation Type
+20,Euclidean,Lognormal,Scramble
+20,Euclidean,Lognormal,Inplace
+20,Euclidean,Lognormal,Swap
+20,Euclidean,Uniform,Scramble
+20,Euclidean,Uniform,Inplace
+20,Euclidean,Uniform,Swap
+20,Asymmetric,Lognormal,Scramble
+20,Asymmetric,Lognormal,Inplace
+20,Asymmetric,Lognormal,Swap
+20,Asymmetric,Uniform,Scramble
+20,Asymmetric,Uniform,Inplace
+20,Asymmetric,Uniform,Swap
+30,Euclidean,Lognormal,Scramble
+30,Euclidean,Lognormal,Inplace
+30,Euclidean,Lognormal,Swap
+30,Euclidean,Uniform,Scramble
+30,Euclidean,Uniform,Inplace
+30,Euclidean,Uniform,Swap
+30,Asymmetric,Lognormal,Scramble
+30,Asymmetric,Lognormal,Inplace
+30,Asymmetric,Lognormal,Swap
+30,Asymmetric,Uniform,Scramble
+30,Asymmetric,Uniform,Inplace
+30,Asymmetric,Uniform,Swap
