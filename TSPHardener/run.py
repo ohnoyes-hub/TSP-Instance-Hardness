@@ -16,7 +16,7 @@ def run_experiment(config):
     mutations = config.mutations
     continuation = config.continuation
     
-    # Build command
+    # Formulation build command
     cmd = [
         'python3', '-m', 'experiment',
         json.dumps([city_size]),
@@ -31,6 +31,7 @@ def run_experiment(config):
     logging.info(f"Running: {' '.join(cmd)}")
     try:
         result = subprocess.run(cmd, check=True, text=True, capture_output=True)
+        
         logging.info(f"Completed: {cmd}")
         logging.debug(f"Output: {result.stdout}")
     except subprocess.CalledProcessError as e:
@@ -42,6 +43,5 @@ if __name__ == '__main__':
     init_logger('run.log')
     configs = load_configs('tsp-formulations.csv')
     
-    # processes = number of configurations
-    with Pool(processes=4) as pool:
+    with Pool(processes=24) as pool:
         pool.map(run_experiment, configs)

@@ -56,7 +56,6 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             mutation_strategy=configuration["mutation_type"],
             is_final=False
         )
-        partial_results["hard_instances"] = {}  # reset in-memory dict
 
     non_improved_iterations = 0
     for j in range(mutations):
@@ -114,8 +113,6 @@ def run_single_experiment(configuration, citysize, rang, mutations):
                 mutation_strategy=configuration["mutation_type"],
                 is_final=False
             )
-            # clear out just the "hard_instances" to keep memory down in Python
-            partial_results["hard_instances"] = {}
 
     # Final save (whatever is left in partial_results)
     if partial_results["hard_instances"] or partial_results["last_matrix"]:
@@ -161,4 +158,5 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
                 "range": rang
             }
             run_single_experiment(conf_with_params, citysize, rang, _mutations)
+            
     logger.debug(f"Total experiment duration: {time.time() - t0:.2f}s")
