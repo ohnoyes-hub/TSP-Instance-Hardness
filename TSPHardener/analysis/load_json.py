@@ -3,6 +3,9 @@ import json
 from utils.json_utils import custom_decoder
 from icecream import ic
 import glob
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def validate_json_structure(file_path, data):
     """Validate the structure and content of the experiment JSON data."""
@@ -28,7 +31,7 @@ def validate_json_structure(file_path, data):
             for key, instance in hard_instances.items():
                 if not key.startswith('iteration_'):
                     warnings.append(f"Invalid key in hard_instances: {key}")
-                required_instance_keys = {'iterations', 'hardest', 'matrix'}
+                required_instance_keys = {'iterations', 'hardest', 'matrix', 'optimal_cost'}
                 missing_instance_keys = required_instance_keys - instance.keys()
                 if missing_instance_keys:
                     errors.append(f"Instance {key} missing keys: {missing_instance_keys}")
@@ -65,6 +68,7 @@ def load_json(file_path):
         return None, [f"Unexpected error: {str(e)}"], []
 
 def main():
+    os.makedirs('./plot', exist_ok=True)
     # Paths to check - adjust according to your data location
     base_dirs = [
         #"../Results",
@@ -77,7 +81,6 @@ def main():
     detailed_issues = []
 
     for base_dir in base_dirs:
-        # Use glob to recursively find all JSON files
         pattern = os.path.join(base_dir, '**', '*.json')
         json_files = glob.glob(pattern, recursive=True)
         
@@ -85,6 +88,7 @@ def main():
             total_files += 1
             data, errors, warnings = load_json(file_path)
 
+            # Collect issues regardless of errors
             if errors or warnings:
                 entry = {
                     "file": file_path,
@@ -95,36 +99,66 @@ def main():
                 if errors: error_files += 1
                 if warnings: warning_files += 1
 
+            # Generate plot if data is valid
+            if data is not None and not errors:
+                hard_instances = data['results']['hard_instances']
+                plot_data = []
+                
+                for key, instance in hard_instances.items():
+                    if not key.startswith('iteration_'):
+                        continue
+                    try:
+                        iteration_num = int(key.split('_')[-1])
+                    except ValueError:
+                        continue
+                    
+                    # Extract values and ensure they are numeric
+                    iterations_val = instance.get('iterations')
+                    hardest_val = instance.get('hardest')
+                    if not isinstance(iterations_val, (int, float)) or not isinstance(hardest_val, (int, float)):
+                        continue
+                    
+                    plot_data.append({
+                        'iteration': iteration_num,
+                        'iterations': iterations_val,
+                        'hardest': hardest_val
+                    })
+                
+                if plot_data:
+                    df = pd.DataFrame(plot_data)
+                    df_melted = df.melt(id_vars='iteration', var_name='metric', value_name='value')
+                    
+                    plt.figure(figsize=(10, 6))
+                    sns.lineplot(data=df_melted, x='iteration', y='value', hue='metric', marker='o')
+                    plt.title(f"Iteration Metrics: {os.path.basename(file_path)}")
+                    plt.xlabel("Iteration Number")
+                    plt.ylabel("Value")
+                    
+                    # Save plot
+                    plot_name = os.path.basename(file_path).replace('.json', '.png')
+                    plot_path = os.path.join('plot', plot_name)
+                    plt.savefig(plot_path, bbox_inches='tight')
+                    plt.close()    
+                    
     # Print summary
-    print(f"\n=== Validation Summary ===")
-    print(f"Total files checked: {total_files}")
-    print(f"Files with errors: {error_files}")
-    print(f"Files with warnings: {warning_files}")
+    ic("=== Validation Summary ===")
+    ic(total_files)
+    ic(error_files)
+    ic(warning_files)
 
     # Print detailed issues
     if detailed_issues:
-        print("\n=== Detailed Issues ===")
+        ic("=== Detailed Issues ===")
         for issue in detailed_issues:
-            print(f"\nFile: {issue['file']}")
+            ic(issue['file'])
             if issue['errors']:
-                print("  Errors:")
+                ic("Errors:")
                 for err in issue['errors']:
-                    print(f"  - {err}")
+                    ic(err)
             if issue['warnings']:
-                print("  Warnings:")
+                ic("  Warnings:")
                 for warn in issue['warnings']:
-                    print(f"  - {warn}")
+                    ic(warn)
 
 if __name__ == "__main__":
     main()
-
-# with open("Continuation/uniform_asymmetric/city19_range17_wouter.json", 'r') as f:
-#     data = json.load(f, object_hook=custom_decoder)
-
-# ic(data.keys())
-# ic(data['configuration'].keys())
-# ic(data['results'].keys())
-# ic(data['time'])
-# ic(data['results']['hard_instances'].keys())
-# ic(data['results']['hard_instances']['iteration_1'].keys())
-# ic(data['results']['last_matrix'])
