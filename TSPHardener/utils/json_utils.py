@@ -109,7 +109,8 @@ def save_partial(configuration, results, citysize, rang, time_spent,
             },
             ...
         },
-        "last_matrix": <the *current* matrix as a 2D list>
+        "last_matrix": <the *current* matrix as a 2D list>,
+        "all_iterations": <list of all Lital's iter>
       }
     """
     base_name = f"city{citysize}_range{rang}_{mutation_strategy}.json"
@@ -125,16 +126,16 @@ def save_partial(configuration, results, citysize, rang, time_spent,
         with open(full_path, "r") as f:
             existing_data = json.load(f, object_hook=custom_decoder)
         existing_data["time"] += time_spent
-        # Merge partial_results["hard_instances"] in
-        if "hard_instances" not in existing_data["results"]:
-            existing_data["results"]["hard_instances"] = {}
-        existing_data["results"]["hard_instances"].update(
-            results.get("hard_instances", {})
-        )
-        # Overwrite the last_matrix
+
+        # Merge `all_iterations`
+        existing_iterations = existing_data["results"].get("all_iterations", [])
+        new_iterations = results.get("all_iterations", [])
+        existing_data["results"]["all_iterations"] = existing_iterations + new_iterations  # Append new values
+
+        # Update `last_matrix` and `hard_instances`
         existing_data["results"]["last_matrix"] = results["last_matrix"]
+        existing_data["results"]["hard_instances"].update(results["hard_instances"])
     else:
-        # New structure
         existing_data = {
             "time": time_spent,
             "configuration": configuration,
@@ -145,15 +146,19 @@ def save_partial(configuration, results, citysize, rang, time_spent,
     # Write
     with open(full_path, "w") as f:
         json.dump(existing_data, f, indent=2, default=custom_encoder)
-
-    if is_final:
-        logger.info(f"Saved final results to: {full_path}")
-    else:
-        logger.info(f"Saved partial results to: {full_path}")
-
+    
     #If final => remove from Continuation
     if is_final:
+        logger.info(f"Saved final results to: {full_path}")
         cont_path = os.path.join("Continuation", f"{distribution}_{tsp_type}", base_name)
         if os.path.exists(cont_path):
             os.remove(cont_path)
             logger.info(f"Removed continuation file {cont_path}")
+    else:
+        logger.info(f"Saved partial results to: {full_path}")
+
+def load_full_results(cont_file):
+    """Loads entire results from a continuation file."""
+    with open(cont_file, "r") as f:
+        data = json.load(f, object_hook=custom_decoder)
+    return data.get("results", {})
