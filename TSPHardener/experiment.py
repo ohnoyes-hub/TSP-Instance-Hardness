@@ -1,11 +1,6 @@
 from utils.file_utils import get_result_path
 from core.experiment import experiment
-import numpy as np
-import json
 import os
-import glob
-import time
-import logging
 from utils.log_util import init_logger
 import argparse
 import ast
@@ -38,8 +33,14 @@ def main():
     continuations = []
     for citysize in sizes:
         for rang in ranges:
-            result_file = get_result_path(citysize, rang, args.distribution, 
-                                        args.tsp_type, args.mutation_strategy, is_final=True)
+            result_file = get_result_path(
+                citysize, 
+                rang, 
+                args.distribution, 
+                args.tsp_type, 
+                args.mutation_strategy, 
+                is_final=True
+            )
             if os.path.exists(result_file):
                 continue  # Skip completed experiments
 

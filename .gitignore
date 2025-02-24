@@ -249,3 +249,10 @@ IncompleteRuns/
 FirstRuns/
 data/
 Littles-Algorithm-Sleegers-et-al.-master/
+
+# Temp folders
+Aux/
+
+# Data folders
+**/Result/
+**/Continuation/

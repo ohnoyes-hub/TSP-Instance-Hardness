@@ -1,6 +1,8 @@
 import numpy as np
 import logging
 
+logger = logging.getLogger(__name__)
+
 def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """
     Generate a random cost matrix of size n x n with values in the range [1, upper) for a asymmetric TSP.
@@ -83,7 +85,7 @@ def triangle_inequality(matrix: np.ndarray) -> bool:
                         continue
                     # Check if the triangle inequality holds
                     if matrix[i, j] + matrix[j, k] < matrix[i, k]:
-                        logging.error(f"Triangle inequality failed for indices ({i}, {j}, {k})")
+                        logger.error(f"Triangle inequality failed for indices ({i}, {j}, {k})")
                         return False
 
         return True
