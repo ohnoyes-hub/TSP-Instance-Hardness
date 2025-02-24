@@ -50,6 +50,8 @@ def main():
     # Mutation Type
     plt.subplot(1, 3, 1)
     sns.violinplot(x='mutation_type', y='hardest', data=df)
+    # change to swarmplot if (> 10000) points
+    sns.stripplot(x='mutation_type', y='hardest', data=df, color='black', alpha=0.5) # comment to just see violin plot
     plt.title('By Mutation Type')
     plt.xlabel('Mutation Type')
     plt.ylabel("Lital's Iterations (hardest)")
@@ -58,6 +60,7 @@ def main():
     # Generation Type
     plt.subplot(1, 3, 2)
     sns.violinplot(x='generation_type', y='hardest', data=df)
+    sns.stripplot(x='generation_type', y='hardest', data=df, color='black', alpha=0.5) # comment to just see violin plot
     plt.title('By Generation Type')
     plt.xlabel('Generation Type')
     plt.ylabel('')
@@ -66,6 +69,7 @@ def main():
     # Distribution
     plt.subplot(1, 3, 3)
     sns.violinplot(x='distribution', y='hardest', data=df)
+    sns.stripplot(x='distribution', y='hardest', data=df, color='black', alpha=0.5) # comment to just see violin plot
     plt.title('By Distribution')
     plt.xlabel('Distribution')
     plt.ylabel('')
@@ -76,7 +80,7 @@ def main():
 
     # Save plot
     os.makedirs('./plot/violin_config', exist_ok=True)
-    plot_path = os.path.join('./plot/violin_config', 'violin_by_config.png')
+    plot_path = os.path.join('./plot/violin_config', 'stripplot_violin_by_config.png')
     plt.savefig(plot_path, bbox_inches='tight')
     plt.close()
 
