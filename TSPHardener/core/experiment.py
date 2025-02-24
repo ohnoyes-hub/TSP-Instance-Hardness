@@ -5,9 +5,10 @@ import logging
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
 from .mutate_tsp import apply_mutation
 
-from utils.json_utils import save_partial
+from utils.json_utils import save_partial, load_full_results
 from utils.file_utils import get_result_path
 
+logger = logging.getLogger(__name__)
 
 def run_single_experiment(configuration, citysize, rang, mutations):
     """
@@ -18,13 +19,15 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     The resulting structure is LIFO, i.e.
       partial_results = {
         "hard_instances": { ... },
-        "last_matrix": [ ... ]
+        "last_matrix": [ ... ],
+        "all_iterations": [ ... ]
       }
     """
     start_time = time.time()
     partial_results = {
         "hard_instances": {},
-        "last_matrix": []
+        "last_matrix": [],
+        "all_iterations": []
     }
 
     # Load from partial or generate new
@@ -32,11 +35,21 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     hardest_matrix = matrix.copy()
 
     # If no partial file existed => store the initial as iteration_0
-    cont_file = os.path.join("Continuation",
-                             f"{configuration['distribution']}_{configuration['generation_type']}",
-                             f"city{citysize}_range{rang}_{configuration['mutation_type']}.json"
-                            )
-    if not os.path.exists(cont_file):
+    cont_file = get_result_path(
+        citysize, 
+        rang, 
+        configuration["distribution"],
+        configuration["generation_type"],
+        configuration["mutation_type"],
+        is_final=False
+    )
+    if os.path.exists(cont_file):
+        try:
+            existing_data = load_full_results(cont_file)
+            partial_results["all_iterations"] = existing_data.get("all_iterations", [])
+        except Exception as e:
+            logger.error(f"Error loading continuation: {e}")
+    else:
         # treat the initial matrix as a "hard" instance (iteration=0)
         partial_results["hard_instances"]["iteration_0"] = {
             "iterations": 0,
@@ -55,15 +68,16 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             mutation_strategy=configuration["mutation_type"],
             is_final=False
         )
-        partial_results["hard_instances"] = {}  # reset in-memory dict
 
     non_improved_iterations = 0
     for j in range(mutations):
         prev_hardest = hardest
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
-            logging.error(f"Error in iteration {j}: {error}")
+            logger.error(f"Error in iteration {j}: {error}")
             continue
+        
+        partial_results["all_iterations"].append(iterations)
 
         # Compare vs. hardest
         is_hardest = False
@@ -77,7 +91,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
         # Early stop if 10k consecutive non-improving
         if non_improved_iterations >= 10000:
-            logging.info(f"Stopping early after {j} consecutive non-improving mutations.")
+            logger.info(f"Stopping early after {j} consecutive non-improving mutations.")
             break
 
         # Now mutate from the hardest matrix
@@ -99,7 +113,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
                 "matrix": hardest_matrix.tolist(),
                 "is_hardest": True
             }
-
+        
         # Periodically (or when new hardest) do a partial save
         # j % 100 == 0
         # or "is_hardest" scenario:
@@ -113,8 +127,6 @@ def run_single_experiment(configuration, citysize, rang, mutations):
                 mutation_strategy=configuration["mutation_type"],
                 is_final=False
             )
-            # clear out just the "hard_instances" to keep memory down in Python
-            partial_results["hard_instances"] = {}
 
     # Final save (whatever is left in partial_results)
     if partial_results["hard_instances"] or partial_results["last_matrix"]:
@@ -131,7 +143,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_final=True
         )
 
-    logging.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
+    logger.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
 
 def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_type, mutation_strategy):    
     """
@@ -149,10 +161,16 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
                 run_single_experiment(config, citysize, rang, _mutations)
                 continue
 
-            results_file = os.path.join("Results", f"{distribution}_{tsp_type}",
-                                        f"city{citysize}_range{rang}_{mutation_strategy}.json")
+            results_file = get_result_path(
+                citysize, 
+                rang, 
+                distribution, 
+                tsp_type, 
+                mutation_strategy, 
+                is_final=True
+            )
             if os.path.exists(results_file):
-                logging.debug(f"Skipping citysize={citysize}, range={rang}, already in Results.")
+                logger.debug(f"Skipping citysize={citysize}, range={rang}, already in Results.")
                 continue
             conf_with_params = {
                 **config,
@@ -160,4 +178,5 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
                 "range": rang
             }
             run_single_experiment(conf_with_params, citysize, rang, _mutations)
-    logging.debug(f"Total experiment duration: {time.time() - t0:.2f}s")
+            
+    logger.debug(f"Total experiment duration: {time.time() - t0:.2f}s")

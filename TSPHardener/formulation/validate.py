@@ -2,6 +2,9 @@ from dataclasses import dataclass
 from typing import List, Union
 import ast
 import csv
+import logging
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class ExperimentConfig:
@@ -58,7 +61,7 @@ def load_configs(csv_path: str) -> List[ExperimentConfig]:
                 )
                 configs.append(config)
             except (ValueError, SyntaxError, KeyError) as e:
-                print(f"Error in row {row_idx}: {str(e)}")
-                print(f"Problematic row: {row}")
+                logger.error(f"Error in row {row_idx}: {str(e)}")
+                logger.error(f"Problematic row: {row}")
                 continue
     return configs

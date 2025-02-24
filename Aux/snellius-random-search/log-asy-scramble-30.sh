@@ -4,7 +4,7 @@
 #SBATCH --partition=rome
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=1
 #SBATCH --mail-type=BEGIN,END
 #SBATCH --mail-user=tdtsijpkens@gmail.com
 
