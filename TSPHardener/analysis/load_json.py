@@ -1,11 +1,8 @@
-import os
 import json
 from utils.json_utils import custom_decoder
-from icecream import ic
+import os
 import glob
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+from icecream import ic
 
 def validate_json_structure(data):
     """
@@ -35,7 +32,7 @@ def validate_json_structure(data):
     # Check 'results' structure
     if 'results' in data:
         results = data['results']
-        required_results_keys = {'hard_instances', 'last_matrix'} #, 'all_iterations'}
+        required_results_keys = {'hard_instances', 'last_matrix', 'all_iterations'}
         missing_results_keys = required_results_keys - results.keys()
         if missing_results_keys:
             errors.append(f"Missing 'results' keys: {missing_results_keys}")
@@ -54,6 +51,11 @@ def validate_json_structure(data):
             last_matrix = results['last_matrix']
             if not isinstance(last_matrix, list) or not all(isinstance(row, list) for row in last_matrix):
                 errors.append("'last_matrix' must be a 2D list")
+            
+            # Validate all_iterations structure
+            all_iterations = results.get('all_iterations', [])
+            if not isinstance(all_iterations, list):
+                errors.append("'all_iterations' must be a list of iteration integers")
 
     # Check configuration content
     if 'configuration' in data:
@@ -95,4 +97,3 @@ def load_json(file_path):
     
     errors, warnings = validate_json_structure(data)
     return data, errors, warnings
-
