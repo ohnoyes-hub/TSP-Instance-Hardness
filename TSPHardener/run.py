@@ -43,5 +43,5 @@ if __name__ == '__main__':
     init_logger('run.log')
     configs = load_configs('tsp-formulations.csv')
     
-    with Pool(processes=24) as pool:
+    with Pool(processes=64) as pool:
         pool.map(run_experiment, configs)
