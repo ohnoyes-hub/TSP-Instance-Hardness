@@ -19,7 +19,7 @@ def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.nda
         - For 'lognormal', this is the sigma parameter.
     """
     if distribution == 'uniform':
-        matrix = np.random.random((n, n)) * int(control)
+        matrix = np.random.random((n, n)) * control
     elif distribution == 'lognormal':
         matrix = (np.random.lognormal(mean=10, sigma=control, size=(n, n))).astype(float) # mean = 10 always in experiments
     else:
@@ -52,9 +52,14 @@ def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions
     """
     # Generate random coordinates for n points in the given dimension
     if distribution == 'uniform':
-        points = np.random.random((n, dimensions)) * int(control)
+        # scale coordinates to cap at control parameter
+        scale = control / np.sqrt(dimensions)
+        points = np.random.random((n, dimensions)) * scale
     elif distribution == 'lognormal':
         points = np.random.lognormal(mean=10, sigma=control, size=(n, dimensions))
+        # scale coordinates to have a mean distance of 10
+        scaling_factor = 10 /np.mean(np.linalg.norm(points, axis=1))
+        points *= scaling_factor
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     # points = np.random.random((n, dimensions))
@@ -118,3 +123,6 @@ def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarra
         return generate_asymmetric_tsp(city_size, distribution, control)
     else:
         raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
+    
+# from icecream import ic
+# ic(generate_tsp(4, "euclidean", "uniform", 100).round(1))

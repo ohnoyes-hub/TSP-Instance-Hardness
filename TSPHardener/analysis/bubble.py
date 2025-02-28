@@ -57,7 +57,7 @@ def main():
         y='generation',
         size='mean_hardest',
         hue='distribution',
-        sizes=(50, 100),  # Adjust min/max bubble sizes
+        sizes=(50, 100),
         alpha=0.7,
         palette='viridis'
     )

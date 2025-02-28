@@ -4,7 +4,6 @@ import logging
 
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
 from .mutate_tsp import apply_mutation
-
 from utils.json_utils import save_partial, load_full_results
 from utils.file_utils import get_result_path
 
@@ -16,7 +15,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     If a results file is in Results, we skip.
     Otherwise we check Continuation for partial progress.
 
-    The resulting structure is LIFO, i.e.
+    The resulting structure is:
       partial_results = {
         "hard_instances": { ... },
         "last_matrix": [ ... ],
@@ -25,6 +24,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     """
     start_time = time.time()
     partial_results = {
+        "initial_matrix": [],
         "hard_instances": {},
         "last_matrix": [],
         "all_iterations": []
@@ -47,9 +47,16 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         try:
             existing_data = load_full_results(cont_file)
             partial_results["all_iterations"] = existing_data.get("all_iterations", [])
+            partial_results["initial_matrix"] = existing_data.get("initial_matrix", [])
+            partial_results["hard_instances"] = existing_data.get("hard_instances", {})
+            partial_results["last_matrix"] = existing_data.get("last_matrix", [])
+            partial_results["all_iterations"] = existing_data.get("all_iterations", [])
         except Exception as e:
             logger.error(f"Error loading continuation: {e}")
     else:
+        # No partial => new initial TSP matrix => store it
+        partial_results["initial_matrix"] = matrix.tolist() 
+
         # treat the initial matrix as a "hard" instance (iteration=0)
         partial_results["hard_instances"]["iteration_0"] = {
             "iterations": 0,
@@ -61,7 +68,10 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         }
         partial_results["last_matrix"] = matrix.tolist()
         save_partial(
-            configuration, partial_results, citysize, rang,
+            configuration, 
+            partial_results,
+            citysize, 
+            rang,
             time_spent=0,
             distribution=configuration["distribution"],
             tsp_type=configuration["generation_type"],
@@ -69,15 +79,14 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_final=False
         )
 
-    non_improved_iterations = 0
     for j in range(mutations):
         prev_hardest = hardest
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
             logger.error(f"Error in iteration {j}: {error}")
             continue
-        
-        partial_results["all_iterations"].append(iterations)
+        else:
+            partial_results["all_iterations"].append(iterations)
 
         # Compare vs. hardest
         is_hardest = False
@@ -86,13 +95,6 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             hardest_matrix = matrix.copy()
             is_hardest = True
             non_improved_iterations = 0
-        else:
-            non_improved_iterations += 1
-
-        # Early stop if 10k consecutive non-improving
-        if non_improved_iterations >= 10000:
-            logger.info(f"Stopping early after {j} consecutive non-improving mutations.")
-            break
 
         # Now mutate from the hardest matrix
         matrix = apply_mutation(hardest_matrix, configuration["mutation_type"],
@@ -120,7 +122,10 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         if (j % 100 == 0) or is_hardest:
             elapsed = time.time() - start_time
             save_partial(
-                configuration, partial_results, citysize, rang,
+                configuration, 
+                partial_results, 
+                citysize, 
+                rang,
                 time_spent=0,
                 distribution=configuration["distribution"],
                 tsp_type=configuration["generation_type"],
@@ -147,7 +152,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
 def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_type, mutation_strategy):    
     """
-    Orchestrate experiments
+    Orchestrates an experiment with configuration
     """ 
     t0 = time.time()
     config = {
@@ -179,4 +184,4 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
             }
             run_single_experiment(conf_with_params, citysize, rang, _mutations)
             
-    logger.debug(f"Total experiment duration: {time.time() - t0:.2f}s")
+    logger.info(f"Total experiment duration: {time.time() - t0:.2f}s")
