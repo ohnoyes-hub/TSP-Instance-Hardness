@@ -71,25 +71,29 @@ def swap_mutate(matrix) -> np.ndarray:
     matrix : np.ndarray
         The distance matrix to mutate.
     """
-    matrix = matrix.copy()
+    arr = matrix.copy()
+    rows, cols = arr.shape
+    total_elements = rows * cols
     
-    n = len(matrix)
-    # swap index (i,j) with (k, l)
-    i, j, k, l = np.random.randint(0, n), np.random.randint(0, n), np.random.randint(0, n), np.random.randint(0, n)
+    def get_off_diag_index():
+        while True:
+            idx = np.random.randint(total_elements)
+            i = idx // cols
+            j = idx % cols
+            if i != j:
+                return (i, j)
     
-    # Ensure that indices are not the same
-    while i == k and j == l:
-        k, l = np.random.randint(0, n), np.random.randint(0, n)
-        # Ensure that the indices are not diagonal
-        while i == j or k == l:
-            j = np.random.randint(0, n)
-            k = np.random.randint(0, n)
-    
-    # Swap the elements
-    # temp = matrix[i, j]
-    matrix[i, j], matrix[k, l] = matrix[k, l], matrix[i, j]
+    i1, j1 = get_off_diag_index()
 
-    return matrix
+    # second off-diagonal index
+    while True:
+        i2, j2 = get_off_diag_index()
+        if (i1, j1) != (i2, j2):
+            break
+
+    # Swap values
+    arr[i1][j1], arr[i2][j2] = arr[i2][j2], arr[i1][j1]
+    return arr
 
 def swap_mutate_symmetric(matrix) -> np.ndarray:
     """
@@ -100,30 +104,30 @@ def swap_mutate_symmetric(matrix) -> np.ndarray:
     matrix : np.ndarray
         The distance matrix to mutate.
     """
-    matrix = matrix.copy()
+    arr = matrix.copy()
+    n = arr.shape[0]
+
+    if n < 3:
+        raise ValueError("City size must be at least 3 or greater for swapping.")
     
-    n = len(matrix)
+    def get_upper_triangle_index():
+        i = np.random.randint(n - 1)
+        j = np.random.randint(i + 1, n)
+        return (i, j)
+    
+    i1, j1 = get_upper_triangle_index()
     
     while True:
-        i, j = np.random.randint(0, n), np.random.randint(0, n)
-        k, l = np.random.randint(0, n), np.random.randint(0, n)
-        # Ensure that indices are not the same
-        while i == k and j == l:
-            k, l = np.random.randint(0, n), np.random.randint(0, n)
-            # Ensure that the indices are not diagonal
-            while i == j or k == l:
-                j = np.random.randint(0, n)
-                k = np.random.randint(0, n)
-        
-        # Ensure that the elements are in the upper triangle (i < j and k < l)
-        if i < j and k < l and (i != k or j != l):
+        i2, j2 = get_upper_triangle_index()
+        if (i2, j2) != (i1, j1):
             break
-        
-    # Swap the elements
-    matrix[i, j], matrix[k, l] = matrix[k, l], matrix[i, j]
-    matrix[j, i], matrix[l, k] = matrix[l, k], matrix[j, i]  # Mirror the value in the lower triangle
-    # print(f"Swapped ({i}, {j}) with ({k}, {l})")
-    return matrix
+    
+    # Swap upper triangle and mirror to lower
+    arr[i1, j1], arr[i2, j2] = arr[i2, j2], arr[i1, j1]
+    arr[j1, i1] = arr[i1, j1]
+    arr[j2, i2] = arr[i2, j2]
+    
+    return arr
  
 
 def mutate_matrix(distribution, _matrix, _control):
@@ -247,4 +251,3 @@ def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
         return mutate(distribution, tsp_type, matrix, control)
     else:
         raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
-    
