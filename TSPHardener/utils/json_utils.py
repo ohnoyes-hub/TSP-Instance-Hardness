@@ -58,7 +58,7 @@ def load_partial(cont_file):
               "iteration_150": {...},  # next hardest
                ...
           },
-          "last_matrix": [ ... ]  # needed to continue
+          "last_matrix": [ ... ]  # the last hard matrix
       }
     }
     """
@@ -135,6 +135,10 @@ def save_partial(configuration, results, citysize, rang, time_spent,
         # Update `last_matrix` and `hard_instances`
         existing_data["results"]["last_matrix"] = results["last_matrix"]
         existing_data["results"]["hard_instances"].update(results["hard_instances"])
+
+        # Update `initial_matrix` if it's not already there
+        if "initial_matrix" not in existing_data["results"]:
+            existing_data["results"]["initial_matrix"] = results["initial_matrix"]
     else:
         existing_data = {
             "time": time_spent,
