@@ -61,3 +61,6 @@ def visualize_iteration_counts(directory_path):
     
     plt.tight_layout()
     plt.show()
+
+if __name__ == '__main__':
+    visualize_iteration_counts('Results/**/*.json')
