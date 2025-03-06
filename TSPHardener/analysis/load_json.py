@@ -3,6 +3,8 @@ from utils.json_utils import custom_decoder
 import os
 import glob
 from icecream import ic
+import pandas as pd
+from typing import Tuple, Dict, List
 
 def validate_json_structure(data):
     """
@@ -97,3 +99,78 @@ def load_json(file_path):
     
     errors, warnings = validate_json_structure(data)
     return data, errors, warnings
+
+def load_experiment_data(base_path: str = '.') -> Tuple[pd.DataFrame, List[str]]:
+    """
+    Load all experiment data from Results and Continuation folders into a DataFrame.
+    
+    Parameters:
+    -----------
+    base_path : str, optional
+        Base directory path (default is current directory)
+    
+    Returns:
+    --------
+    pd.DataFrame
+        Combined data with columns: ['city_size', 'range', 'mutation_type',
+        'generation_type', 'distribution', 'iteration']
+    List[str]
+        List of error messages for problematic files
+    """
+    # Collect files from both directories
+    pattern = os.path.join(base_path, '{Results,Continuation}', '**', 'city*_range*.json')
+    files = glob.glob(pattern, recursive=True)
+    
+    data = []
+    errors = []
+    
+    for file_path in files:
+        try:
+            # Extract parameters from filename
+            filename = os.path.basename(file_path)
+            city_part, range_part = filename.split('_')[:2]
+            city_size = int(city_part.replace('city', ''))
+            control_range = int(range_part.replace('range', '').split('.')[0])
+            
+            # Load and validate JSON
+            json_data, file_errors, warnings = load_json(file_path)
+            
+            if file_errors:
+                errors.append(f"{filename}: {', '.join(file_errors)}")
+                continue
+                
+            # Extract configuration and iterations
+            config = json_data.get('configuration', {})
+            iterations = json_data.get('results', {}).get('all_iterations', [])
+            
+            # Skip files with no iterations
+            if not iterations:
+                errors.append(f"{filename}: No iterations found")
+                continue
+                
+            # Add each iteration as a row
+            for iteration in iterations:
+                data.append({
+                    'city_size': city_size,
+                    'range': control_range,
+                    'mutation_type': config.get('mutation_type'),
+                    'generation_type': config.get('generation_type'),
+                    'distribution': config.get('distribution'),
+                    'iteration': iteration
+                })
+                
+        except Exception as e:
+            errors.append(f"{filename}: {str(e)}")
+            continue
+    
+    return pd.DataFrame(data), errors
+
+# Load data from current directory
+df, errors = load_experiment_data()
+
+# Print summary
+print(f"Encountered {len(errors)} errors:\n", "\n".join(errors[:3]))
+
+# Quick stats
+print("\nConfiguration performance:")
+print(df.groupby(['distribution'])['iteration'].describe())

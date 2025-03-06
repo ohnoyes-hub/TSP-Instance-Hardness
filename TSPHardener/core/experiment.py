@@ -15,7 +15,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     If a results file is in Results, we skip.
     Otherwise we check Continuation for partial progress.
 
-    The resulting structure is:
+    The structure is:
       partial_results = {
         "hard_instances": { ... },
         "last_matrix": [ ... ],
@@ -79,8 +79,8 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_final=False
         )
 
-    for j in range(mutations):
-        prev_hardest = hardest
+    start_iter = len(partial_results["all_iterations"]) # don't start from 0 for continuation. New files will automatically start from 0.
+    for j in range(start_iter, mutations):
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
             logger.error(f"Error in iteration {j}: {error}")
