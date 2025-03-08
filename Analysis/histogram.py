@@ -7,7 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-base_dir = "./CombinedData"
+base_dir = "./Results"
 
 configurations = []
 runs_data = {}

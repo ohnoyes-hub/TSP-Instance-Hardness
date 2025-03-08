@@ -1,2 +1,5 @@
 numpy
 icecream
+matplotlib
+pandas
+seaborn
