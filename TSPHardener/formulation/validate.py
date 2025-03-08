@@ -21,7 +21,7 @@ class ExperimentConfig:
         if self.size not in {20, 30}:
             raise ValueError(f"Invalid size: {self.size}. Only testing 20 or 30 for now")
             
-        if self.mutations != 10000:
+        if self.mutations != 1000:
             raise ValueError(f"Unexpected mutation count: {self.mutations}")
 
         # Validate categorical values

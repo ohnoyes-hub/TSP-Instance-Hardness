@@ -18,7 +18,7 @@ def run_experiment(config):
     
     # Formulation build command
     cmd = [
-        'python3', '-m', 'experiment',
+        'python3', '-m', 'main',
         json.dumps([city_size]),
         json.dumps(ranges),
         str(mutations),
