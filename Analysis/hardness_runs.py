@@ -26,10 +26,7 @@ def extract_control_parameter(file_name):
 
 # Specify base directory and configurations to process
 base_dir = "./CombinedData"
-target_configurations = [
-    "uniform_euclidean_scramble_size20",
-    "uniform_asymmetric_wouter_size30"
-]
+#target_configurations = TODO
 
 data = []
 
