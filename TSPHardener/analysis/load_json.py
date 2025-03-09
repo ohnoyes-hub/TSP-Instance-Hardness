@@ -4,6 +4,7 @@ import os
 import glob
 from icecream import ic
 import pandas as pd
+from collections import defaultdict
 from typing import Tuple, Dict, List
 
 def validate_json_structure(data):
@@ -136,7 +137,10 @@ def load_all_hard_instances() -> pd.DataFrame:
     Returns:
         pd.DataFrame: DataFrame containing each hardest instance's data merged with its configuration.
     """
-    base_dirs = ["./Continuation", "./Results"]
+    base_dirs = [
+        "./Continuation", 
+        "./Results"
+    ]
     all_instances = []
 
     for base_dir in base_dirs:
@@ -168,7 +172,6 @@ def load_all_hard_instances() -> pd.DataFrame:
 
                 # Merge instance data with configuration
                 entry = {
-                    'file_path': file_path,
                     'iteration_num': iteration_num,
                     'iterations': iterations_val,
                     'hardest_value': hardest_val,
@@ -177,3 +180,37 @@ def load_all_hard_instances() -> pd.DataFrame:
                 all_instances.append(entry)
     
     return pd.DataFrame(all_instances)
+
+def load_lon_data() -> Tuple[Dict, defaultdict]:
+    """
+    Loads all LON data (local_optima and transitions) from JSON files.
+    """
+    all_data = load_full()
+    global_local_optima = {}
+    global_transitions = defaultdict(list)
+
+    for data in all_data:
+        results = data.get('results', {})
+
+        local_optima = {}
+        for key_str, value in results.get("local_optima", {}).items():
+            try:
+                key = int(key_str)  # Convert JSON string keys to integers
+                local_optima[key] = value
+            except ValueError:
+                continue  # Skip invalid keys
+        
+        # Process transitions (convert keys/dests to integers)
+        transitions = results.get("transitions", {})
+        for src_str, dests in transitions.items():
+            try:
+                src = int(src_str)  # Convert source key to integer
+                valid_dests = [int(d) for d in dests if isinstance(d, (int, str))]
+                global_transitions[src].extend(valid_dests)
+            except ValueError:
+                continue  # Skip invalid keys
+
+        # Merge local_optima
+        global_local_optima.update(local_optima)
+
+    return global_local_optima, global_transitions
