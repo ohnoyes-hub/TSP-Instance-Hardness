@@ -62,7 +62,7 @@ def validate_json_structure(data):
     # Check configuration content
     if 'configuration' in data:
         config = data['configuration']
-        required_config_keys = {'mutation_type', 'generation_type', 'distribution'}
+        required_config_keys = {'mutation_type', 'generation_type', 'distribution', 'city_size', 'range'}
         missing_config_keys = required_config_keys - config.keys()
         if missing_config_keys:
             warnings.append(f"Configuration missing keys: {missing_config_keys}")
@@ -100,77 +100,80 @@ def load_json(file_path):
     errors, warnings = validate_json_structure(data)
     return data, errors, warnings
 
-# def load_experiment_data(base_path: str = '.') -> Tuple[pd.DataFrame, List[str]]:
-#     """
-#     Load all experiment data from Results and Continuation folders into a DataFrame.
-    
-#     Parameters:
-#     -----------
-#     base_path : str, optional
-#         Base directory path (default is current directory)
-    
-#     Returns:
-#     --------
-#     pd.DataFrame
-#         Combined data with columns: ['city_size', 'range', 'mutation_type',
-#         'generation_type', 'distribution', 'iteration']
-#     List[str]
-#         List of error messages for problematic files
-#     """
-#     # Collect files from both directories
-#     pattern = os.path.join(base_path, '{Results,Continuation}', '**', 'city*_range*.json')
-#     files = glob.glob(pattern, recursive=True)
-    
-#     data = []
-#     errors = []
-    
-#     for file_path in files:
-#         try:
-#             # Extract parameters from filename
-#             filename = os.path.basename(file_path)
-#             city_part, range_part = filename.split('_')[:2]
-#             city_size = int(city_part.replace('city', ''))
-#             control_range = int(range_part.replace('range', '').split('.')[0])
-            
-#             # Load and validate JSON
-#             json_data, file_errors, warnings = load_json(file_path)
-            
-#             if file_errors:
-#                 errors.append(f"{filename}: {', '.join(file_errors)}")
-#                 continue
-                
-#             # Extract configuration and iterations
-#             config = json_data.get('configuration', {})
-#             iterations = json_data.get('results', {}).get('all_iterations', [])
-            
-#             # Skip files with no iterations
-#             if not iterations:
-#                 errors.append(f"{filename}: No iterations found")
-#                 continue
-                
-#             # Add each iteration as a row
-#             for iteration in iterations:
-#                 data.append({
-#                     'city_size': city_size,
-#                     'range': control_range,
-#                     'mutation_type': config.get('mutation_type'),
-#                     'generation_type': config.get('generation_type'),
-#                     'distribution': config.get('distribution'),
-#                     'iteration': iteration
-#                 })
-                
-#         except Exception as e:
-#             errors.append(f"{filename}: {str(e)}")
-#             continue
-    
-#     return pd.DataFrame(data), errors
+def load_full():
+    """
+    Load all JSON files in the Continuation and Results directories.
+    Returns:
+    -------
+    list
+        A list of dictionaries containing validate JSON data.
+    """
+    base_dirs = [
+        #"./Continuation",
+        "./Results"
+    ]
 
-# # Load data from current directory
-# df, errors = load_experiment_data()
+    all_data = []
 
-# # Print summary
-# print(f"Encountered {len(errors)} errors:\n", "\n".join(errors[:3]))
+    for base_dir in base_dirs:
+        pattern = os.path.join(base_dir, '**', '*.json')
+        json_files = glob.glob(pattern, recursive=True)
 
-# # Quick stats
-# print("\nConfiguration performance:")
-# print(df.groupby(['distribution'])['iteration'].describe())
+        for file_path in json_files:
+            data, errors, warnings = load_json(file_path)
+            if data is None or errors:
+                ic("Error", file_path, errors)
+                continue
+
+            all_data.append(data)
+    
+    return all_data
+
+def load_all_hard_instances() -> pd.DataFrame:
+    """
+    Load all hardest instances from JSON files along with their configurations.
+    
+    Returns:
+        pd.DataFrame: DataFrame containing each hardest instance's data merged with its configuration.
+    """
+    base_dirs = ["./Continuation", "./Results"]
+    all_instances = []
+
+    for base_dir in base_dirs:
+        pattern = os.path.join(base_dir, '**', '*.json')
+        json_files = glob.glob(pattern, recursive=True)
+
+        for file_path in json_files:
+            data, errors, _ = load_json(file_path)
+            if data is None or errors:
+                continue  # Skip invalid files
+            
+            config = data.get('configuration', {})
+            hard_instances = data.get('results', {}).get('hard_instances', {})
+
+            for key, instance in hard_instances.items():
+                if not key.startswith('iteration_'):
+                    continue
+                
+                try:
+                    iteration_num = int(key.split('_')[-1])
+                except ValueError:
+                    continue
+                
+                # Validate numerical values
+                iterations_val = instance.get('iterations')
+                hardest_val = instance.get('hardest')
+                if not isinstance(iterations_val, (int, float)) or not isinstance(hardest_val, (int, float)):
+                    continue
+
+                # Merge instance data with configuration
+                entry = {
+                    'file_path': file_path,
+                    'iteration_num': iteration_num,
+                    'iterations': iterations_val,
+                    'hardest_value': hardest_val,
+                    **config
+                }
+                all_instances.append(entry)
+    
+    return pd.DataFrame(all_instances)

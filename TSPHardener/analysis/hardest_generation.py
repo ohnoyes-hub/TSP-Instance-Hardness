@@ -50,7 +50,7 @@ def generate_plot(data, file_path):
 
 def main():
     base_dirs = [
-        #"./Continuation",
+        "./Continuation",
         "./Results"
     ]
 
