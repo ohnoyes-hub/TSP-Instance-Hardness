@@ -7,7 +7,7 @@ from .load_json import load_json
 
 def main():
     base_dirs = [
-        #"./Continuation",
+        "./Continuation",
         "./Results"
     ]
 
