@@ -19,7 +19,7 @@ def plot_uniform_histogram(rand_max, num_samples=1000, num_bins=20):
     plt.xlim(0, rand_max)
     plt.xlabel("x", fontsize=12)
     plt.ylabel("Density", fontsize=12)
-    plt.title(f"Uniform Distribution Histogram on [0, rand_max = {rand_max}]", fontsize=14)
+    plt.title(r"Uniform Distribution Histogram on (0, $rand_{max}$ = 5)", fontsize=14)
     plt.legend()
     plt.savefig("./plot/uniform-drawn-method.png")
 

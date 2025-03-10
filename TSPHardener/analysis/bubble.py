@@ -3,74 +3,60 @@ import glob
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from .load_json import load_json
+import numpy as np
+from icecream import ic
+from .load_json import load_json, load_all_hard_instances
+                
+def bubble_plot():
+    df = load_all_hard_instances()
+    df = df.dropna(subset=['matrix', 'optimal_cost'])
 
-def main():
-    base_dirs = [
-        "./Continuation",
-        "./Results"
-    ]
-    config_data = []
+    # Convert 'inf' in diagonal to 0
+    def clean_matrix(matrix):
+        matrix = np.array(matrix)
+        np.fill_diagonal(matrix, 0)
+        return matrix
 
-    # Load and aggregate data
-    for base_dir in base_dirs:
-        pattern = os.path.join(base_dir, '**', '*.json')
-        json_files = glob.glob(pattern, recursive=True)
-
-        for file_path in json_files:
-            data, errors, warnings = load_json(file_path)
-            if data is None or errors:
-                continue
-            
-            config = data.get('configuration', {})
-            mutation = config.get('mutation_type', 'unknown')
-            generation = config.get('generation_type', 'unknown')
-            distribution = config.get('distribution', 'unknown')
-
-            hard_instances = data['results'].get('hard_instances', {})
-            hardest_values = [
-                instance.get('hardest') 
-                for instance in hard_instances.values() 
-                if isinstance(instance.get('hardest'), (int, float))
-            ]
-
-            if hardest_values:
-                config_data.append({
-                    'mutation': mutation,
-                    'generation': generation,
-                    'distribution': distribution,
-                    'mean_hardest': sum(hardest_values) / len(hardest_values),
-                    'count': len(hardest_values)
-                })
-
-    if not config_data:
-        print("No valid data found for plotting.")
-        return
-
-    df = pd.DataFrame(config_data)
-
-    # Create bubble plot
-    plt.figure(figsize=(12, 8))
-    bubble_plot = sns.scatterplot(
-        data=df,
-        x='mutation',
-        y='generation',
-        size='mean_hardest',
-        hue='distribution',
-        sizes=(50, 100),
-        alpha=0.7,
-        palette='viridis'
+    # Calculate Nuclear Norm for each matrix
+    df['norm'] = df['matrix'].apply(
+        lambda x: np.linalg.norm(clean_matrix(x), ord='nuc')
     )
-    plt.title("Bubble Plot: Mean 'Hardest' Iterations by Configuration")
-    plt.xlabel("Mutation Type")
-    plt.ylabel("Generation Type")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 
-    # Save plot
-    os.makedirs('./plot/bubble_config', exist_ok=True)
-    plot_path = os.path.join('./plot/bubble_config', 'bubble_config.png')
-    plt.savefig(plot_path, bbox_inches='tight')
-    plt.close()
+    # Scale optimal cost for better visualization
+    df['scaled_optimal_cost'] = df['optimal_cost'] / 100000
+
+    ic(df[['norm', 'scaled_optimal_cost']].head())
+
+    # Create configuration identifier
+    df['configuration'] = df['mutation_type'] + '_' + df['generation_type'] + '_' + df['distribution']
+
+    # Generate bubble plot
+    plt.figure(figsize=(14, 8))
+    sns.scatterplot(
+        data=df,
+        x='iterations',
+        y='scaled_optimal_cost',
+        hue='configuration',
+        size='norm',
+        alpha=0.7,
+        palette='tab20',
+        sizes=(30, 300),  # Adjust bubble size range
+        edgecolor='black'
+    )
+
+    # Customize plot
+    plt.title('Lital Iterations vs. Scaled Optimal Cost (Size = Nuclear Norm)', fontsize=14)
+    plt.xlabel('Lital Iterations', fontsize=12)
+    plt.ylabel('Scaled Optimal Cost (÷ 100,000)', fontsize=12)
+    plt.legend(
+        title='Configuration',
+        bbox_to_anchor=(1.25, 1),
+        loc='upper left',
+        frameon=True
+    )
+    plt.tight_layout()
+    plt.savefig("./plot/bubble_plot.png")
+    plt.show()
 
 if __name__ == "__main__":
-    main()
+    bubble_plot()

@@ -102,12 +102,6 @@ def main():
                         continue
 
                     superplot_data.append({
-                        'file': file_path,
-                        'iteration': iteration_num,
-                        'iterations': 'iterations', # 'iterations'
-                        'hardest': hardest_val
-                    })
-                    superplot_data.append({
                         'filename': os.path.basename(file_path),
                         'iteration': iteration_num,
                         'metric': 'hardest',
@@ -136,27 +130,40 @@ def main():
     if superplot_data:
         df_super = pd.DataFrame(superplot_data)
 
+        max_iter = df_super['iteration'].max()
+        filenames = df_super['filename'].unique()   
+
+        idx = pd.MultiIndex.from_product(
+            [filenames, range(1, max_iter + 1)],
+            names=['filename', 'iteration']
+        )
+
+        # Reindex and forward fill missing values
+        df_super = (
+            df_super.set_index(['filename', 'iteration'])
+            .reindex(idx)
+            .reset_index()
+        )
+        df_super['value'] = df_super.groupby('filename')['value'].ffill()
+
+        # Generate the plot
         plt.figure(figsize=(16, 12))
         ax = sns.lineplot(
             data=df_super,
             x='iteration',
             y='value',
             hue='filename',
-            style='metric',
             marker='.',
-            legend=False 
+            #legend=False
         )
         plt.title("Hardest Lital Iterations vs. Generation")
         plt.xlabel("Generation")
         plt.ylabel("Lital's iter")
-        plt.legend(
-            handles=[ax.lines[0]],
-            labels=["Lital's iteration"]
-        )
+        plt.legend(title="Filename")
 
         # Identify the 5 highest iteration values
         top_rows_each_file = df_super.loc[df_super.groupby('filename')['value'].idxmax()]
-        top5 = top_rows_each_file.nlargest(5, 'value')
+        top5 = df_super.nlargest(5, 'value')
 
         for idx, row in top5.iterrows():
             x_val = row['iteration']
