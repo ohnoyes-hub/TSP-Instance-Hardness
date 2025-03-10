@@ -7,7 +7,7 @@ import pandas as pd
 from collections import defaultdict
 from typing import Tuple, Dict, List
 
-def validate_json_structure(data):
+def validate_json_structure(data) -> Tuple[List, List]:
     """
     Validate the structure and content of the experiment JSON data.
     Parameters:
@@ -74,7 +74,7 @@ def validate_json_structure(data):
 
     return errors, warnings
 
-def load_json(file_path):
+def load_json(file_path) -> Tuple[Dict, List, List]:
     """
     Load and validate a JSON file.
     Parameters:
@@ -93,6 +93,13 @@ def load_json(file_path):
     try:
         with open(file_path, "r") as f:
             data = json.load(f, object_hook=custom_decoder)
+
+        # Rename 'wouter' mutation type to 'inplace'
+        if data and 'configuration' in data:
+            config = data['configuration']
+            if config.get('mutation_type') == 'wouter':
+                config['mutation_type'] = 'inplace'
+
     except json.JSONDecodeError as e:
         return None, [f"JSON decode error: {str(e)}"], []
     except Exception as e:
@@ -167,7 +174,8 @@ def load_all_hard_instances() -> pd.DataFrame:
                 # Validate numerical values
                 iterations_val = instance.get('iterations')
                 hardest_val = instance.get('hardest')
-                if not isinstance(iterations_val, (int, float)) or not isinstance(hardest_val, (int, float)):
+                optimal_cost = instance.get('optimal_cost')
+                if not isinstance(iterations_val, (int, float)) or not isinstance(hardest_val, (int, float)) or not isinstance(optimal_cost, (int, float)):
                     continue
 
                 # Merge instance data with configuration
@@ -175,6 +183,8 @@ def load_all_hard_instances() -> pd.DataFrame:
                     'iteration_num': iteration_num,
                     'iterations': iterations_val,
                     'hardest_value': hardest_val,
+                    'optimal_cost': optimal_cost,
+                    "matrix" : instance.get('matrix'),
                     **config
                 }
                 all_instances.append(entry)
