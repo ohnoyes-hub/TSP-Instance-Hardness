@@ -37,7 +37,7 @@ def plot_iteration_range(dist: str = 'uniform'):
             stats_df = stats_df.sort_values('range')
 
             # Plot each statistic
-            plt.figure(figsize=(8, 5))
+            plt.figure(figsize=(12, 6))
             
             plt.plot(stats_df['range'], stats_df['min'], label='min', color='blue')
             plt.plot(stats_df['range'], stats_df['max'], label='max', color='red')
@@ -52,7 +52,7 @@ def plot_iteration_range(dist: str = 'uniform'):
             )
             plt.title(f"City Size {size}: $rand_{{max}}$ against Lital iterations ({dist} Distribution)")
             plt.xlabel(r"$rand_{max}$")
-            plt.ylabel("Lital's Iteration")
+            plt.ylabel("Lital Iterations")
             plt.grid(True)
             plt.legend()
 
@@ -61,8 +61,8 @@ def plot_iteration_range(dist: str = 'uniform'):
             plt.tight_layout()
             
             # Save the figure, or just call plt.show()
-            plt.savefig(f'./plot/replication/range_vs_iteration_uniform_{size}.png', bbox_inches='tight')
+            plt.savefig(f'./plot/replication/range_vs_iteration_{dist}_{size}.png', bbox_inches='tight')
             plt.show()
 
 if __name__ == "__main__":
-    plot_iteration_range('lognormal')
+    plot_iteration_range()

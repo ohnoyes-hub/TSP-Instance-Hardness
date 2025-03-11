@@ -167,6 +167,7 @@ def load_all_hard_instances() -> pd.DataFrame:
                     continue
                 
                 try:
+                    # generation number
                     iteration_num = int(key.split('_')[-1])
                 except ValueError:
                     continue
@@ -175,12 +176,14 @@ def load_all_hard_instances() -> pd.DataFrame:
                 iterations_val = instance.get('iterations')
                 hardest_val = instance.get('hardest')
                 optimal_cost = instance.get('optimal_cost')
+
+
                 if not isinstance(iterations_val, (int, float)) or not isinstance(hardest_val, (int, float)) or not isinstance(optimal_cost, (int, float)):
                     continue
 
                 # Merge instance data with configuration
                 entry = {
-                    'iteration_num': iteration_num,
+                    'generation': iteration_num,
                     'iterations': iterations_val,
                     'hardest_value': hardest_val,
                     'optimal_cost': optimal_cost,
@@ -190,6 +193,20 @@ def load_all_hard_instances() -> pd.DataFrame:
                 all_instances.append(entry)
     
     return pd.DataFrame(all_instances)
+
+def load_all_iteration():
+    """
+    Load all iterations from JSON files.
+    """
+    all_data = load_full()
+    grouped_data = defaultdict(list)
+
+    for entry in all_data:
+        generation_type = entry.get('configuration', {}).get('generation_type', 'unknown')
+        iterations = entry.get('results', {}).get('all_iterations', [])
+        grouped_data[generation_type].extend(iterations)
+    
+    return grouped_data
 
 def load_lon_data() -> Tuple[Dict, defaultdict]:
     """
@@ -224,3 +241,4 @@ def load_lon_data() -> Tuple[Dict, defaultdict]:
         global_local_optima.update(local_optima)
 
     return global_local_optima, global_transitions
+
