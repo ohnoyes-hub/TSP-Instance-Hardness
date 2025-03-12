@@ -3,6 +3,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+LOGNORMAL_MEAN = 10
+
 def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """
     Generate a random cost matrix of size n x n with values in the range [1, upper) for a asymmetric TSP.
@@ -19,14 +21,14 @@ def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.nda
         - For 'lognormal', this is the sigma parameter.
     """
     if distribution == 'uniform':
-        matrix = np.random.random((n, n)) * control
+        matrix = np.random.randint(0, control + 1, size=(n, n)).astype(float)
+        np.fill_diagonal(matrix, np.inf)
     elif distribution == 'lognormal':
-        matrix = (np.random.lognormal(mean=10, sigma=control, size=(n, n))).astype(float) # mean = 10 always in experiments
+        matrix = np.around(np.random.lognormal(mean=LOGNORMAL_MEAN, sigma=control, size=(n, n)))
+        np.fill_diagonal(matrix, np.inf)
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     
-    for i in range(n):
-        matrix[i, i] = np.inf
     return matrix
 
 def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions: int = 100) -> np.ndarray:
@@ -54,22 +56,23 @@ def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions
     if distribution == 'uniform':
         # scale coordinates to cap at control parameter
         scale = control / np.sqrt(dimensions)
-        points = np.random.random((n, dimensions)) * scale
+        points = np.random.randint(0, int(scale) + 1, size=(n, dimensions))
     elif distribution == 'lognormal':
-        points = np.random.lognormal(mean=10, sigma=control, size=(n, dimensions))
+        points = np.random.lognormal(mean=LOGNORMAL_MEAN, sigma=control, size=(n, dimensions))
         # scale coordinates to have a mean distance of 10
-        scaling_factor = 10 /np.mean(np.linalg.norm(points, axis=1))
+        scaling_factor = 10 / np.mean(np.linalg.norm(points, axis=1))
         points *= scaling_factor
+        points = np.around(points).astype(int)
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
-    # points = np.random.random((n, dimensions))
     
     # Calculate the pairwise Euclidean distance matrix
-    distance_matrix = np.zeros((n, n))
+    distance_matrix = np.zeros((n, n), dtype=float)
     
     for i in range(n):
         for j in range(i + 1, n):
             distance = np.linalg.norm(points[i] - points[j])
+            distance = np.around(distance)  # Around to nearest integer
             distance_matrix[i, j] = distance
             distance_matrix[j, i] = distance
     
@@ -124,5 +127,12 @@ def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarra
     else:
         raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
     
-# from icecream import ic
-# ic(generate_tsp(4, "euclidean", "uniform", 100).round(1))
+from icecream import ic
+# values 
+matrix = generate_tsp(4, "euclidean", "lognormal", 2.4)
+ic(matrix)
+
+ic(generate_tsp(4, "euclidean", "lognormal", 2.4))
+ic(generate_tsp(4, "asymmetric", "lognormal", 0.2))
+ic(generate_tsp(4, "euclidean", "uniform", 100))
+ic(generate_tsp(4, "asymmetric", "uniform", 100))
