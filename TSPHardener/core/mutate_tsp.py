@@ -1,5 +1,7 @@
 import numpy as np
 
+LOGNORMAL_MEAN = 10
+
 def permute_matrix(matrix) -> np.ndarray:
     """
     Generate a random permutation of the given distance matrix.
@@ -21,9 +23,11 @@ def permute_matrix(matrix) -> np.ndarray:
     
     # Create a flattened list of values excluding the diagonal
     values = [matrix[i, j] for i, j in indices]
+    print("Indices", values)
     
     # Shuffle the values
     np.random.shuffle(values)
+    print("Shuffled values", values)
     
     # Assign the shuffled values back to the matrix
     for (i, j), value in zip(indices, values):
@@ -132,36 +136,45 @@ def swap_mutate_symmetric(matrix) -> np.ndarray:
 
 def mutate_matrix(distribution, _matrix, _control):
     matrix = _matrix.copy()
+    n = matrix.shape[0]
     number1, number2 = 0, 0
 
+    # ensure that the random city pair to mutate is not on the diagonal
     while number1 == number2:
-        number1, number2 = np.random.randint(0,matrix.shape[0]), np.random.randint(0,matrix.shape[0])
+        number1, number2 = np.random.randint(0, n), np.random.randint(0, n)
     previous_number = matrix[number1,number2]
+    
     while matrix[number1,number2] == previous_number:
         if distribution == "uniform":
             matrix[number1,number2] = np.random.randint(1,_control)
         elif distribution == "lognormal":
-            matrix[number1,number2] = np.random.lognormal(mean=10, sigma=_control)
+            matrix[number1,number2] = np.around(np.random.lognormal(mean=LOGNORMAL_MEAN, sigma=_control))
         else:
             raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
+    
     return matrix
 
 def mutate_matrix_symmetric(distribution, _matrix, _upper):
     matrix = _matrix.copy()
+    n = matrix.shape[0]
     number1, number2 = 0, 0
 
     while number1 == number2:
-        number1, number2 = np.random.randint(0,matrix.shape[0]), np.random.randint(0,matrix.shape[0])
+        number1, number2 = np.random.randint(0,n), np.random.randint(0,n)
     previous_number = matrix[number1,number2]
+
     while matrix[number1,number2] == previous_number:
         if distribution == "uniform":
-            matrix[number1,number2] = np.random.randint(1,_upper)
-            matrix[number2,number1] = matrix[number1,number2] # Mirror the value in the lower triangle
+            new_val = np.random.randint(1, _upper)
+            matrix[number1, number2] = new_val
+            matrix[number2, number1] = new_val  # Symmetric update
         elif distribution == "lognormal":
-            matrix[number1,number2] = np.random.lognormal(mean=10, sigma=_upper)
-            matrix[number2,number1] = matrix[number1,number2]
+            new_val = np.around(np.random.lognormal(mean=10, sigma=_upper))
+            matrix[number1, number2] = new_val
+            matrix[number2, number1] = new_val
         else:
             raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
+    
     return matrix
 
 def shuffle(tsp_type, matrix):
@@ -251,3 +264,17 @@ def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
         return mutate(distribution, tsp_type, matrix, control)
     else:
         raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
+    
+
+from .generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp
+asy_matrix = generate_asymmetric_tsp(5, 'uniform', 20)
+eu_matrix = generate_euclidean_tsp(5, 'uniform', 100)
+
+from icecream import ic
+ic(asy_matrix, permute_matrix(asy_matrix))
+ic(eu_matrix, permute_symmetric_matrix(eu_matrix))
+
+# ic(eu_matrix, swap_mutate_symmetric(eu_matrix))
+# ic(eu_matrix, mutate_matrix_symmetric('uniform', eu_matrix, 100))
+# ic(asy_matrix, swap_mutate(asy_matrix))
+# ic(asy_matrix, mutate_matrix('uniform', asy_matrix, 100))

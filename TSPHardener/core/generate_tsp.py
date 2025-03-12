@@ -127,12 +127,12 @@ def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarra
     else:
         raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
     
-from icecream import ic
-# values 
-matrix = generate_tsp(4, "euclidean", "lognormal", 2.4)
-ic(matrix)
+# from icecream import ic
+# # values 
+# matrix = generate_tsp(4, "euclidean", "lognormal", 2.4)
+# ic(matrix)
 
-ic(generate_tsp(4, "euclidean", "lognormal", 2.4))
-ic(generate_tsp(4, "asymmetric", "lognormal", 0.2))
-ic(generate_tsp(4, "euclidean", "uniform", 100))
-ic(generate_tsp(4, "asymmetric", "uniform", 100))
+# ic(generate_tsp(4, "euclidean", "lognormal", 2.4))
+# ic(generate_tsp(4, "asymmetric", "lognormal", 0.2))
+# ic(generate_tsp(4, "euclidean", "uniform", 100))
+# ic(generate_tsp(4, "asymmetric", "uniform", 100))
