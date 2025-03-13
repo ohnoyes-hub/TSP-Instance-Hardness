@@ -147,16 +147,19 @@ def save_partial(configuration, results, citysize, rang, time_spent,
         if "initial_matrix" not in existing_data["results"]:
             existing_data["results"]["initial_matrix"] = results["initial_matrix"]
 
-        # Update `local_optima` and `transitions` to be included
-        if "local_optima" not in results:
-            existing_local_optima = existing_data["results"].get("local_optima", {})
-            new_local_optima = results.get("local_optima", {})
-            existing_data["results"]["local_optima"] = {**existing_local_optima, **new_local_optima}
-        if "transitions" not in results:
-            existing_trans = existing_data["results"].get("transitions", defaultdict(list))
-            new_trans = results.get("transitions", defaultdict(list))
-            for src, dests in new_trans.items():
-                existing_trans[src].extend(dests)
+        # Update `local_optima` to be included in Continuation and Results
+        existing_local_optima = existing_data["results"].get("local_optima", {})
+        new_local_optima = results.get("local_optima", {})
+        existing_data["results"]["local_optima"] = {**existing_local_optima, **new_local_optima}
+        # Update `transitions` to be included in Continuation and Results
+        existing_trans = existing_data["results"].get("transitions", defaultdict(list))
+        existing_trans = defaultdict(list, existing_trans)
+        new_trans = results.get("transitions", defaultdict(list))
+        new_trans = defaultdict(list, new_trans)  # Ensure it's a defaultdict
+        for src, dests in new_trans.items():
+            existing_trans[src].extend(dests)
+        # convert back to regular dict before saving
+        existing_data["results"]["transitions"] = dict(existing_trans)
     else:
         existing_data = {
             "time": time_spent,
