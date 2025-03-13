@@ -23,11 +23,11 @@ def permute_matrix(matrix) -> np.ndarray:
     
     # Create a flattened list of values excluding the diagonal
     values = [matrix[i, j] for i, j in indices]
-    print("Indices", values)
+    # print("Indices", values)
     
     # Shuffle the values
     np.random.shuffle(values)
-    print("Shuffled values", values)
+    # print("Shuffled values", values)
     
     # Assign the shuffled values back to the matrix
     for (i, j), value in zip(indices, values):
@@ -266,13 +266,13 @@ def apply_mutation(matrix, mutation_type, tsp_type, control, distribution):
         raise ValueError("Invalid mutation type. Choose either 'swap', 'scramble', or 'wouter'.")
     
 
-from .generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp
-asy_matrix = generate_asymmetric_tsp(5, 'uniform', 20)
-eu_matrix = generate_euclidean_tsp(5, 'uniform', 100)
+# from .generate_tsp import generate_asymmetric_tsp, generate_euclidean_tsp
+# asy_matrix = generate_asymmetric_tsp(5, 'uniform', 20)
+# eu_matrix = generate_euclidean_tsp(5, 'uniform', 100)
 
-from icecream import ic
-ic(asy_matrix, permute_matrix(asy_matrix))
-ic(eu_matrix, permute_symmetric_matrix(eu_matrix))
+# from icecream import ic
+# ic(asy_matrix, permute_matrix(asy_matrix))
+# ic(eu_matrix, permute_symmetric_matrix(eu_matrix))
 
 # ic(eu_matrix, swap_mutate_symmetric(eu_matrix))
 # ic(eu_matrix, mutate_matrix_symmetric('uniform', eu_matrix, 100))
