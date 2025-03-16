@@ -3,3 +3,7 @@ icecream
 matplotlib
 pandas
 seaborn
+networkx[default]
+scikit-learn
+statsmodels
+pillow
