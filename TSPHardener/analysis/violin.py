@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from .load_json import load_json
+from ..analysis_util.load_json import load_json
 
 def main():
     base_dirs = [

@@ -132,8 +132,12 @@ def load_full():
             if data is None or errors:
                 ic("Error", file_path, errors)
                 continue
+            if warnings:
+                ic("Warning", file_path, warnings)
 
             all_data.append(data)
+    
+    ic("Loaded", len(all_data), "files")
     
     return all_data
 
@@ -145,7 +149,7 @@ def load_all_hard_instances() -> pd.DataFrame:
         pd.DataFrame: DataFrame containing each hardest instance's data merged with its configuration.
     """
     base_dirs = [
-        "./Continuation", 
+        #"./Continuation", 
         "./Results"
     ]
     all_instances = []
@@ -192,6 +196,8 @@ def load_all_hard_instances() -> pd.DataFrame:
                 }
                 all_instances.append(entry)
     
+    ic("Loaded", len(all_instances), "hard instances")
+
     return pd.DataFrame(all_instances)
 
 def load_all_iteration():
@@ -205,6 +211,8 @@ def load_all_iteration():
         generation_type = entry.get('configuration', {}).get('generation_type', 'unknown')
         iterations = entry.get('results', {}).get('all_iterations', [])
         grouped_data[generation_type].extend(iterations)
+
+    ic("Loaded", len(grouped_data), "generation types")
     
     return grouped_data
 
@@ -251,5 +259,49 @@ def load_lon_data() -> Tuple[Dict, defaultdict]:
     # convert transitions back to list for JSON compatibility
     final_transitions = {k: list(v) for k, v in global_transitions.items()}
 
+    ic("Loaded", len(global_local_optima), "local optima and", len(global_transitions), "transitions")
+
     return global_local_optima, final_transitions
 
+def fix_iteration_data(file_path, metric="sum"):
+    """Convert 'iterations' list to a scalar metric."""
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+
+    local_optima = data.get("results", {}).get("local_optima", {})
+    for key, value in local_optima.items():
+        iterations_list = value.get("iterations", [])
+        if isinstance(iterations_list, list) and len(iterations_list) > 0:
+            if metric == "sum":
+                value["iterations"] = sum(iterations_list)
+            elif metric == "avg":
+                value["iterations"] = sum(iterations_list) / len(iterations_list)
+            elif metric == "max":
+                value["iterations"] = max(iterations_list)
+            else:
+                raise ValueError(f"Unknown metric: {metric}")
+    
+    with open(file_path, 'w') as f:
+        json.dump(data, f, indent=4)
+
+def filter_transitions(lon_data, cost_threshold=0.01):
+    """
+    Filter out transitions that are trivial (e.g., self-loops) or have similar costs."""
+    cleaned_transitions = defaultdict(set)
+    for source, targets in lon_data["filtered_transitions"].items():
+        source_cost = lon_data["local_optima"].get(source, {}).get("cost", None)
+        
+        for target in targets:
+            target_cost = lon_data["local_optima"].get(target, {}).get("cost", None)
+            
+            if source == target:
+                continue  # Remove self-loops
+            
+            if source_cost is not None and target_cost is not None:
+                if abs(source_cost - target_cost) < cost_threshold:
+                    continue  # Remove trivial transitions
+            
+            cleaned_transitions[source].add(target)
+    
+    lon_data["filtered_transitions"] = {k: list(v) for k, v in cleaned_transitions.items()}
+    return lon_data
