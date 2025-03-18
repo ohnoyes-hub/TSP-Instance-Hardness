@@ -4,7 +4,7 @@ import glob
 import matplotlib.pyplot as plt
 from collections import Counter
 from icecream import ic
-from .load_json import load_json
+from ..analysis_util.load_json import load_json
 
 def visualize_iteration_counts(directory_path):
    

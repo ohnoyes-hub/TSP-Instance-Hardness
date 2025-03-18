@@ -1,18 +1,19 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
-from .load_json import load_full
+from analysis_util.load_json import load_full
+from icecream import ic
 
 # Load data using the existing function
-all_data = load_full()
-
-# Extract relevant data points (including distribution, generation_type, mutation_type)
 all_data = load_full()
 
 # Extract relevant data points from hardest_instances
 data_points = []
 for entry in all_data:
     config = entry.get('configuration', {})
+    if not config or 'range' not in config:
+        continue
+
     range_val = config.get('range')
     distribution = config.get('distribution')
     generation_type = config.get('generation_type')

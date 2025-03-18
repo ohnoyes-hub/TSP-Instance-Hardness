@@ -14,27 +14,6 @@ def build_lon(optima, transitions):
         for dest, count in dests.items():
             G.add_edge(src, dest, weight=count)
     return G
-    
-
-def filter_transitions(lon_data, cost_threshold=0.01):
-    cleaned_transitions = defaultdict(set)
-    for source, targets in lon_data["filtered_transitions"].items():
-        source_cost = lon_data["local_optima"].get(source, {}).get("cost", None)
-        
-        for target in targets:
-            target_cost = lon_data["local_optima"].get(target, {}).get("cost", None)
-            
-            if source == target:
-                continue  # Remove self-loops
-            
-            if source_cost is not None and target_cost is not None:
-                if abs(source_cost - target_cost) < cost_threshold:
-                    continue  # Remove trivial transitions
-            
-            cleaned_transitions[source].add(target)
-    
-    lon_data["filtered_transitions"] = {k: list(v) for k, v in cleaned_transitions.items()}
-    return lon_data
 
 # Step 2: Cluster similar optima based on cost differences
 def cluster_similar_optima(lon_data, distance_threshold=0.05):

@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from icecream import ic
-from .load_json import load_json, load_all_hard_instances
+from ..analysis_util.load_json import load_json, load_all_hard_instances
                 
 def bubble_plot():
     df = load_all_hard_instances()

@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from icecream import ic
-from .load_json import load_all_hard_instances
+from ..analysis_util.load_json import load_all_hard_instances
 
 import numpy as np
 import scipy.stats as stats

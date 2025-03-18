@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from .load_json import load_full, load_all_hard_instances
+from analysis_util.load_json import load_full, load_all_hard_instances
 import pandas as pd
 from collections import defaultdict
 

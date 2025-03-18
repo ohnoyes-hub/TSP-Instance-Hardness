@@ -6,7 +6,7 @@ import seaborn as sns
 from icecream import ic
 from scipy.stats import zscore
 
-from .load_json import load_json
+from ..analysis_util.load_json import load_json
 
 def compute_differences(arr):
     """
