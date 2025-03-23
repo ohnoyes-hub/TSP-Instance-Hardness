@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from analysis_util.load_json import load_full, load_all_hard_instances
 import pandas as pd
 from collections import defaultdict
+from icecream import ic
 
 # Load data
 all_data = load_full()
@@ -58,4 +59,5 @@ for config_key, data_list in config_groups.items():
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig(f"plot/hill_climbed_runs/{config_title}.png")
+    ic("Saved", config_title)
     plt.close()

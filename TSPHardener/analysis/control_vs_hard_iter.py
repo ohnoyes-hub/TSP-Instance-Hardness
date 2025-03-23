@@ -16,28 +16,34 @@ def plot_iteration_range(dist: str = 'uniform'):
 
     if uniform_df.empty:
         print("No data to plot. Check your filters.")
-    else:
-        city_sizes = [20, 30]
-        mutation_types = ['swap', 'scramble', 'inplace']
-        tsp_type = ['euclidean', 'asymmetric']
+        return
+    
+    # configurations
+    city_sizes = [20, 30]
+    mutation_types = ['swap', 'scramble', 'inplace']
+    tsp_types = ['euclidean', 'asymmetric']
 
-        for tsp in tsp_type:
+    
+    for mutation in mutation_types:
+        for tsp in tsp_types:
             for size in city_sizes:
-                city_df = uniform_df[uniform_df['city_size'] == size]
+                subset_df = uniform_df[
+                    (uniform_df['mutation_type'] == mutation) &
+                    (uniform_df['generation_type'] == tsp) &
+                    (uniform_df['city_size'] == size)
+                ]
                 
-                if city_df.empty:
-                    print(f"No data for city_size={size}")
+                if subset_df.empty:
+                    print(f"No data for mutation={mutation}, tsp_type={tsp}, city_size={size}")
                     continue
-                
-                # statistics
+
+                # Compute statistics
                 stats_df = (
-                    city_df
+                    subset_df
                     .groupby('range')['iterations']
                     .agg(['min', 'max', 'median', 'mean', 'std'])
                     .reset_index()
-                )                   
-
-                stats_df = stats_df.sort_values('range')
+                ).sort_values('range')
 
                 # Plot each statistic
                 plt.figure(figsize=(12, 6))
@@ -48,27 +54,32 @@ def plot_iteration_range(dist: str = 'uniform'):
                 plt.plot(stats_df['range'], stats_df['mean'], label='mean', color='orange')
                 plt.plot(stats_df['range'], stats_df['std'], label='std', color='purple', linestyle='dashed')
 
-                plt.scatter(
-                    city_df['range'],
-                    city_df['iterations'],
-                    alpha=0.7
-                )
+                # Scatter plot of actual data points
+                plt.scatter(subset_df['range'], subset_df['iterations'], alpha=0.7)
+
+                # Title and labels
                 if dist == 'uniform':
-                    plt.title(f"City Size {size}: $rand_{{max}}$ against Lital iterations ({dist} Distribution)")
-                if dist == 'lognormal':
-                    plt.title(f"City Size {size}: $\sigma$ against Lital iterations ({dist} Distribution)")
-                plt.xlabel(r"$rand_{max}$")
+                    title = f"City Size {size}, Mutation: {mutation}, TSP: {tsp}\n$rand_{{max}}$ vs Lital Iterations ({dist} Distribution)"
+                    plt.xlabel(r"$rand_{max}$")
+                elif dist == 'lognormal':
+                    title = f"City Size {size}, Mutation: {mutation}, TSP: {tsp}\n$\sigma$ vs Lital Iterations ({dist} Distribution)"
+                    plt.xlabel(r"$\sigma$")
+
+                plt.title(title)
                 plt.ylabel("Lital Iterations")
                 plt.grid(True)
                 plt.legend()
 
-                x_vals = sorted(city_df['range'].unique())
+                # X-axis ticks
+                x_vals = sorted(subset_df['range'].unique())
                 plt.xticks(x_vals)
                 plt.tight_layout()
-                
-                # Save the figure, or just call plt.show()
-                plt.savefig(f'./plot/replication/range_vs_iteration_{dist}_{size}.png', bbox_inches='tight')
-                plt.show()
+
+                # Save the figure
+                filename = f'./plot/replication/range_vs_iteration_{dist}_{mutation}_{tsp}_{size}.png'
+                plt.savefig(filename, bbox_inches='tight')
+                print(f"Saved plot: {filename}")
+                plt.close()
 
 if __name__ == "__main__":
-    plot_iteration_range()
+    plot_iteration_range('lognormal')
