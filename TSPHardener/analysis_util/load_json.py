@@ -117,7 +117,7 @@ def load_full():
         A list of dictionaries containing validate JSON data.
     """
     base_dirs = [
-        #"./Continuation",
+        "./Continuation",
         "./Results"
     ]
 
@@ -149,7 +149,7 @@ def load_all_hard_instances() -> pd.DataFrame:
         pd.DataFrame: DataFrame containing each hardest instance's data merged with its configuration.
     """
     base_dirs = [
-        #"./Continuation", 
+        "./Continuation", 
         "./Results"
     ]
     all_instances = []
@@ -192,6 +192,7 @@ def load_all_hard_instances() -> pd.DataFrame:
                     'hardest_value': hardest_val,
                     'optimal_cost': optimal_cost,
                     "matrix" : instance.get('matrix'),
+                    'file_path': file_path,
                     **config
                 }
                 all_instances.append(entry)

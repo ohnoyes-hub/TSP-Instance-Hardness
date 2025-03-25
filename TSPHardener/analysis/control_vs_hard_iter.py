@@ -82,4 +82,5 @@ def plot_iteration_range(dist: str = 'uniform'):
                 plt.close()
 
 if __name__ == "__main__":
+    plot_iteration_range()
     plot_iteration_range('lognormal')
