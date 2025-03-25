@@ -26,7 +26,7 @@ for config_key, data_list in config_groups.items():
         all_iter = data.get('results', {}).get('all_iterations', [])
         if not all_iter:
             continue
-        x = range(len(all_iter))
+        x = range(1, len(all_iter) + 1)
         label = 'All Iterations' if idx == 0 else None  # Avoid duplicate labels
         plt.plot(x, all_iter, marker='o', linestyle='-', markersize=4, alpha=0.5, label=label)
     

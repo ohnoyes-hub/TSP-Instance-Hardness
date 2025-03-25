@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import itertools
 
-from ..analysis_util.load_json import load_full, load_all_hard_instances
+from analysis_util.load_json import load_full, load_all_hard_instances
 
 def plot_hard_instances():
     all_data = load_full()
@@ -110,4 +110,4 @@ def plot_hard_instances_super():
     plt.close()
 
 if __name__ == "__main__":
-    plot_hard_instances_super()
+    plot_hard_instances()
