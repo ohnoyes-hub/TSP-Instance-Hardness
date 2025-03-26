@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from icecream import ic
-from ..analysis_util.load_json import load_all_hard_instances
+from analysis_util.load_json import load_all_hard_instances
 
 import numpy as np
 import scipy.stats as stats
@@ -95,6 +95,7 @@ def main():
     
     # Save results
     config_results.to_csv("./stats/pairwise_config_comparisons.csv", index=False)
+    print("Results saved to 'pairwise_config_comparisons.csv'")
 
 if __name__ == "__main__":
     main()
