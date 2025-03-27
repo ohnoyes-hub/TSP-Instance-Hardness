@@ -6,6 +6,41 @@ from icecream import ic
 import pandas as pd
 from collections import defaultdict
 from typing import Tuple, Dict, List
+import re
+
+def fill_missing_config(data, file_path):
+    """
+    Fill missing configuration values by parsing the file path using regex.
+    """
+    if not data or 'configuration' not in data:
+        return
+
+    config = data['configuration']
+    normalized_path = os.path.normpath(file_path)
+    parts = normalized_path.split(os.sep)
+
+    # Regex pattern to extract parameters from directory and filename
+    dir_pattern = re.compile(r"^(?P<distribution>\w+)_(?P<generation_type>\w+)$")
+    file_pattern = re.compile(
+        r"^city(?P<city_size>\d+)_range(?P<range>\d+)_(?P<mutation_type>\w+)\.json$"
+    )
+
+    # Extract distribution and generation_type from parent directory
+    if len(parts) >= 2:
+        parent_dir = parts[-2]  # e.g., "lognormal_euclidean"
+        dir_match = dir_pattern.match(parent_dir)
+        if dir_match:
+            config.setdefault('distribution', dir_match.group("distribution"))
+            config.setdefault('generation_type', dir_match.group("generation_type"))
+
+    # Extract city_size, range, mutation_type from filename
+    filename = os.path.basename(file_path)
+    file_match = file_pattern.match(filename)
+    if file_match:
+        config.setdefault('city_size', int(file_match.group("city_size")))
+        config.setdefault('range', int(file_match.group("range")))
+        config.setdefault('mutation_type', file_match.group("mutation_type"))
+
 
 def validate_json_structure(data) -> Tuple[List, List]:
     """
@@ -35,7 +70,7 @@ def validate_json_structure(data) -> Tuple[List, List]:
     # Check 'results' structure
     if 'results' in data:
         results = data['results']
-        required_results_keys = {'hard_instances', 'last_matrix', 'all_iterations'}
+        required_results_keys = {'initial_matrix', 'hard_instances', 'last_matrix', 'all_iterations', 'local_optima', 'transitions'}
         missing_results_keys = required_results_keys - results.keys()
         if missing_results_keys:
             errors.append(f"Missing 'results' keys: {missing_results_keys}")
@@ -97,6 +132,11 @@ def load_json(file_path) -> Tuple[Dict, List, List]:
         # Rename 'wouter' mutation type to 'inplace'
         if data and 'configuration' in data:
             config = data['configuration']
+            
+            # Fill missing configuration values
+            fill_missing_config(data, file_path)
+
+            # change mutation type naming convention
             if config.get('mutation_type') == 'wouter':
                 config['mutation_type'] = 'inplace'
 
@@ -306,3 +346,4 @@ def filter_transitions(lon_data, cost_threshold=0.01):
     
     lon_data["filtered_transitions"] = {k: list(v) for k, v in cleaned_transitions.items()}
     return lon_data
+
