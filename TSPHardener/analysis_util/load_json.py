@@ -22,24 +22,45 @@ def fill_missing_config(data, file_path):
     # Regex pattern to extract parameters from directory and filename
     dir_pattern = re.compile(r"^(?P<distribution>\w+)_(?P<generation_type>\w+)$")
     file_pattern = re.compile(
-        r"^city(?P<city_size>\d+)_range(?P<range>\d+)_(?P<mutation_type>\w+)\.json$"
+        r"^city(?P<city_size>\d+)_range(?P<range>\d+\.?\d*)_(?P<mutation_type>\w+)\.json$"  # Allow floats
     )
 
     # Extract distribution and generation_type from parent directory
     if len(parts) >= 2:
-        parent_dir = parts[-2]  # e.g., "lognormal_euclidean"
+        parent_dir = parts[-2]
         dir_match = dir_pattern.match(parent_dir)
         if dir_match:
             config.setdefault('distribution', dir_match.group("distribution"))
             config.setdefault('generation_type', dir_match.group("generation_type"))
+    
 
     # Extract city_size, range, mutation_type from filename
     filename = os.path.basename(file_path)
     file_match = file_pattern.match(filename)
     if file_match:
-        config.setdefault('city_size', int(file_match.group("city_size")))
-        config.setdefault('range', int(file_match.group("range")))
-        config.setdefault('mutation_type', file_match.group("mutation_type"))
+        city_size = file_match.group("city_size")
+        range_str = file_match.group("range")
+        mutation_type = file_match.group("mutation_type")
+        
+        # Set city_size as integer
+        config.setdefault('city_size', int(city_size))
+        
+        # Set mutation_type
+        config.setdefault('mutation_type', mutation_type)
+        
+        # Parse range based on distribution
+        distribution = config.get('distribution')
+        try:
+            if distribution == 'lognormal':
+                config.setdefault('range', float(range_str))
+            elif distribution == 'uniform':
+                # Ensure range is integer (even if filename has .0)
+                config.setdefault('range', int(float(range_str)))
+            else:
+                # Fallback: try float first, then int
+                config.setdefault('range', float(range_str) if '.' in range_str else int(range_str))
+        except ValueError:
+            pass
 
 
 def validate_json_structure(data) -> Tuple[List, List]:
@@ -102,7 +123,15 @@ def validate_json_structure(data) -> Tuple[List, List]:
         missing_config_keys = required_config_keys - config.keys()
         if missing_config_keys:
             warnings.append(f"Configuration missing keys: {missing_config_keys}")
-
+        else:
+            # Validate range type based on distribution
+            distribution = config['distribution']
+            range_val = config['range']
+            if distribution == 'lognormal' and not isinstance(range_val, float):
+                errors.append("Range must be a float for lognormal distribution")
+            elif distribution == 'uniform' and not isinstance(range_val, int):
+                errors.append("Range must be an integer for uniform distribution")
+                
     # Check time is numeric
     if 'time' in data and not isinstance(data['time'], (int, float)):
         errors.append("'time' must be numeric")
@@ -133,12 +162,13 @@ def load_json(file_path) -> Tuple[Dict, List, List]:
         if data and 'configuration' in data:
             config = data['configuration']
             
-            # Fill missing configuration values
-            fill_missing_config(data, file_path)
 
             # change mutation type naming convention
             if config.get('mutation_type') == 'wouter':
                 config['mutation_type'] = 'inplace'
+
+            # Fill missing configuration values
+            fill_missing_config(data, file_path)
 
     except json.JSONDecodeError as e:
         return None, [f"JSON decode error: {str(e)}"], []
