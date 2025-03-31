@@ -17,7 +17,6 @@ def compute_triangle_inequality_metrics(matrix):
     n = len(matrix)
     violations = []
     
-    # Sample 1000 triplets to reduce computation (adjust as needed)
     for _ in range(1000):
         i, j, k = np.random.choice(n, 3, replace=False)
         direct = matrix[i, k]
