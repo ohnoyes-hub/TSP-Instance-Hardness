@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 from analysis_util.load_json import load_full
+import seaborn as sns
+import matplotlib.pyplot as plt
+import os
 
 def compute_sad_and_frobenius(initial, evolved):
     initial = np.array(initial)
@@ -18,6 +21,20 @@ def compute_sad_and_frobenius(initial, evolved):
     frob = np.sqrt(np.sum(diff_masked ** 2))
     return sad, frob
 
+def compute_symmetry_metrics(matrix):
+    matrix = np.array(matrix)
+    n = matrix.shape[0]
+    asymmetry = np.abs(matrix - matrix.T)  # Compare M[i,j] vs. M[j,i]
+    np.fill_diagonal(asymmetry, 0)  # Ignore diagonal
+    
+    symmetric_pairs = np.sum(asymmetry == 0) - n  # Subtract diagonal
+    total_pairs = n * (n - 1)
+    
+    return {
+        "symmetric_ratio": symmetric_pairs / total_pairs,
+        "mean_asymmetry": np.mean(asymmetry[asymmetry > 0]) if np.any(asymmetry > 0) else 0,
+        "max_asymmetry": np.max(asymmetry)
+    }
 
 def collect_matrix_differences():
     data = load_full()
@@ -39,13 +56,16 @@ def collect_matrix_differences():
 
             if evolved_matrix and iterations is not None:
                 sad, frob = compute_sad_and_frobenius(init_matrix, evolved_matrix)
+                symmetry = compute_symmetry_metrics(evolved_matrix)
 
                 record = {
                     "generation": key,
                     "iterations": iterations,
                     "sad": sad,
                     "frobenius": frob,
-                    **config
+                    "symmetric_ratio": symmetry["symmetric_ratio"],
+                    "mean_asymmetry": symmetry["mean_asymmetry"],
+                    **config  # Includes generation_type, distribution, etc.
                 }
                 records.append(record)
 
@@ -66,7 +86,92 @@ def collect_matrix_differences():
     df = pd.DataFrame(records)
     return df
 
+def visualize_differences():
+    # Load matrix difference if it exists
+    df = pd.read_csv("matrix_differences.csv")
+
+    # Scatter plot for SAD vs. iterations
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='sad', y='iterations', hue='mutation_type', alpha=0.6)
+    sns.regplot(data=df, x='sad', y='iterations', scatter=False, color='black')
+    plt.xscale('log')  # If needed
+    plt.title("SAD vs. Iterations (by Mutation Type)")
+    plt.xlabel("SAD")
+    plt.ylabel("Lital Iterations")
+    plt.legend(title='Mutation Type')
+    plt.grid(True)
+    plt.tight_layout()
+    os.makedirs('./plot/instance_diff', exist_ok=True)
+    plot_path = os.path.join('./plot/instance_diff', 'scatter_sad_iterations.png')
+    plt.savefig(plot_path, bbox_inches='tight')
+    plt.show()
+
+    # Repeat for Frobenius
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='iterations', y='frobenius', hue='city_size', palette='viridis', alpha=0.6)
+    sns.regplot(data=df, x='iterations', y='frobenius', scatter=False, color='black')
+    plt.xscale('log')
+    plt.xlabel("Lital Iterations")
+    plt.ylabel("Frobenius Norm")
+    plt.legend(title='City Size')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.title("Frobenius Norm vs. Iterations (by City Size)")
+    plt.legend(title='City Size')
+    plt.title("Frobenius vs. Iterations (by City Size)")
+    # save plot
+    plot_path = os.path.join('./plot/instance_diff', 'scatter_frobenius_iterations.png')
+    plt.savefig(plot_path, bbox_inches='tight')
+    plt.show()
+
+    # Violin plot for symmetric ratio
+    plt.figure(figsize=(10, 6))
+    sns.violinplot(data=df, x='mutation_type', y='symmetric_ratio', cut=0, scale='width')
+    plt.title("Symmetric Ratio by Mutation Type")
+    plt.xlabel("Mutation Type")
+    plt.ylabel("Symmetric Ratio")
+    plt.tight_layout()
+    plt.savefig(os.path.join('./plot/instance_diff', 'violin_symmetric_ratio.png'), bbox_inches='tight')
+    plt.show()
+
+    # boxplot
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(
+        data=df, 
+        x="generation_type", 
+        y="symmetric_ratio", 
+        hue="distribution"  # Optional split
+    )
+    plt.title("Symmetry Ratio by Generation Type")
+    plt.xlabel("Generation Type")
+    plt.ylabel("Symmetric Ratio")
+    plt.legend(title='Distribution')
+    plt.ylim(0, 1.1)
+    plt.tight_layout()
+    plt.savefig(os.path.join('./plot/instance_diff', 'box_symmetric_ratio.png'), bbox_inches='tight')
+    plt.show()
+
+    #scatterplot
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(
+        data=df, 
+        x="mean_asymmetry", 
+        y="iterations", 
+        hue="generation_type",
+        alpha=0.7
+    )
+    plt.title("Asymmetry vs. Iterations")
+    plt.xlabel("Mean Asymmetry")
+    plt.ylabel("Iterations")
+    plt.legend(title='Generation Type')
+    plt.tight_layout()
+    plt.savefig(os.path.join('./plot/instance_diff', 'scatter_mean_asymmetry_iterations.png'), bbox_inches='tight')
+    plt.show()
+
+
 if __name__ == "__main__":
     df = collect_matrix_differences()
     print(df.head())
     df.to_csv("matrix_differences.csv", index=False)
+    visualize_differences()
+
