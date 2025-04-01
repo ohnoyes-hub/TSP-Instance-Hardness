@@ -11,6 +11,21 @@ import matplotlib.pyplot as plt
 
 from analysis_util.load_json import load_json
 
+def compute_symmetry_metrics(matrix):
+    matrix = np.array(matrix)
+    n = matrix.shape[0]
+    asymmetry = np.abs(matrix - matrix.T)  # Compare M[i,j] vs. M[j,i]
+    np.fill_diagonal(asymmetry, 0)  # Ignore diagonal
+    
+    symmetric_pairs = np.sum(asymmetry == 0) - n  # Subtract diagonal
+    total_pairs = n * (n - 1)
+    
+    return {
+        "symmetric_ratio": symmetric_pairs / total_pairs,
+        "mean_asymmetry": np.mean(asymmetry[asymmetry > 0]) if np.any(asymmetry > 0) else 0,
+        "max_asymmetry": np.max(asymmetry)
+    }
+
 # approach 1
 def compute_triangle_inequality_metrics(matrix):
     matrix = np.array(matrix)
