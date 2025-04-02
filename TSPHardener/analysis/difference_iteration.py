@@ -4,8 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from icecream import ic
+from scipy.stats import zscore
 
-from .load_json import load_json
+from ..analysis_util.load_json import load_json
 
 def compute_differences(arr):
     """
@@ -15,7 +16,7 @@ def compute_differences(arr):
 
 def difference_between_iterations():
     base_dirs = [
-        "./Continuation", 
+        #"./Continuation", 
         "./Results"
     ]
     analysis_data = []
@@ -29,11 +30,9 @@ def difference_between_iterations():
                 ic("Skipped", file_path, errors)
                 continue
 
-            # Extract key parameters
             config = data.get('configuration', {})
             iterations = data.get('results', {}).get('all_iterations', []) 
 
-            # Compute differences PER FILE
             diffs = compute_differences(iterations)
             if not diffs:
                 continue
@@ -52,53 +51,42 @@ def difference_between_iterations():
     if df.empty:
         ic("No valid data found!")
         return
+    
+    df['zscore_difference'] = zscore(df['difference'])
 
-    # Statistics
-    stats_df = df.groupby(
-        ['mutation_type', 'generation_type', 'distribution']
-    )['difference'].describe()
-    print("\n=== Descriptive Statistics by Configuration ===")
-    ic(stats_df)
-
-    aggregated = df.groupby(
-        ['mutation_type', 'generation_type', 'distribution']
-    )['difference'].agg(['mean', 'std', 'median', 'min', 'max'])
-    print("\n=== Custom Aggregated Stats ===")
-    ic(aggregated)
-
-    # Boxplot
+    # Violin plot
     plt.figure(figsize=(10, 6))
-    sns.boxplot(x='mutation_type', y='difference', data=df)
-    plt.title("Generation Differences by Mutation Type")
+    sns.violinplot(x='mutation_type', y='zscore_difference', data=df, cut=0, scale='width')
+    plt.title("Z-score Scaled Generation Differences by Mutation Type")
     plt.xlabel("Mutation Type")
     plt.ylabel("Generation Difference")
 
     # Save plot
     os.makedirs('./plot/iteration_diff', exist_ok=True)
-    plot_path = os.path.join('./plot/iteration_diff', 'boxplot_diff.png')
+    plot_path = os.path.join('./plot/iteration_diff', 'violin_zscore_diff_mutation.png')
     plt.savefig(plot_path, bbox_inches='tight')
     plt.close()
 
     # Violin plot
     plt.figure(figsize=(10, 6))
-    sns.violinplot(x='generation_type', y='difference', data=df, cut=0, scale='width')
-    plt.title("Distribution of Generation Differences by Generation Type")
+    sns.violinplot(x='generation_type', y='zscore_difference', data=df, cut=0, scale='width')
+    plt.title("Z-Score Scaled Distribution of Generation Differences by Generation Type")
     
     # Save plot
-    plot_path = os.path.join('./plot/iteration_diff', 'violin_diff.png')
+    plot_path = os.path.join('./plot/iteration_diff', 'violin_zscore_diff_generation.png')
     plt.savefig(plot_path, bbox_inches='tight')
     plt.close()
 
     # Histogram
     plt.figure(figsize=(10, 6))
     plt.figure(figsize=(10, 6))
-    sns.histplot(df['difference'], kde=True, bins=30)
-    plt.title("Histogram of All Generation Differences")
+    sns.histplot(df['zscore_difference'], kde=True, bins=30)
+    plt.title("Histogram of Z-Score Scaled Generation Differences")
     plt.xlabel("Generation Difference")
     plt.ylabel("Frequency")
     
     # Save plot
-    plot_path = os.path.join('./plot/iteration_diff', 'hist_diff.png')
+    plot_path = os.path.join('./plot/iteration_diff', 'hist_zscore_diff.png')
     plt.savefig(plot_path, bbox_inches='tight')
     plt.close()
 

@@ -18,7 +18,7 @@ def run_experiment(config):
     
     # Formulation build command
     cmd = [
-        'python3', '-m', 'experiment',
+        'python3', '-m', 'main',
         json.dumps([city_size]),
         json.dumps(ranges),
         str(mutations),
@@ -43,5 +43,5 @@ if __name__ == '__main__':
     init_logger('run.log')
     configs = load_configs('tsp-formulations.csv')
     
-    with Pool(processes=64) as pool:
+    with Pool(processes=70) as pool:
         pool.map(run_experiment, configs)

@@ -3,12 +3,12 @@ import glob
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from .load_json import load_json
+from analysis_util.load_json import load_json
 from icecream import ic
 
 def all_iteration():
     base_dirs = [
-        "./Continuation", 
+        #"./Continuation", 
         "./Results"
     ]
 
@@ -61,7 +61,7 @@ def all_iteration():
         # Strip plot (individual points)
         sns.stripplot(data=df, x='iteration', jitter=0.3, alpha=0.5)
         plt.title("Individual Lital's Iteration Points")
-        plt.xlabel("Iteration Number")
+        plt.xlabel("Lital's Iteration")
         
         # Save strip plot
         plot_path = os.path.join('./plot/all_iterations', 'strip_all_iterations.png')
@@ -81,7 +81,7 @@ def all_iteration():
 
 def all_iteration_config():
     base_dirs = [
-        "./Continuation", 
+        #"./Continuation", 
         "./Results"
     ]
 
@@ -153,17 +153,17 @@ def all_iteration_config():
         #       hue='mutation_type', inner=None)
         # sns.swarmplot(data=df, x='distribution', y='iteration', 
         #             hue='mutation_type', size=2, color='black')
-        sns.swarmplot(data=df, x='distribution', y='iteration', 
-                    hue='mutation_type', dodge=True, size=1,
-                    linewidth=0.5, alpha=0.7) 
-        plt.title("Detailed Lital's Iteration Distribution Across Configurations")
-        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-        plt.tight_layout()
+        # sns.swarmplot(data=df, x='distribution', y='iteration', 
+        #             hue='mutation_type', dodge=True, size=1,
+        #             linewidth=0.5, alpha=0.7) 
+        # plt.title("Detailed Lital's Iteration Distribution Across Configurations")
+        # plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        # plt.tight_layout()
 
-        # Save swarm plot
-        plot_path = os.path.join('./plot/all_iterations', 'swarm_all_iterations.png')
-        plt.savefig(plot_path, bbox_inches='tight')
-        plt.close()
+        # # Save swarm plot
+        # plot_path = os.path.join('./plot/all_iterations', 'swarm_all_iterations.png')
+        # plt.savefig(plot_path, bbox_inches='tight')
+        # plt.close()
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import json
 import numpy as np
 import os
 import logging
+from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,8 @@ def load_partial(cont_file):
                ...
           },
           "last_matrix": [ ... ]  # the last hard matrix
-      }
+      },
+      "local_optima": {...},
     }
     """
     with open(cont_file, "r") as f:
@@ -74,7 +76,7 @@ def load_partial(cont_file):
     
     # find the largest iteration key in "hard_instances" to get the hardest
     # they look like "iteration_0", "iteration_150", ...
-    # This is for extensionability purposes and Hill climber will alwasys have hardest instance in the last matrix
+    # Ensure that continuation works on the hardest TSP instance
     max_iter = -1
     max_hard = 0
     for k, v in results["hard_instances"].items():
@@ -87,8 +89,13 @@ def load_partial(cont_file):
 
     hardest = max_hard
     matrix = np.array(results["last_matrix"])
-    
-    return hardest, matrix
+
+    # Local optima and transitions
+    results = data["results"]
+    local_optima = results.get("local_optima", {})
+    transitions = results.get("transitions", defaultdict(list))
+
+    return hardest, matrix, local_optima, transitions
 
 
 def save_partial(configuration, results, citysize, rang, time_spent,
@@ -139,6 +146,20 @@ def save_partial(configuration, results, citysize, rang, time_spent,
         # Update `initial_matrix` if it's not already there
         if "initial_matrix" not in existing_data["results"]:
             existing_data["results"]["initial_matrix"] = results["initial_matrix"]
+
+        # Update `local_optima` to be included in Continuation and Results
+        existing_local_optima = existing_data["results"].get("local_optima", {})
+        new_local_optima = results.get("local_optima", {})
+        existing_data["results"]["local_optima"] = {**existing_local_optima, **new_local_optima}
+        # Update `transitions` to be included in Continuation and Results
+        existing_trans = existing_data["results"].get("transitions", defaultdict(list))
+        existing_trans = defaultdict(list, existing_trans)
+        new_trans = results.get("transitions", defaultdict(list))
+        new_trans = defaultdict(list, new_trans)  # Ensure it's a defaultdict
+        for src, dests in new_trans.items():
+            existing_trans[src].extend(dests)
+        # convert back to regular dict before saving
+        existing_data["results"]["transitions"] = dict(existing_trans)
     else:
         existing_data = {
             "time": time_spent,
