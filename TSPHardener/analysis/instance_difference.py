@@ -89,13 +89,15 @@ def collect_matrix_differences():
 def visualize_differences():
     # Load matrix difference if it exists
     df = pd.read_csv("matrix_differences.csv")
+    df['sad'] = np.log(df['sad'])
+    df['frobenius'] = np.log(df['frobenius'])
 
     # Scatter plot for SAD vs. iterations
     plt.figure(figsize=(10, 6))
     sns.scatterplot(data=df, x='sad', y='iterations', hue='mutation_type', alpha=0.6)
     sns.regplot(data=df, x='sad', y='iterations', scatter=False, color='black')
     plt.xscale('log')  # If needed
-    plt.title("SAD vs. Iterations (by Mutation Type)")
+    plt.title("Lital Iteration vs Sum of Absolute Difference (by Mutation Type)")
     plt.xlabel("SAD")
     plt.ylabel("Lital Iterations")
     plt.legend(title='Mutation Type')
@@ -108,7 +110,7 @@ def visualize_differences():
 
     # Repeat for Frobenius
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(data=df, x='iterations', y='frobenius', hue='city_size', palette='viridis', alpha=0.6)
+    sns.scatterplot(data=df, x='iterations', y='frobenius', hue='mutation_type', alpha=0.6)
     sns.regplot(data=df, x='iterations', y='frobenius', scatter=False, color='black')
     plt.xscale('log')
     plt.xlabel("Lital Iterations")
@@ -116,7 +118,8 @@ def visualize_differences():
     plt.legend(title='City Size')
     plt.grid(True)
     plt.tight_layout()
-    plt.title("Frobenius Norm vs. Iterations (by City Size)")
+    plt.title("Frobenius Norm of Initial and Hardest Matrices vs. Lital Iterations")
+    plt.suptitle("By Mutation Type")
     plt.legend(title='City Size')
     plt.title("Frobenius vs. Iterations (by City Size)")
     # save plot
@@ -151,7 +154,7 @@ def visualize_differences():
     plt.savefig(os.path.join('./plot/instance_diff', 'box_symmetric_ratio.png'), bbox_inches='tight')
     plt.show()
 
-    #scatterplot
+    # TODO: change visualization of scatterplot, Generation Type: Euclidean would always on 0 so we are really interested in the asymmetric
     plt.figure(figsize=(10, 6))
     sns.scatterplot(
         data=df, 
@@ -170,8 +173,8 @@ def visualize_differences():
 
 
 if __name__ == "__main__":
-    df = collect_matrix_differences()
-    print(df.head())
-    df.to_csv("matrix_differences.csv", index=False)
+    # df = collect_matrix_differences()
+    # print(df.head())
+    # df.to_csv("matrix_differences.csv", index=False)
     visualize_differences()
 
