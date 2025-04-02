@@ -1,7 +1,10 @@
 import numpy as np
 import logging
+from scipy.spatial.distance import pdist, squareform
 
 logger = logging.getLogger(__name__)
+
+LOGNORMAL_MEAN = 10
 
 def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.ndarray:
     """
@@ -19,14 +22,16 @@ def generate_asymmetric_tsp(n: int, distribution: str, control: float) -> np.nda
         - For 'lognormal', this is the sigma parameter.
     """
     if distribution == 'uniform':
-        matrix = np.random.random((n, n)) * control
+        if control <= 0 or not isinstance(control, int):
+            raise ValueError("Control parameter must be a positive integer.")
+        matrix = np.random.randint(0, control + 1, size=(n, n)).astype(float)
+        matrix = _set_diagonal_to_inf(matrix)
     elif distribution == 'lognormal':
-        matrix = (np.random.lognormal(mean=10, sigma=control, size=(n, n))).astype(float) # mean = 10 always in experiments
+        matrix = np.around(np.random.lognormal(mean=LOGNORMAL_MEAN, sigma=control, size=(n, n)))
+        matrix = _set_diagonal_to_inf(matrix)
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
     
-    for i in range(n):
-        matrix[i, i] = np.inf
     return matrix
 
 def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions: int = 100) -> np.ndarray:
@@ -44,7 +49,7 @@ def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions
         - For 'uniform', this is the upper bound for the random values.
         - For 'lognormal', this is the sigma parameter.
     dimensions : int
-        The dimensionality of the Euclidean space (default is 10).
+        The dimensionality of the Cartesian plane (default is 10).
     Returns:
     -------
     np.ndarray
@@ -54,46 +59,35 @@ def generate_euclidean_tsp(n: int, distribution: str, control: float, dimensions
     if distribution == 'uniform':
         # scale coordinates to cap at control parameter
         scale = control / np.sqrt(dimensions)
-        points = np.random.random((n, dimensions)) * scale
+        points = np.random.randint(0, int(scale) + 1, size=(n, dimensions))
     elif distribution == 'lognormal':
-        points = np.random.lognormal(mean=10, sigma=control, size=(n, dimensions))
+        points = np.random.lognormal(mean=LOGNORMAL_MEAN, sigma=control, size=(n, dimensions))
         # scale coordinates to have a mean distance of 10
-        scaling_factor = 10 /np.mean(np.linalg.norm(points, axis=1))
+        scaling_factor = 10 / np.mean(np.linalg.norm(points, axis=1))
         points *= scaling_factor
+        points = np.around(points).astype(int)
     else:
         raise ValueError("Invalid distribution. Choose either 'uniform' or 'lognormal'.")
-    # points = np.random.random((n, dimensions))
     
-    # Calculate the pairwise Euclidean distance matrix
-    distance_matrix = np.zeros((n, n))
-    
-    for i in range(n):
-        for j in range(i + 1, n):
-            distance = np.linalg.norm(points[i] - points[j])
-            distance_matrix[i, j] = distance
-            distance_matrix[j, i] = distance
-    
-    np.fill_diagonal(distance_matrix, np.inf)  # Set diagonal to infinity for TSP
-    
+    distances = pdist(points, metric='euclidean')
+    distance_matrix = squareform(np.around(distances))
+    distance_matrix = _set_diagonal_to_inf(distance_matrix)
+
     return distance_matrix
+    # Calculate the pairwise Euclidean distance matrix
+    #distance_matrix = np.zeros((n, n), dtype=float)
+    
+    # for i in range(n):
+    #     for j in range(i + 1, n):
+    #         distance = np.linalg.norm(points[i] - points[j])
+    #         distance = np.around(distance)  # Around to nearest integer
+    #         distance_matrix[i, j] = distance
+    #         distance_matrix[j, i] = distance
+    
+    # np.fill_diagonal(distance_matrix, np.inf)  # Set diagonal to infinity for TSP
+    
 
-def triangle_inequality(matrix: np.ndarray) -> bool:
-        """Test the triangle inequality for a symmetric distance matrix."""
-        n = matrix.shape[0]
-        # Iterate over all possible triplets (i, j, k) where i, j, k are distinct
-        for i in range(n):
-            for j in range(n):
-                if i == j or matrix[i, j] == np.inf:
-                    continue
-                for k in range(n):
-                    if k == i or k == j or matrix[i, k] == np.inf or matrix[j, k] == np.inf:
-                        continue
-                    # Check if the triangle inequality holds
-                    if matrix[i, j] + matrix[j, k] < matrix[i, k]:
-                        logger.error(f"Triangle inequality failed for indices ({i}, {j}, {k})")
-                        return False
-
-        return True
+    #return distance_matrix
 
 
 def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarray:
@@ -123,6 +117,17 @@ def generate_tsp(city_size, generation_type, distribution, control) -> np.ndarra
         return generate_asymmetric_tsp(city_size, distribution, control)
     else:
         raise ValueError("Invalid generation type. Choose either 'euclidean' or 'asymmetric'.")
-    
+
+def _set_diagonal_to_inf(matrix: np.ndarray) -> np.ndarray:
+    np.fill_diagonal(matrix, np.inf)
+    return matrix
+
 # from icecream import ic
-# ic(generate_tsp(4, "euclidean", "uniform", 100).round(1))
+# # # values 
+# matrix = generate_tsp(4, "euclidean", "lognormal", 2.4)
+# ic(matrix)
+
+# ic(generate_tsp(4, "euclidean", "lognormal", 2.4))
+# ic(generate_tsp(4, "asymmetric", "lognormal", 0.2))
+# ic(generate_tsp(4, "euclidean", "uniform", 100))
+# ic(generate_tsp(4, "asymmetric", "uniform", 100))

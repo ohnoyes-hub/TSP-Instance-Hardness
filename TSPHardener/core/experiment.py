@@ -1,5 +1,6 @@
 import time
 import os
+from collections import defaultdict
 import logging
 
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
@@ -9,23 +10,25 @@ from utils.file_utils import get_result_path
 
 logger = logging.getLogger(__name__)
 
+def track_basin_transition(source_matrix, mutated_matrix, partial_results):
+    source_hash = hash(source_matrix.tobytes())
+    mutated_hash = hash(mutated_matrix.tobytes())
+    partial_results["transitions"][source_hash].append(mutated_hash)
+
 def run_single_experiment(configuration, citysize, rang, mutations):
     """
     Handles one (citysize, range) combination.
     If a results file is in Results, we skip.
     Otherwise we check Continuation for partial progress.
 
-    The resulting structure is:
-      partial_results = {
-        "hard_instances": { ... },
-        "last_matrix": [ ... ],
-        "all_iterations": [ ... ]
-      }
+    partial_results is what is being passed around and saved.
     """
     start_time = time.time()
     partial_results = {
         "initial_matrix": [],
         "hard_instances": {},
+        "local_optima": {},
+        "transitions": defaultdict(list),
         "last_matrix": [],
         "all_iterations": []
     }
@@ -46,11 +49,12 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     if os.path.exists(cont_file):
         try:
             existing_data = load_full_results(cont_file)
+            partial_results["local_optima"] = existing_data.get("local_optima", {})
+            partial_results["transitions"] = existing_data.get("transitions", defaultdict(list))
             partial_results["all_iterations"] = existing_data.get("all_iterations", [])
             partial_results["initial_matrix"] = existing_data.get("initial_matrix", [])
             partial_results["hard_instances"] = existing_data.get("hard_instances", {})
             partial_results["last_matrix"] = existing_data.get("last_matrix", [])
-            partial_results["all_iterations"] = existing_data.get("all_iterations", [])
         except Exception as e:
             logger.error(f"Error loading continuation: {e}")
     else:
@@ -79,13 +83,13 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_final=False
         )
 
-    for j in range(mutations):
-        prev_hardest = hardest
+    start_iter = len(partial_results["all_iterations"]) # start iteration from last generation
+    for j in range(start_iter, mutations):
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
             logger.error(f"Error in iteration {j}: {error}")
             continue
-        else:
+        else: # store iteration
             partial_results["all_iterations"].append(iterations)
 
         # Compare vs. hardest
@@ -94,13 +98,23 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             hardest = iterations
             hardest_matrix = matrix.copy()
             is_hardest = True
-            non_improved_iterations = 0
 
-        # Now mutate from the hardest matrix
+        # track local optima
+        matrix_hash = hash(matrix.tobytes())
+        partial_results["local_optima"][matrix_hash] = {
+            "iterations": iterations,
+            # "matrix": matrix.tolist(), # expensive so I am just using hash
+            "cost": optimal_cost,
+            "is_hardest": is_hardest
+        }
+        # log basin transitions
+        track_basin_transition(hardest_matrix, matrix, partial_results)
+
+        # mutate hardest_matrix for next iteration
         matrix = apply_mutation(hardest_matrix, configuration["mutation_type"],
                                 configuration["generation_type"], rang,
                                 configuration["distribution"])
-
+        
         # Always store the last_matrix for continuation
         partial_results["last_matrix"] = matrix.tolist()
         
