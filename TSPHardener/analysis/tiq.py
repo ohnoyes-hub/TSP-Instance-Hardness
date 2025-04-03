@@ -9,7 +9,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from analysis_util.load_json import load_json
+from analysis_util.load_json import load_json, load_all_hard_instances
 
 def compute_symmetry_metrics(matrix):
     matrix = np.array(matrix)
@@ -89,3 +89,23 @@ def triangle_inequality_violation(matrix):
         'average_violation_magnitude': avg_violation,
         'violation_ratio': violation_ratio
     }
+
+
+df_hard_instances = load_all_hard_instances()
+violation_data = [triangle_inequality_violation(instance["matrix"]) for instance in df_hard_instances.itertuples()]
+
+df = pd.DataFrame(violation_data)
+df["instance_id"] = df_hard_instances["generation"]
+
+fig, ax1 = plt.subplots(figsize=(10, 6))
+ax1.bar(df["instance_id"], df["violation_ratio"], color='skyblue', label='Violation Frequency')
+ax1.set_xlabel("Instance ID")
+ax1.set_ylabel("Violation Frequency (%)")
+
+ax2 = ax1.twinx()
+ax2.plot(df["instance_id"], df["average_violation_magnitude"], color='red', marker='o', label='Avg Magnitude')
+ax2.set_ylabel("Average Violation Magnitude")
+
+plt.title("Triangle Inequality Violation Profile")
+fig.legend(loc="upper right")
+plt.show()
