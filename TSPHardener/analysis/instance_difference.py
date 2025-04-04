@@ -94,12 +94,12 @@ def visualize_differences():
 
     # Scatter plot for SAD vs. iterations
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(data=df, x='sad', y='iterations', hue='mutation_type', alpha=0.6)
-    sns.regplot(data=df, x='sad', y='iterations', scatter=False, color='black')
+    sns.scatterplot(data=df, x='iterations', y='sad', hue='mutation_type', alpha=0.6)
+    sns.regplot(data=df, x='iterations', y='sad', scatter=False, color='black')
     plt.xscale('log')  # If needed
-    plt.title("Lital Iteration vs Sum of Absolute Difference (by Mutation Type)")
-    plt.xlabel("SAD")
-    plt.ylabel("Lital Iterations")
+    plt.title("Sum of Absolute Difference of Initial Matrix and Hardest Matrix against Lital Iteration (by Mutation Type)")
+    plt.xlabel("Lital Iterations")
+    plt.ylabel("SAD")
     plt.legend(title='Mutation Type')
     plt.grid(True)
     plt.tight_layout()

@@ -26,36 +26,6 @@ def compute_symmetry_metrics(matrix):
         "max_asymmetry": np.max(asymmetry)
     }
 
-# approach 1
-def compute_triangle_inequality_metrics(matrix):
-    matrix = np.array(matrix)
-    n = len(matrix)
-    violations = []
-    
-    for _ in range(1000):
-        i, j, k = np.random.choice(n, 3, replace=False)
-        direct = matrix[i, k]
-        indirect = matrix[i, j] + matrix[j, k]
-        if indirect == 0:
-            continue  # Avoid division by zero
-        ratio = direct / indirect
-        if ratio > 1:
-            violations.append(ratio)
-    
-    if not violations:
-        return {
-            "avg_violation": 0,
-            "max_violation": 0,
-            "violation_freq": 0
-        }
-    
-    return {
-        "avg_violation": np.mean(violations),
-        "max_violation": np.max(violations),
-        "violation_freq": len(violations) / 1000 
-    }
-
-# approach 2
 def triangle_inequality_violation(matrix):
     matrix = np.array(matrix)
     n = matrix.shape[0]
@@ -91,21 +61,37 @@ def triangle_inequality_violation(matrix):
     }
 
 
-df_hard_instances = load_all_hard_instances()
-violation_data = [triangle_inequality_violation(instance["matrix"]) for instance in df_hard_instances.itertuples()]
+def compute_and_save():
+    df_hard_instances = load_all_hard_instances()
+    results = []
 
-df = pd.DataFrame(violation_data)
-df["instance_id"] = df_hard_instances["generation"]
+    for row in df_hard_instances.itertuples():
+        # row.matrix is the distance matrix
+        tiq_vals = triangle_inequality_violation(row.matrix)
 
-fig, ax1 = plt.subplots(figsize=(10, 6))
-ax1.bar(df["instance_id"], df["violation_ratio"], color='skyblue', label='Violation Frequency')
-ax1.set_xlabel("Instance ID")
-ax1.set_ylabel("Violation Frequency (%)")
+        # Build a dictionary combining tiq_vals
+        # i.e. iteration= row.iterations, generation=row.generation, etc.
 
-ax2 = ax1.twinx()
-ax2.plot(df["instance_id"], df["average_violation_magnitude"], color='red', marker='o', label='Avg Magnitude')
-ax2.set_ylabel("Average Violation Magnitude")
+        config_data = {
+            "distribution": row.distribution,
+            "generation_type": row.generation_type,
+            "city_size": row.city_size,
+            "range": row.range,
+            "mutation_type": row.mutation_type
+        }
+        combined_dict = {
+            **tiq_vals, 
+            "configuration": config_data,
+            "iteration": row.iterations, 
+            "generation": row.generation,
+            "optimal_cost": row.optimal_cost
+        }
 
-plt.title("Triangle Inequality Violation Profile")
-fig.legend(loc="upper right")
-plt.show()
+        results.append(combined_dict)
+
+    df_tiq = pd.DataFrame(results)
+
+    # Save to CSV
+    df_tiq.to_csv("triangle_inequality_violations.csv", index=False)
+
+compute_and_save()
