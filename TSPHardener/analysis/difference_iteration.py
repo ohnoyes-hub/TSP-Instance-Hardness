@@ -65,6 +65,7 @@ def difference_between_iterations():
     os.makedirs('./plot/iteration_diff', exist_ok=True)
     plot_path = os.path.join('./plot/iteration_diff', 'violin_zscore_diff_mutation.png')
     plt.savefig(plot_path, bbox_inches='tight')
+    ic("Saved plot:", plot_path)
     plt.close()
 
     # Violin plot
@@ -88,6 +89,7 @@ def difference_between_iterations():
     # Save plot
     plot_path = os.path.join('./plot/iteration_diff', 'hist_zscore_diff.png')
     plt.savefig(plot_path, bbox_inches='tight')
+    ic("Saved plot:", plot_path)
     plt.close()
 
 if __name__ == "__main__":

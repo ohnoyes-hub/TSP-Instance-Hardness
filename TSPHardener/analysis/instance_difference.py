@@ -4,6 +4,7 @@ from analysis_util.load_json import load_full
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
+from icecream import ic
 
 def compute_sad_and_frobenius(initial, evolved):
     initial = np.array(initial)
@@ -92,6 +93,41 @@ def visualize_differences():
     df['sad'] = np.log(df['sad'])
     df['frobenius'] = np.log(df['frobenius'])
 
+    # Individual Plots
+    mutation_types = df['mutation_type'].unique()
+    for mutation in mutation_types:
+        sub_df = df[df['mutation_type'] == mutation]
+
+        # SAD vs. Iterations
+        plt.figure(figsize=(10, 6))
+        sns.scatterplot(data=sub_df, x='iterations', y='sad', alpha=0.6)
+        sns.regplot(data=sub_df, x='iterations', y='sad', scatter=False, color='black')
+        plt.xscale('log')
+        plt.title(f"SAD vs Iterations - {mutation}")
+        plt.xlabel("Lital Iterations")
+        plt.ylabel("Log SAD")
+        plt.grid(True)
+        plt.tight_layout()
+        filename = f'scatter_sad_iterations_{mutation}.png'
+        plt.savefig(os.path.join('./plot/instance_diff', filename), bbox_inches='tight')
+        ic("Saved plot:", filename)
+        plt.close()
+
+        # Frobenius vs. Iterations
+        plt.figure(figsize=(10, 6))
+        sns.scatterplot(data=sub_df, x='iterations', y='frobenius', alpha=0.6)
+        sns.regplot(data=sub_df, x='iterations', y='frobenius', scatter=False, color='black')
+        plt.xscale('log')
+        plt.title(f"Frobenius vs Iterations - {mutation}")
+        plt.xlabel("Lital Iterations")
+        plt.ylabel("Log Frobenius Norm")
+        plt.grid(True)
+        plt.tight_layout()
+        filename = f'scatter_frobenius_iterations_{mutation}.png'
+        plt.savefig(os.path.join('./plot/instance_diff', filename), bbox_inches='tight')
+        ic("Saved plot:", filename)
+        plt.close()
+
     # Scatter plot for SAD vs. iterations
     plt.figure(figsize=(10, 6))
     sns.scatterplot(data=df, x='iterations', y='sad', hue='mutation_type', alpha=0.6)
@@ -106,6 +142,7 @@ def visualize_differences():
     os.makedirs('./plot/instance_diff', exist_ok=True)
     plot_path = os.path.join('./plot/instance_diff', 'scatter_sad_iterations.png')
     plt.savefig(plot_path, bbox_inches='tight')
+    ic("Saved plot:", plot_path)
     plt.show()
 
     # Repeat for Frobenius
@@ -125,6 +162,7 @@ def visualize_differences():
     # save plot
     plot_path = os.path.join('./plot/instance_diff', 'scatter_frobenius_iterations.png')
     plt.savefig(plot_path, bbox_inches='tight')
+    ic("Saved plot:", plot_path)
     plt.show()
 
     # Violin plot for symmetric ratio
@@ -135,23 +173,7 @@ def visualize_differences():
     plt.ylabel("Symmetric Ratio")
     plt.tight_layout()
     plt.savefig(os.path.join('./plot/instance_diff', 'violin_symmetric_ratio.png'), bbox_inches='tight')
-    plt.show()
-
-    # boxplot
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(
-        data=df, 
-        x="generation_type", 
-        y="symmetric_ratio", 
-        hue="distribution"  # Optional split
-    )
-    plt.title("Symmetry Ratio by Generation Type")
-    plt.xlabel("Generation Type")
-    plt.ylabel("Symmetric Ratio")
-    plt.legend(title='Distribution')
-    plt.ylim(0, 1.1)
-    plt.tight_layout()
-    plt.savefig(os.path.join('./plot/instance_diff', 'box_symmetric_ratio.png'), bbox_inches='tight')
+    ic("Saved plot:", plot_path)
     plt.show()
 
     # TODO: change visualization of scatterplot, Generation Type: Euclidean would always on 0 so we are really interested in the asymmetric
@@ -169,6 +191,7 @@ def visualize_differences():
     plt.legend(title='Generation Type')
     plt.tight_layout()
     plt.savefig(os.path.join('./plot/instance_diff', 'scatter_mean_asymmetry_iterations.png'), bbox_inches='tight')
+    ic("Saved plot:", plot_path)
     plt.show()
 
 

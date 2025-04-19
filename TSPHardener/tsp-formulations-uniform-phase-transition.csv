@@ -1,0 +1,24 @@
+size,range,mutations,continuation,tsp type,distribution,mutation strategy
+20,"[5,10]",100,,asymmetric,uniform,wouter
+20,"[15,20]",100,,asymmetric,uniform,wouter
+20,"[25,30]",100,,asymmetric,uniform,wouter
+20,"[35,40]",100,,asymmetric,uniform,wouter
+20,"[45,50]",100,,asymmetric,uniform,wouter
+20,"[55,60]",100,,euclidean,uniform,wouter
+20,"[65,70]",100,,euclidean,uniform,wouter
+20,"[75,80]",100,,euclidean,uniform,wouter
+20,"[85,90]",100,,euclidean,uniform,wouter
+20,"[95,100]",100,,euclidean,uniform,wouter
+30,"[5,10]",100,,asymmetric,uniform,wouter
+30,"[15,20]",100,,asymmetric,uniform,wouter
+30,"[25,30]",100,,asymmetric,uniform,wouter
+30,"[35,40]",100,,asymmetric,uniform,wouter
+30,"[45,50]",100,,asymmetric,uniform,wouter
+30,"[55,60]",100,,euclidean,uniform,wouter
+30,"[65,70]",100,,euclidean,uniform,wouter
+30,"[75,80]",100,,euclidean,uniform,wouter
+30,"[85,90]",100,,euclidean,uniform,wouter
+30,"[95,100]",100,,euclidean,uniform,wouter
+30,[10],100,,euclidean,uniform,wouter
+30,[15],100,,euclidean,uniform,wouter
+30,[25],100,,euclidean,uniform,wouter

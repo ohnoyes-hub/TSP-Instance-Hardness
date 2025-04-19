@@ -164,6 +164,118 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
     logger.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
 
+def run_single_phase_transition_experiment(configuration, citysize, rang, mutations):
+    """
+    Modified Hill-climber above to not Hill-climb where each iteration will new instance instead of mutating the hardest.
+    Replicate phase transition experiment from prior literature not using hill-climbing.
+    """
+    start_time = time.time()
+    partial_results = {
+        "initial_matrix": [],
+        "hard_instances": {},
+        "local_optima": {},
+        "transitions": defaultdict(list),
+        "last_matrix": [],
+        "all_iterations": []
+    }
+
+    # Load from partial or generate new
+    cont_file = get_result_path(
+        citysize, 
+        rang, 
+        configuration["distribution"],
+        configuration["generation_type"],
+        configuration["mutation_type"],
+        is_final=False
+    )
+    if os.path.exists(cont_file):
+        try:
+            existing_data = load_full_results(cont_file)
+            partial_results["local_optima"] = existing_data.get("local_optima", {})
+            partial_results["hard_instances"] = existing_data.get("hard_instances", {})
+            partial_results["all_iterations"] = existing_data.get("all_iterations", [])
+            # Ignore transitions, initial_matrix, last_matrix as they are not used
+        except Exception as e:
+            logger.error(f"Error loading continuation: {e}")
+    else:
+        # No initial setup needed for new matrices
+        pass
+
+    start_iter = len(partial_results["all_iterations"])
+    hardest = 0
+    hardest_matrix = None
+
+    for j in range(start_iter, mutations):
+        # Generate a new matrix for each iteration
+        _, matrix = initialize_matrix_and_hardest(citysize, rang, configuration)
+        
+        # Run the algorithm on the new matrix
+        iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
+        if error:
+            logger.error(f"Error in iteration {j}: {error}")
+            continue
+        else:
+            partial_results["all_iterations"].append(iterations)
+
+        # Check if this is the hardest instance so far
+        is_hardest = False
+        if iterations > hardest:
+            hardest = iterations
+            hardest_matrix = matrix.copy()
+            is_hardest = True
+
+        # Track local optima (no transitions)
+        matrix_hash = hash(matrix.tobytes())
+        partial_results["local_optima"][matrix_hash] = {
+            "iterations": iterations,
+            "cost": optimal_cost,
+            "is_hardest": is_hardest
+        }
+
+        # Store as a hard instance if it's the hardest
+        if is_hardest:
+            iteration_key = f"iteration_{j}"
+            partial_results["hard_instances"][iteration_key] = {
+                "iterations": iterations,
+                "hardest": hardest,
+                "optimal_tour": optimal_tour,
+                "optimal_cost": optimal_cost,
+                "matrix": hardest_matrix.tolist(),
+                "is_hardest": True
+            }
+
+        # Periodically save partial results
+        if (j % 100 == 0) or is_hardest:
+            elapsed = time.time() - start_time
+            save_partial(
+                configuration, 
+                partial_results,
+                citysize, 
+                rang,
+                time_spent=elapsed,
+                distribution=configuration["distribution"],
+                tsp_type=configuration["generation_type"],
+                mutation_strategy=configuration["mutation_type"],
+                is_final=False
+            )
+
+    # Final save
+    if partial_results["hard_instances"]:
+        elapsed = time.time() - start_time
+        save_partial(
+            configuration, 
+            partial_results,
+            citysize, 
+            rang,
+            time_spent=elapsed,
+            distribution=configuration["distribution"],
+            tsp_type=configuration["generation_type"],
+            mutation_strategy=configuration["mutation_type"],
+            is_final=True
+        )
+
+    logger.info(f"Completed up to {mutations} new instances for citysize={citysize}, range={rang}.")
+
 def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_type, mutation_strategy):    
     """
     Orchestrates an experiment with configuration
@@ -196,6 +308,6 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
                 "city_size": citysize,
                 "range": rang
             }
-            run_single_experiment(conf_with_params, citysize, rang, _mutations)
+            run_single_phase_transition_experiment(conf_with_params, citysize, rang, _mutations)
             
     logger.info(f"Total experiment duration: {time.time() - t0:.2f}s")

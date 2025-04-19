@@ -2,6 +2,8 @@ import pandas as pd
 from icecream import ic
 from analysis_util.load_json import load_all_hard_instances
 
+# Shows by how much the final instance is harder than the baseline per configuration
+
 # Load data with configurations and file paths
 df = load_all_hard_instances() #include_file_path=True)
 
