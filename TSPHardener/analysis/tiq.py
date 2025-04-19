@@ -80,9 +80,9 @@ def compute_and_save():
             "mutation_type": row.mutation_type
         }
         combined_dict = {
-            **tiq_vals, 
-            "configuration": config_data,
-            "iteration": row.iterations, 
+            **tiq_vals,
+            **config_data,
+            "iteration": row.iterations,
             "generation": row.generation,
             "optimal_cost": row.optimal_cost
         }
@@ -93,5 +93,36 @@ def compute_and_save():
 
     # Save to CSV
     df_tiq.to_csv("triangle_inequality_violations.csv", index=False)
+    ic("Saved triangle_inequality_violations.csv")
 
-compute_and_save()
+# compute_and_save()
+
+def plot_tiq_vs_iterations():
+
+    tiq_values = ['violation_count', 'total_violation_magnitude', 'average_violation_magnitude', 'violation_ratio']
+
+    df = pd.read_csv("triangle_inequality_violations.csv")
+    
+    for tiq_value in tiq_values:
+        plt.figure(figsize=(10, 6))
+        sns.scatterplot(
+            data=df,
+            x='iteration',
+            y=tiq_value,
+            hue='mutation_type',
+            alpha=0.6
+        )
+        plt.xscale('log') 
+        plt.xlabel("Lital Iterations")
+        plt.ylabel("Triangle Inequality Violations")
+        plt.title(f"TIQ {tiq_value} vs Iterations (by Mutation Type)")
+        plt.legend(title="Mutation Type")
+        plt.grid(True)
+        plt.tight_layout()
+
+        os.makedirs('./plot/tiq', exist_ok=True)
+        plt.savefig(f'./plot/tiq/scatter_{tiq_value}_vs_iterations.png', bbox_inches='tight')
+        plt.show()
+
+# Uncomment below if running standalone
+plot_tiq_vs_iterations()

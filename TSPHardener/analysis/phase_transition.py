@@ -1,59 +1,68 @@
-import seaborn as sns
 import matplotlib.pyplot as plt
-import pandas as pd
+from analysis_util.load_json import load_phase_transition_iterations
+from icecream import ic
 import os
-from analysis_util.load_json import load_full
 
-# Load all experiment data
-all_data = load_full()
+def plot_phase_transition(dist: str = 'uniform'):
+    df = load_phase_transition_iterations()
 
-# Define valid ranges for each distribution
-lognormal_ranges = [round(0.2 * i, 1) for i in range(1, 26)]  # 0.2 to 5.0
-uniform_ranges = list(range(5, 101, 5))                      # 5 to 100
+    # Filter data
+    filtered_df = df[
+        (df['distribution'] == dist) &
+        (df['range'].notna()) &
+        (df['iteration'] > 0)
+    ]
 
-# Collect data points
-lognormal_points = {'euclidean': [], 'asymmetric': []}
-uniform_points = {'euclidean': [], 'asymmetric': []}
+    if filtered_df.empty:
+        ic("No data found", dist)
+        return
 
-for entry in all_data:
-    config = entry.get('configuration', {})
-    distribution = config.get('distribution')
-    range_val = config.get('range')
-    gen_type = config.get('generation_type')
-    results = entry.get('results', {})
-    all_iterations = results.get('all_iterations', [])
+    # Configuration parameters
+    city_sizes = [20, 30]
+    tsp_types = ['euclidean', 'asymmetric']
 
-    if not all_iterations or gen_type not in ['euclidean', 'asymmetric']:
-        continue
+    for tsp_type in tsp_types:
+        for size in city_sizes:
+            # Subset data
+            subset = filtered_df[
+                (filtered_df['generation_type'] == tsp_type) &
+                (filtered_df['city_size'] == size)
+            ]
 
-    first_50 = all_iterations[:30]
+            if subset.empty:
+                ic("No data:", tsp_type, size)
+                continue
 
-    if distribution == 'lognormal' and range_val in lognormal_ranges:
-        for iteration in first_50:
-            lognormal_points[gen_type].append({'range': range_val, 'iteration': iteration})
-    elif distribution == 'uniform' and range_val in uniform_ranges:
-        for iteration in first_50:
-            uniform_points[gen_type].append({'range': range_val, 'iteration': iteration})
+            # Calculate statistics
+            stats = subset.groupby('range')['iteration'].agg(['max', 'median', 'mean', 'std']).reset_index().sort_values('range')
 
-# Create and plot for each combination
-for dist_type, points_dict in [('lognormal', lognormal_points), ('uniform', uniform_points)]:
-    for gen_type, points in points_dict.items():
-        if not points:
-            continue
-        df = pd.DataFrame(points)
-        plt.figure(figsize=(8, 5))
-        sns.scatterplot(data=df, x='range', y='iteration', alpha=0.6)
-        plt.xlabel('Range (σ)' if dist_type == 'lognormal' else 'Range (Max Distance)')
-        plt.ylabel('Iterations to Solve Initial Matrix')
-        plt.title(f'{dist_type.capitalize()} Distribution - {gen_type.capitalize()}')
-        plt.grid(True)
-        plt.tight_layout()
+            # Plot setup
+            plt.figure(figsize=(12, 6))
+            
+            # Plot lines
+            plt.plot(stats['range'], stats['max'], label='Max')
+            plt.plot(stats['range'], stats['median'], label='Median')
+            plt.plot(stats['range'], stats['mean'], label='Mean')
+            plt.plot(stats['range'], stats['std'], linestyle='--', label='Std Dev')
 
-        # Save plot
-        folder_path = './plot/phase_transition'
-        os.makedirs(folder_path, exist_ok=True)
-        filename = f'{dist_type}_{gen_type}_distribution.png'
-        plot_path = os.path.join(folder_path, filename)
-        plt.savefig(plot_path, bbox_inches='tight')
-        plt.show()
+            # Scatter raw data
+            plt.scatter(subset['range'], subset['iteration'], color='grey', alpha=0.3, label='Data Points')
 
+            # Labels and title
+            plt.xlabel(r"$rand_{max}$" if dist == 'uniform' else r"$\sigma$")
+            plt.ylabel("Iterations")
+            plt.title(f"City Size {size}, {tsp_type.title()} TSP Phase Transition ({dist.capitalize()})")
+            plt.legend()
+            plt.grid(True)
+            plt.xticks(sorted(stats['range'].unique()))
+
+            # Save plot
+            os.makedirs('./plot/phase_transition', exist_ok=True)
+            save_path = os.path.join('./plot/phase_transition',f'phase_transition_{dist}_{tsp_type}_{size}.png')
+            plt.savefig(save_path, bbox_inches='tight')
+            plt.close()
+            ic("Saved:", save_path)
+
+if __name__ == "__main__":
+    plot_phase_transition('uniform')
+    plot_phase_transition('lognormal')

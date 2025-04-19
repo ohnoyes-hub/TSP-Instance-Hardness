@@ -287,6 +287,39 @@ def load_all_iteration():
     
     return grouped_data
 
+def load_phase_transition_iterations() -> pd.DataFrame:
+    """
+    Load all iterations from Phase Transition experiments (all_iterations field).
+    """
+    base_dirs = [
+        "./Phase-Trans-Results",
+        "./Phase-Trans-Continuation"
+    ]
+    all_entries = []
+
+    for base_dir in base_dirs:
+        pattern = os.path.join(base_dir, '**', '*.json')
+        json_files = glob.glob(pattern, recursive=True)
+
+        for file_path in json_files:
+            data, errors, _ = load_json(file_path)
+            if data is None or errors:
+                continue  # Skip invalid files
+            
+            config = data.get('configuration', {})
+            iterations = data.get('results', {}).get('all_iterations', [])
+            
+            for iteration_val in iterations:
+                entry = {
+                    'iteration': iteration_val,
+                    'file_path': file_path,
+                    **config
+                }
+                all_entries.append(entry)
+    
+    ic("Loaded", len(all_entries), "phase transition iterations")
+    return pd.DataFrame(all_entries)
+
 def load_lon_data() -> Tuple[Dict, defaultdict]:
     """
     Loads all LON data (local_optima and transitions) from JSON files.

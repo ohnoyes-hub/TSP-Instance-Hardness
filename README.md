@@ -45,3 +45,40 @@ TSPHardener is where `main.py` and `run.py`.
 - `core` :  Contains the core logic for the hill-climber.
 - `utils` : Utility functions for experiment data handling.
 - `analysis` :  Independent plotting and statistical scripts which load their data from `load_json`. These scripts provide visualizations and quantitative insights into the experiment.
+
+
+Random Sampling experiment:
+100 phase transition experiments
+
+lognormal (25) * tsp_type (2) * city_size(2)
+
+80 phase transition experiments
+
+uniform (20) * tsp_type (2) * city_size(2)
+
+Hill-climber experiment:
+Type of run for which experiment: fine grain detail(feedback)
+
+lognormal 
+25 * 2 * 2 * 3 = 300
+uniform 
+20 * 2 * 2 * 3 = 240
+
+average cell value of hardest intances. - difference between local optima
+
+TODO:
+1. describe random sampling
+2. random sampling figures
+3. diffrence between initial and evolved instance of hill-climber (lital iterations)
+4. tiqness, average, std of cell values of matrices. 
+5. make github public
+
+Experiments to redo:
+hill-climber: size30, inplace, euclidean, lognormal
+hill-climber: size20, scramble, euclidean, lognormal
+hill-climber: size30, scramble, euclidean, lognormal
+hill-climber: size30, swap, euclidean, lognormal
+
+phase-transition: size20, euclidean, lognormal
+phase-transition: size30, euclidean, lognormal
+phase-transition: size30, euclidean, uniform
