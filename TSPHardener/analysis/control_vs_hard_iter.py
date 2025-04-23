@@ -143,7 +143,7 @@ def plot_iteration_range(dist: str = "uniform") -> None:
                     y_line,
                     linestyle="--",
                     linewidth=2,
-                    label="trend‑line (linear)",
+                    label="trend of hill-climbed hardest instances",
                     color="black",
                 )
 
