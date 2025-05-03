@@ -4,7 +4,7 @@ from multiprocessing import Pool
 import json
 from formulation.validate import ExperimentConfig, load_configs
 import logging
-from utils.log_util import init_logger
+from utils.log_util import init_logger, log_experiment_info
 
 def run_experiment(config):
     # params
@@ -35,7 +35,8 @@ def run_experiment(config):
         logging.info(f"Completed: {cmd}")
         logging.debug(f"Output: {result.stdout}")
     except subprocess.CalledProcessError as e:
-        logging.error(f"Error in {cmd}:", f"{e.stderr}")
+        error_details = e.stderr if e.stderr else "No stderr captured."
+        log_experiment_info(config.__dict__, error_details)
     except Exception as e:
         logging.error(f"Unexpected error in {' '.join(cmd)}: {str(e)}")
 
