@@ -10,7 +10,7 @@ To effectively leverage computational resources, each experimental configuration
 
 ### Dependencies
 
-To install all required libraries with `pip install -r requirements.txt`
+Install all required libraries with: `pip install -r requirements.txt`
 
 ### Full Experiment
 To initiate a complete set of experiments based on `tsp-formulation.csv`, run:
