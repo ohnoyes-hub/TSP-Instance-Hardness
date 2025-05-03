@@ -2,7 +2,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from ..analysis_util.load_json import load_all_iteration
+from util.load_experiment import load_all_iteration
 
 # Load data
 df = load_all_iteration()

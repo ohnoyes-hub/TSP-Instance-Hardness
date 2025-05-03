@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from TSPHardener.analysis_util.load_experiment import load_json
+from util.load_experiment import load_json
 from icecream import ic
 
 def all_iteration():

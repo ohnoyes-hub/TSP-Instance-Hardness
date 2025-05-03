@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from analysis_util.load_json import load_full
+from util.load_experiment import load_full
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os

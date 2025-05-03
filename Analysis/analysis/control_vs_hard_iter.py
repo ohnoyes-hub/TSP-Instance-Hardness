@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from analysis_util.load_json import load_all_hard_instances
+from util.load_experiment import load_all_hard_instances
 
 def plot_iteration_range_pre(dist: str = 'uniform'):
     # Load all hardest instances with configurations

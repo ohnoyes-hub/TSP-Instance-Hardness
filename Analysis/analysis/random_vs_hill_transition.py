@@ -6,7 +6,7 @@ with the scatter from phase_transition.
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from analysis_util.load_json import (
+from TSPHardener.analysis_util.load_experiment import (
     load_all_hard_instances,
     load_phase_transition_iterations,
 )
