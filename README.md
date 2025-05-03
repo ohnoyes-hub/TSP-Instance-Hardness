@@ -1,13 +1,12 @@
 # Where Really Hard Traveling Salesman Problems Are
 
-This repository contains source code for the experiments and analysis presented in Where Really Hard Traveling Salesman Problems Are, a thesis by Thomas Sijpkens. It expands upon (Wouter Knibbe's thesis)[https://github.com/WouterKnibbe/ATSP_hillForHard] by exploring a more diverse set of configurations and mutation strategies for generating hard TSP instances using hill climbing.
-The study focuses on comparing how well different TSP configurations perform when used in hill climbing for hardness instance generation, with particular attention to:
+This repository contains the source code for experiments and analyses presented in the thesis Where Really Hard Traveling Salesman Problems Are by Thomas Sijpkens. It extends and builds upon the prior work of Wouter Knibbe's thesis, introducing a broader range of TSP configurations and more varied mutation strategies for both hill climbing and random sampling methods.
 
-- TSP types (e.g., Euclidean, etc.)
-- Mutation strategies (e.g., scramble, etc.)
-- Cost distributions (e.g., uniform, lognormal)
+To effectively leverage computational resources, each experimental configuration is designed to be embarrassingly parallel, resulting in a total of 620 independent experimental runs.
 
-Local optima and transition paths are recorded during hill climbing, and these are used to build a local optima network. This network helps illustrate how effectively various hill-climbing algorithms can escape local optima across different configurations.
+Continuing Work
+
+During the hill climbing process, local optima and transition paths are systematically recorded to construct local optima networks. These networks provide detailed insights into the evolutionary trajectories and characteristics of TSP instances, clarifying how different instances evolve under various mutation strategies and random sampling approaches.
 
 # Dependencies
 
@@ -17,15 +16,24 @@ To install all required libraries for both experiments and analysis:
 
 # Structure`
 
-.
 ├── TSPHardener
-│   ├── main.py
-│   ├── run.py
-│   ├── core/
-│   └── utils/
+
+│ ├── main.py
+
+│ ├── run.py
+
+│ ├── core/
+
+│ └── utils/
+
 ├── analysis/
-│   └── (scripts for plotting and statistics)
+
+│ ├── analysis
+
+│ └── analysis (scripts for plotting and statistics)
+
 ├── tsp-formulation.csv
+
 └── requirements.txt
 
 
