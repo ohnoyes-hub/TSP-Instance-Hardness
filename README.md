@@ -39,21 +39,25 @@ In the example above:
 - Cost distribution: uniform
 - Mutation strategy: scramble
 
+---
+
 # Project Structure
 
 ```plaintext
 ├── TSPHardener
 │   ├── main.py           # Executes a single experiment
 │   ├── run.py            # Executes all experiments in parallel
+|   ├── tsp-formulation.csv   # Definitions of experiment formulations
 │   ├── core/             # Core logic for the hill-climber
 │   └── utils/            # Utility functions for experiment handling
 ├── analysis/
 │   ├── analysis          # Scripts for plotting and statistical analysis
 │   └── util              # Utility functions for data validation and loading
-├── tsp-formulation.csv   # Definitions of experiment formulations
 └── requirements.txt      # Project dependencies
 ```
 
-Continuing Work
+---
+
+# Continuing Work
 
 During the hill climbing process, local optima and transition paths are systematically recorded to construct local optima networks. These networks provide detailed insights into the evolutionary trajectories and characteristics of TSP instances, clarifying how different instances evolve under various mutation strategies and random sampling approaches.
