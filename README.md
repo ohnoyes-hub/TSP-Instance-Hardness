@@ -49,8 +49,9 @@ TSPHardener is where `main.py` and `run.py`.
   
 - `run.py` : Reads all formulations from `tsp-formulation.csv`. `run.py` and executes them in parallel using a thread pool. Each formulation is passed to a hill-climber run.
 - `core` :  Contains the core logic for the hill-climber.
-- `utils` : Utility functions for experiment data handling.
-- `analysis` :  Independent plotting and statistical scripts which load their data from `load_json`. These scripts provide visualizations and quantitative insights into the experiment.
+- `TSPHardener.utils` : Utility functions for saving experiments, saving partial results, handling continuing from an experiment, and logging.
+- `analysis.analysis` :  Independent plotting and statistical scripts analyzing the whole experiment.
+- `analysis.util` : Utility function on validating and loading experiment data for analysis.
 
 
 Random Sampling experiment:
