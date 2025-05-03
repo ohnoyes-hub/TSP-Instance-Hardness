@@ -1,7 +1,30 @@
 from abc import ABC, abstractmethod
 import numpy as np
+from .generate_tsp import TSPBuilder
 
 LOGNORMAL_MEAN = 10
+
+def get_mutation_strategy(mutation_type, generation_type, distribution, control):
+    """
+    Simple factory to create a mutation strategy instance.
+    """
+    if mutation_type == "swap":
+        return SwapMutation()
+    elif mutation_type == "inplace":
+        return InplaceMutation(distribution, control)
+    elif mutation_type == "scramble":
+        return ScrambleMutation()
+    elif mutation_type == "random_sampling":
+        builder = (
+            TSPBuilder()
+            .set_city_size(control)
+            .set_generation_type(generation_type)
+            .set_distribution(distribution)
+            .set_control(control)
+        )
+        return RandomSampling(builder)
+    else:
+        raise ValueError(f"Unknown mutation type: {mutation_type}")
 
 class MutationStrategy(ABC):
     """Abstract base class for mutation strategies."""
@@ -48,8 +71,7 @@ class RandomSampling(MutationStrategy):
     
     def mutate(self, tsp_instance):
         new_instance = self.tsp_builder.build()
-        tsp_instance.matrix = new_instance.matrix.copy()
-        return tsp_instance
+        return new_instance.matrix
 
 #################################################################
 # Mutation Core Functions:
