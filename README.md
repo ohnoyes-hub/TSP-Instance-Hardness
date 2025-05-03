@@ -8,6 +8,10 @@ To effectively leverage computational resources, each experimental configuration
 
 ## Running Experiments
 
+### Dependencies
+
+To install all required libraries with `pip install -r requirements.txt`
+
 ### Full Experiment
 To initiate a complete set of experiments based on `tsp-formulation.csv`, run:
 
@@ -35,13 +39,7 @@ In the example above:
 - Cost distribution: uniform
 - Mutation strategy: scramble
 
-# Dependencies
-
-To install all required libraries for both experiments and analysis:
-
-`pip install -r requirements.txt`
-
-# Structure`
+# Project Structure
 
 ```plaintext
 ├── TSPHardener
