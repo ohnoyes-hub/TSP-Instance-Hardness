@@ -26,8 +26,10 @@ def get_mutation_strategy(mutation_type, generation_type, distribution, control)
     else:
         raise ValueError(f"Unknown mutation type: {mutation_type}")
 
+##################################################################
+# Mutation Strategy:
+##################################################################
 class MutationStrategy(ABC):
-    """Abstract base class for mutation strategies."""
     @abstractmethod
     def mutate(self, tsp_instance):
         pass
@@ -70,8 +72,8 @@ class RandomSampling(MutationStrategy):
         self.tsp_builder = tsp_builder
     
     def mutate(self, tsp_instance):
-        new_instance = self.tsp_builder.build()
-        return new_instance.matrix
+        tsp_instance.matrix = self.tsp_builder.build().matrix
+        return tsp_instance
 
 #################################################################
 # Mutation Core Functions:
@@ -85,8 +87,7 @@ def permute_matrix(matrix) -> np.ndarray:
     matrix : np.ndarray
         The distance matrix to permute.
     """
-    n = len(matrix)
-    
+    n = len(matrix)  
     matrix = matrix.copy()
     
     # List of indices excluding the diagonal
@@ -96,12 +97,9 @@ def permute_matrix(matrix) -> np.ndarray:
     np.random.shuffle(indices)
     
     # Create a flattened list of values excluding the diagonal
-    values = [matrix[i, j] for i, j in indices]
-    # print("Indices", values)
-    
+    values = [matrix[i, j] for i, j in indices]    
     # Shuffle the values
     np.random.shuffle(values)
-    # print("Shuffled values", values)
     
     # Assign the shuffled values back to the matrix
     for (i, j), value in zip(indices, values):
