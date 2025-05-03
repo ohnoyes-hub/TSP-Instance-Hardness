@@ -52,7 +52,9 @@ def process_mutation_iteration(j, matrix, hardest, hardest_matrix,
         iteration_result["is_hardest"] = True
     
     # Apply mutation to the hardest matrix
-    tsp_instance = TSPInstance(hardest_matrix.copy(), generation_type)
+    # TODO: check if .copy() is needed(copy is n)
+    tsp_instance = TSPInstance(hardest_matrix, generation_type)
+    #tsp_instance = TSPInstance(hardest_matrix.copy(), generation_type)
     strategy = get_mutation_strategy(mutation_type, generation_type, distribution, rang)
     new_matrix = strategy.mutate(tsp_instance).matrix
     return hardest, hardest_matrix, new_matrix, iteration_result
