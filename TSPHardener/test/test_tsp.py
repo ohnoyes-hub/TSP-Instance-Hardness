@@ -32,12 +32,12 @@ class TestATSPMutation(unittest.TestCase):
         self.assertFalse(np.array_equal(self.tsp_instance.matrix, original_matrix))
         self.assertTrue(np.all(np.isinf(np.diag(self.tsp_instance.matrix))))
 
-    # def test_scramble_mutation(self):
-    #     base = self.tsp_instance.matrix.copy()
-    #     ScrambleMutation().mutate(self.tsp_instance)
-    #     self.assertEqual(self.tsp_instance.shape, (4, 4))
-    #     self.assertFalse(np.array_equal(self.tsp_instance.matrix, base))
-    #     self.assertTrue(np.all(np.isinf(np.diag(self.tsp_instance.matrix))))
+    def test_scramble_mutation(self):
+        base = self.tsp_instance.matrix.copy()
+        ScrambleMutation().mutate(self.tsp_instance)
+        self.assertEqual(self.tsp_instance.shape, (4, 4))
+        self.assertFalse(np.array_equal(self.tsp_instance.matrix, base))
+        self.assertTrue(np.all(np.isinf(np.diag(self.tsp_instance.matrix))))
 
     def test_inplace_mutation_uniform(self):
         original_matrix = self.tsp_instance.matrix.copy()
