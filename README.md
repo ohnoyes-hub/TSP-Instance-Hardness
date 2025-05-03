@@ -55,12 +55,6 @@ To install all required libraries for both experiments and analysis:
 ├── tsp-formulation.csv   # Definitions of experiment formulations
 └── requirements.txt      # Project dependencies
 ```
-  
-- `run.py` : Reads all formulations from `tsp-formulation.csv`. `run.py` and executes them in parallel using a thread pool. Each formulation is passed to a hill-climber run.
-- `core` :  Contains the core logic for the hill-climber.
-- `TSPHardener.utils` : Utility functions for saving experiments, saving partial results, handling continuing from an experiment, and logging.
-- `analysis.analysis` :  Independent plotting and statistical scripts analyzing the whole experiment.
-- `analysis.util` : Utility function on validating and loading experiment data for analysis.
 
 Continuing Work
 
