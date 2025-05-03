@@ -1,4 +1,4 @@
-from analysis_util.load_json import load_lon_data
+from util.load_experiment import load_lon_data
 import numpy as np
 from collections import defaultdict
 from scipy.spatial.distance import pdist, squareform

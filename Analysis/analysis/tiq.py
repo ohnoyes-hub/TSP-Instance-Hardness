@@ -9,7 +9,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from analysis_util.load_json import load_json, load_all_hard_instances
+from TSPHardener.analysis_util.load_experiment import load_json, load_all_hard_instances
 
 def compute_symmetry_metrics(matrix):
     matrix = np.array(matrix)

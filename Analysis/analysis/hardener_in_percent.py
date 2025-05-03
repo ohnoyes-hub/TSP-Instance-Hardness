@@ -1,6 +1,6 @@
 import pandas as pd
 from icecream import ic
-from analysis_util.load_json import load_all_hard_instances
+from util.load_experiment import load_all_hard_instances
 
 # Shows by how much the final instance is harder than the baseline per configuration
 

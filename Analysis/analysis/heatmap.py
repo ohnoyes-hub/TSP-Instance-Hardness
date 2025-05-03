@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt  
 import numpy as np
 import os
-from ..analysis_util.load_json import load_full
+from util.load_experiment import load_full
 
 distributions = {
     "uniform": np.arange(5, 105, 5),  # 5, 10, ..., 100
