@@ -28,7 +28,7 @@ class ExperimentConfig:
         validators = {
             'tsp_type': ['euclidean', 'asymmetric'],
             'distribution': ['uniform', 'lognormal'],
-            'mutation_strategy': ['scramble', 'wouter', 'swap']
+            'mutation_strategy': ['scramble', 'wouter', 'swap', 'random_sampling']
         }
         
         for field, allowed in validators.items():

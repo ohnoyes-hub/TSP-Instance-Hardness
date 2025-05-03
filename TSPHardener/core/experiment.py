@@ -3,13 +3,15 @@ import os
 from collections import defaultdict
 import logging
 
+# TODO: remove initialize_matrix_and_hardest?
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
-from .mutate_tsp import apply_mutation
+from .generate_tsp import TSPBuilder, TSPInstance
+from .mutate_tsp import get_mutation_strategy
 from utils.json_utils import save_partial, load_full_results
 from utils.file_utils import get_result_path
 
 logger = logging.getLogger(__name__)
-
+    
 def track_basin_transition(source_matrix, mutated_matrix, partial_results):
     source_hash = hash(source_matrix.tobytes())
     mutated_hash = hash(mutated_matrix.tobytes())
@@ -36,6 +38,14 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     # Load from partial or generate new
     hardest, matrix = initialize_matrix_and_hardest(citysize, rang, configuration)
     hardest_matrix = matrix.copy()
+
+    # mutation strategy
+    mutation_strategy = get_mutation_strategy(
+        configuration["mutation_type"],
+        configuration["generation_type"],
+        configuration["distribution"],
+        rang
+    )
 
     # If no partial file existed => store the initial as iteration_0
     cont_file = get_result_path(
@@ -110,10 +120,10 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         # log basin transitions
         track_basin_transition(hardest_matrix, matrix, partial_results)
 
-        # mutate hardest_matrix for next iteration
-        matrix = apply_mutation(hardest_matrix, configuration["mutation_type"],
-                                configuration["generation_type"], rang,
-                                configuration["distribution"])
+        # Mutate the hardest matrix for hill-climbing(expect for random_sampling which creates new instance)
+        tsp_instance = TSPInstance(hardest_matrix.copy(), configuration["generation_type"])
+        tsp_instance = mutation_strategy.mutate(tsp_instance)
+        matrix = tsp_instance.matrix 
         
         # Always store the last_matrix for continuation
         partial_results["last_matrix"] = matrix.tolist()
