@@ -17,13 +17,21 @@ To install all required libraries for both experiments and analysis:
 # Structure`
 
 ├── TSPHardener
+
 │ ├── main.py
+
 │ ├── run.py
+
 │ ├── core/
+
 │ └── utils/
+
 ├── analysis/
+
 │ ├── analysis
+
 │ └── util
+
 └── requirements.txt
 
 
