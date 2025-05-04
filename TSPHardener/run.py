@@ -6,6 +6,8 @@ from formulation.validate import ExperimentConfig, load_configs
 import logging
 from utils.log_util import init_logger, log_experiment_info
 
+NUM_PROCESSES = 32
+
 def run_experiment(config):
     # params
     city_size = config.size
@@ -44,5 +46,5 @@ if __name__ == '__main__':
     init_logger('run.log')
     configs = load_configs('tsp-formulations.csv')
     
-    with Pool(processes=70) as pool:
+    with Pool(processes=NUM_PROCESSES) as pool:
         pool.map(run_experiment, configs)

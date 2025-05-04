@@ -10,7 +10,7 @@ def get_mutation_strategy(mutation_type, generation_type, distribution, control)
     """
     if mutation_type == "swap":
         return SwapMutation()
-    elif mutation_type == "inplace":
+    elif mutation_type == "wouter": # wouter = inplace
         return InplaceMutation(distribution, control)
     elif mutation_type == "scramble":
         return ScrambleMutation()
@@ -42,6 +42,7 @@ class SwapMutation(MutationStrategy):
             tsp_instance.matrix = swap_mutate(tsp_instance.matrix)
         else:
             raise ValueError("Invalid TSP type. Choose either 'euclidean' or 'asymmetric'.")
+        return tsp_instance
 
 class ScrambleMutation(MutationStrategy):
     def mutate(self, tsp_instance):

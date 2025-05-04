@@ -12,10 +12,10 @@ from utils.file_utils import get_result_path
 
 logger = logging.getLogger(__name__)
     
-def track_basin_transition(source_matrix, mutated_matrix, partial_results):
-    source_hash = hash(source_matrix.tobytes())
-    mutated_hash = hash(mutated_matrix.tobytes())
-    partial_results["transitions"][source_hash].append(mutated_hash)
+# def track_basin_transition(source_matrix, mutated_matrix, partial_results):
+#     source_hash = hash(source_matrix.tobytes())
+#     mutated_hash = hash(mutated_matrix.tobytes())
+#     partial_results["transitions"][source_hash].append(mutated_hash)
 
 def run_single_experiment(configuration, citysize, rang, mutations):
     """
@@ -59,8 +59,8 @@ def run_single_experiment(configuration, citysize, rang, mutations):
     if os.path.exists(cont_file):
         try:
             existing_data = load_full_results(cont_file)
-            partial_results["local_optima"] = existing_data.get("local_optima", {})
-            partial_results["transitions"] = existing_data.get("transitions", defaultdict(list))
+            # partial_results["local_optima"] = existing_data.get("local_optima", {})
+            # partial_results["transitions"] = existing_data.get("transitions", defaultdict(list))
             partial_results["all_iterations"] = existing_data.get("all_iterations", [])
             partial_results["initial_matrix"] = existing_data.get("initial_matrix", [])
             partial_results["hard_instances"] = existing_data.get("hard_instances", {})
@@ -110,15 +110,15 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             is_hardest = True
 
         # track local optima
-        matrix_hash = hash(matrix.tobytes())
-        partial_results["local_optima"][matrix_hash] = {
-            "iterations": iterations,
-            # "matrix": matrix.tolist(), # expensive so I am just using hash
-            "cost": optimal_cost,
-            "is_hardest": is_hardest
-        }
-        # log basin transitions
-        track_basin_transition(hardest_matrix, matrix, partial_results)
+        # matrix_hash = hash(matrix.tobytes())
+        # partial_results["local_optima"][matrix_hash] = {
+        #     "iterations": iterations,
+        #     # "matrix": matrix.tolist(), # expensive so I am just using hash
+        #     "cost": optimal_cost,
+        #     "is_hardest": is_hardest
+        # }
+        # # log basin transitions
+        # track_basin_transition(hardest_matrix, matrix, partial_results)
 
         # Mutate the hardest matrix for hill-climbing(expect for random_sampling which creates new instance)
         tsp_instance = TSPInstance(hardest_matrix.copy(), configuration["generation_type"])
