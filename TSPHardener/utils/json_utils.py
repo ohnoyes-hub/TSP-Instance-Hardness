@@ -95,7 +95,7 @@ def load_partial(cont_file):
     local_optima = results.get("local_optima", {})
     transitions = results.get("transitions", defaultdict(list))
 
-    return hardest, matrix, local_optima, transitions
+    return hardest, matrix #, local_optima, transitions
 
 
 def save_partial(configuration, results, citysize, rang, time_spent,

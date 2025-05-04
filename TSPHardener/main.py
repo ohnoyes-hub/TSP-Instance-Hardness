@@ -19,7 +19,7 @@ parser.add_argument('--tsp_type', type=str, choices=['euclidean', 'asymmetric'],
                     help='Type of TSP to generate: symmetric or asymmetric.')
 parser.add_argument('--distribution', type=str, choices=['uniform', 'lognormal'], required=True,
                     help='Distribution to use for generating the TSP instance.')
-parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble', 'wouter'], required=True,
+parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble', 'wouter', 'random_sampling'], required=True,
                     help='Mutation strategy to use.')
 
 
