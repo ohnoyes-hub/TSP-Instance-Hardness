@@ -17,7 +17,6 @@ def get_mutation_strategy(mutation_type, generation_type, distribution, control)
     elif mutation_type == "random_sampling":
         builder = (
             TSPBuilder()
-            .set_city_size(control)
             .set_generation_type(generation_type)
             .set_distribution(distribution)
             .set_control(control)
