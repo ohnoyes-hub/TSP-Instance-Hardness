@@ -1,7 +1,9 @@
 import unittest
 import numpy as np
-from core.generate_tsp import TSPBuilder
-from core.mutate_tsp import SwapMutation, ScrambleMutation, InplaceMutation, RandomSampling
+from core.generate_tsp import TSPBuilder, TSPInstance
+from core.mutate_tsp import SwapMutation, ScrambleMutation, InplaceMutation, RandomSampling, get_mutation_strategy
+from core.helpers import run_litals_algorithm
+import itertools
 from scipy.stats import lognorm, chisquare
 
 class TestTSPGeneration(unittest.TestCase):
@@ -132,6 +134,81 @@ class TestRandomSampling(unittest.TestCase):
         assert not np.allclose(original.matrix, original.matrix.T), "Matrix should not be symmetric."
         assert np.all(np.diag(original.matrix) == np.inf), "Diagonal not set to infinity."
 
+def brute_force_tsp_cost(matrix: np.ndarray) -> float:
+    """
+    Compute the true optimal tour cost of a full‐matrix TSP by brute force.
+    Assumes square matrix with matrix[i,i] == np.inf.
+    Uses city 0 as the fixed start/end.
+    """
+    n = matrix.shape[0]
+    best = np.inf
+    # permute the remaining cities
+    for perm in itertools.permutations(range(1, n)):
+        tour = (0,) + perm + (0,)
+        cost = sum(matrix[tour[i], tour[i+1]] for i in range(n))
+        if cost < best:
+            best = cost
+    return best
+
+class TestSolvingTSPInstances(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(123)
+        builder = (
+            TSPBuilder()
+            .set_city_size(5)
+            .set_generation_type("asymmetric")
+            .set_distribution("uniform")
+            .set_control(20)
+        )
+        self.tsp = builder.build()
+        # brute force:
+        self.opt0 = brute_force_tsp_cost(self.tsp.matrix)
+
+    def test_original_instance(self):
+        # check if Lital's algorithms can solve the original instance
+        iter, tour, cost, error = run_litals_algorithm(self.tsp.matrix)
+        self.assertIsNone(error)
+        self.assertEqual(cost, self.opt0)
+
+    def test_multiple_lital_are_same(self):
+        # check if Lital's algorithm will produce the same iteration on the same tsp instance
+        iter1, tour1, cost1, error1 = run_litals_algorithm(self.tsp.matrix)
+        iter2, tour2, cost2, error2 = run_litals_algorithm(self.tsp.matrix)
+        self.assertIsNone(error1)
+        self.assertIsNone(error2)
+        self.assertEqual(cost1, cost2)
+        self.assertEqual(tour1, tour2)
+        self.assertEqual(iter1, iter2)
+
+class TestSolveSwapMutation(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(89)
+        builder = (
+            TSPBuilder()
+            .set_city_size(5)
+            .set_generation_type("asymmetric")
+            .set_distribution("lognormal")
+            .set_control(0.5)
+        )
+    
+        self.tsp = builder.build()
+
+    def test_swap_then_solve(self):
+        # apply swap and determine if we can still solve the tsp instance
+        original_matrix = self.tsp.matrix.copy()
+        # solve the original instance
+        iter1, tour1, cost1, error1 = run_litals_algorithm(self.tsp.matrix)
+        self.assertIsNone(error1)
+        SwapMutation().mutate(self.tsp)
+        self.assertEqual(self.tsp.matrix.shape, (5, 5))
+        self.assertNotEqual(self.tsp.matrix, original_matrix)
+        self.assertTrue(np.all(np.isinf(np.diag(self.tsp.matrix))))
+        # run Lital's algorithm
+        iter2, tour2, cost2, error2 = run_litals_algorithm(self.tsp.matrix)
+        self.assertIsNone(error2)
+        self.assertNotEqual(cost1, cost2)
+        self.assertNotEqual(tour1, tour2)
+        self.assertNotEqual(iter1, iter2)
 # class TestRunMutation(unittest.TestCase):
 #     # Test the mutation strategies
 #     test_suite = unittest.TestSuite()

@@ -1,5 +1,5 @@
 {
-  "time": 0.5453848838806152,
+  "time": 0.6104931831359863,
   "configuration": {
     "mutation_type": "wouter",
     "generation_type": "euclidean",
@@ -337,7 +337,7 @@
       }
     },
     "local_optima": {
-      "3154041690528633991": {
+      "-1796050258539688143": {
         "iterations": 61,
         "cost": 0.0,
         "is_hardest": true

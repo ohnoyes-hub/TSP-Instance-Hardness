@@ -103,11 +103,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             partial_results["all_iterations"].append(iterations)
 
         # Compare vs. hardest
-        is_hardest = False
-        if iterations > hardest:
-            hardest = iterations
-            hardest_matrix = matrix.copy()
-            is_hardest = True
+        
 
         # track local optima
         # matrix_hash = hash(matrix.tobytes())
@@ -122,23 +118,30 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
         # Mutate the hardest matrix for hill-climbing(expect for random_sampling which creates new instance)
         tsp_instance = TSPInstance(hardest_matrix.copy(), configuration["generation_type"])
-        tsp_instance = mutation_strategy.mutate(tsp_instance)
-        matrix = tsp_instance.matrix 
-        
+        mutation_strategy.mutate(tsp_instance)
+        new_matrix = tsp_instance.matrix 
+
         # Always store the last_matrix for continuation
         partial_results["last_matrix"] = matrix.tolist()
+        is_hardest = False
+
         
-        # If it's a newly hardest, store it
-        if is_hardest:
-            iteration_key = f"iteration_{j+1}"
-            partial_results["hard_instances"][iteration_key] = {
-                "iterations": iterations,
-                "hardest": hardest,
-                "optimal_tour": optimal_tour,
-                "optimal_cost": optimal_cost,
-                "matrix": hardest_matrix.tolist(),
-                "is_hardest": True
-            }
+        if iterations > hardest:
+            hardest = iterations
+            is_hardest = True
+        
+        matrix = new_matrix
+        # # If it's a newly hardest, store it
+        # if is_hardest:
+        #     iteration_key = f"iteration_{j+1}"
+        #     partial_results["hard_instances"][iteration_key] = {
+        #         "iterations": iterations,
+        #         "hardest": hardest,
+        #         "optimal_tour": optimal_tour,
+        #         "optimal_cost": optimal_cost,
+        #         "matrix": hardest_matrix.tolist(),
+        #         "is_hardest": True
+        #     }
         
         # Periodically (or when new hardest) do a partial save
         # j % 100 == 0
