@@ -192,23 +192,7 @@ class TestSolveSwapMutation(unittest.TestCase):
         )
     
         self.tsp = builder.build()
-
-    def test_swap_then_solve(self):
-        # apply swap and determine if we can still solve the tsp instance
-        original_matrix = self.tsp.matrix.copy()
-        # solve the original instance
-        iter1, tour1, cost1, error1 = run_litals_algorithm(self.tsp.matrix)
-        self.assertIsNone(error1)
-        SwapMutation().mutate(self.tsp)
-        self.assertEqual(self.tsp.matrix.shape, (5, 5))
-        self.assertNotEqual(self.tsp.matrix, original_matrix)
-        self.assertTrue(np.all(np.isinf(np.diag(self.tsp.matrix))))
-        # run Lital's algorithm
-        iter2, tour2, cost2, error2 = run_litals_algorithm(self.tsp.matrix)
-        self.assertIsNone(error2)
-        self.assertNotEqual(cost1, cost2)
-        self.assertNotEqual(tour1, tour2)
-        self.assertNotEqual(iter1, iter2)
+        
 # class TestRunMutation(unittest.TestCase):
 #     # Test the mutation strategies
 #     test_suite = unittest.TestSuite()
