@@ -29,11 +29,17 @@ def get_mutation_strategy(mutation_type, generation_type, distribution, control)
 # Mutation Strategy:
 ##################################################################
 class MutationStrategy(ABC):
+    """
+    Abstract class for mutation strategies.
+    """
     @abstractmethod
-    def mutate(self, tsp_instance):
-        pass
+    def mutate(self, tsp_instance) -> None:
+        """Mutate the given TSP instance's distance matrix."""
 
 class SwapMutation(MutationStrategy):
+    """
+    Swaps two random non-diagonal elements in the distance matrix.
+    """
     def mutate(self, tsp_instance):
         if tsp_instance.tsp_type == "euclidean":
             tsp_instance.matrix = swap_mutate_symmetric(tsp_instance.matrix)
@@ -44,6 +50,9 @@ class SwapMutation(MutationStrategy):
         return tsp_instance
 
 class ScrambleMutation(MutationStrategy):
+    """
+    Randomly permute all non-diagonal elements in the distance matrix.
+    """
     def mutate(self, tsp_instance):
         if tsp_instance.tsp_type == 'euclidean':
             tsp_instance.matrix = permute_symmetric_matrix(tsp_instance.matrix)
@@ -52,7 +61,10 @@ class ScrambleMutation(MutationStrategy):
         return tsp_instance
 
 class InplaceMutation(MutationStrategy):
+    """Mutates a single element (or symmetric pair) using the specified distribution."""
     def __init__(self, distribution, control):
+        if distribution not in ["uniform", "lognormal"]:
+            raise ValueError(f"Invalid distribution: {distribution}. Choose 'uniform' or 'lognormal'.")
         self.distribution = distribution
         self.control = control
         
@@ -68,6 +80,7 @@ class InplaceMutation(MutationStrategy):
         return tsp_instance
 
 class RandomSampling(MutationStrategy):
+    """Replaces the matrix with a new instance built by the TSPBuilder."""
     def __init__(self, tsp_builder):
         self.tsp_builder = tsp_builder
     
@@ -89,22 +102,17 @@ def permute_matrix(matrix) -> np.ndarray:
     """
     n = len(matrix)  
     matrix = matrix.copy()
-    
-    # List of indices excluding the diagonal
-    indices = [(i, j) for i in range(n) for j in range(n) if i != j]
-    
+    # get list of all indices excluding the diagonal
+    indices = [(i, j) for i in range(n) for j in range(n) if i != j]   
     # Shuffle the indices
     np.random.shuffle(indices)
-    
     # Create a flattened list of values excluding the diagonal
     values = [matrix[i, j] for i, j in indices]    
     # Shuffle the values
     np.random.shuffle(values)
-    
     # Assign the shuffled values back to the matrix
     for (i, j), value in zip(indices, values):
         matrix[i, j] = value
-    
     return matrix
 
 def permute_symmetric_matrix(matrix: np.ndarray) -> np.ndarray:
@@ -116,25 +124,18 @@ def permute_symmetric_matrix(matrix: np.ndarray) -> np.ndarray:
     matrix : np.ndarray
         The distance matrix to permute.
     """
-    n = len(matrix)
-    
+    n = len(matrix)  
     matrix = matrix.copy()
-
     # list of indices in the upper triangle excluding the diagonal
     indices = [(i, j) for i in range(n) for j in range(i + 1, n)]
-
     # upper triangle values excluding the diagonal
     values = [matrix[i, j] for i, j in indices]
-
     # Shuffle the values to randomize their order
     np.random.shuffle(values)
-
     # Assign the shuffled values back to the upper triangle
     for (i, j), value in zip(indices, values):
         matrix[i, j] = value
         matrix[j, i] = value  # Mirror the value in the lower triangle
-    
-    
     return matrix
 
 
@@ -150,7 +151,7 @@ def swap_mutate(matrix) -> np.ndarray:
     arr = matrix.copy()
     rows, cols = arr.shape
     total_elements = rows * cols
-    
+    # get random index excluding the diagonal
     def get_off_diag_index():
         while True:
             idx = np.random.randint(total_elements)
@@ -161,13 +162,13 @@ def swap_mutate(matrix) -> np.ndarray:
     
     i1, j1 = get_off_diag_index()
 
-    # second off-diagonal index
+    # get second off-diagonal index
     while True:
         i2, j2 = get_off_diag_index()
         if (i1, j1) != (i2, j2):
             break
 
-    # Swap values
+    # Swap indices
     arr[i1][j1], arr[i2][j2] = arr[i2][j2], arr[i1][j1]
     return arr
 
