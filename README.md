@@ -1,6 +1,6 @@
 # Where Really Hard Traveling Salesman Problems Are
 
-This repository contains the source code for experiments and analyses presented in the thesis Where Really Hard Traveling Salesman Problems Are by Thomas Sijpkens. It extends and builds upon the prior work of Wouter Knibbe's thesis, introducing a broader range of TSP configurations and more varied mutation strategies for both hill climbing and random sampling methods.
+This repository contains the source code for experiments and analyses presented in the thesis Where Really Hard Traveling Salesman Problems Are by Thomas Sijpkens. It extends and builds upon the prior work of [Wouter Knibbe's thesis](https://github.com/WouterKnibbe/ATSP_hillForHard), introducing a broader range of TSP configurations and more varied mutation strategies for both hill climbing and random sampling methods.
 
 To effectively leverage computational resources, each experimental configuration is designed run in parallel, resulting in a total of 620 independent experimental runs.
 
@@ -48,11 +48,14 @@ In the example above:
 │   ├── main.py           # Executes a single experiment
 │   ├── run.py            # Executes all experiments in parallel
 |   ├── tsp-formulation.csv   # Definitions of experiment formulations
+|   ├── formulation.validate # validates the experiment formulations
 │   ├── core/             # Core logic for the hill-climber
-│   └── utils/            # Utility functions for experiment handling
-├── analysis/
-│   ├── analysis          # Scripts for plotting and statistical analysis
-│   └── util              # Utility functions for data validation and loading
+│   ├── utils/            # Utility functions for experiment handling
+│   └── test/            # Test suite.
+├── Analysis/
+│   ├── analysis/          # Scripts for plotting and statistical analysis
+│   ├── plot/              # Where saved plots are stored
+│   └── util/              # Utility functions for data validation and loading
 └── requirements.txt      # Project dependencies
 ```
 
