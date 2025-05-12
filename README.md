@@ -18,7 +18,7 @@ To initiate a complete set of experiments based on `tsp-formulation.csv`, run:
 ```bash
 python3 -m TSPHardener.run
 ```
-Each row in the `tsp-formulation.csv` corresponds to a single experiment and utilizes one thread from a thread pool. To adjust the number of threads, modify the variable `NUM_PROCESSES` in `run.py`:
+Each row in the `tsp-formulation.csv` corresponds to a single experiment and utilizes one thread from a process pool. To adjust the number of processes, modify the variable `NUM_PROCESSES` in `run.py`:
 
 
 ```python
@@ -63,4 +63,4 @@ In the example above:
 
 # Continuing Work
 
-During the hill climbing process, local optima and transition paths are systematically recorded to construct local optima networks. These networks provide detailed insights into the evolutionary trajectories and characteristics of TSP instances, clarifying how different instances evolve under various mutation strategies and random sampling approaches.
+During the hill climbing process, local optima and transition paths are systematically recorded to construct local optima networks. Local optima networks provides an abstract view of the hill climber search space. These networks provide detailed insights into the evolutionary trajectories and characteristics of TSP instances, clarifying how different instances evolve under various mutation strategies and random sampling approaches.
