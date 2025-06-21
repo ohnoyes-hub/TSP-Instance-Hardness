@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: |
+  If you use this software in your research, please cite it using the following metadata.
+title: "TSP Instance Hardness"
+version: "0.1.0"
+authors:
+  - family-names: "Sijpkens"
+    given-names: "Thomas"
+repository-code: "https://github.com/ohnoyes-hub/TSP-Instance-Hardness"
+preferred-citation:
+  type: article
+  title: "TSP Instance Hardness"
+  authors:
+    - family-names: "Sijpkens"
+      given-names: "Thomas"
+  year: 2025
