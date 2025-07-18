@@ -95,7 +95,7 @@ def load_partial(cont_file):
     local_optima = results.get("local_optima", {})
     transitions = results.get("transitions", defaultdict(list))
 
-    return hardest, matrix #, local_optima, transitions
+    return hardest, matrix, local_optima, transitions
 
 
 def save_partial(configuration, results, citysize, rang, time_spent,
@@ -121,7 +121,7 @@ def save_partial(configuration, results, citysize, rang, time_spent,
       }
     """
     base_name = f"city{citysize}_range{rang}_{mutation_strategy}.json"
-    folder = f"Results/{distribution}_{tsp_type}" if is_final else f"Continuation/{distribution}_{tsp_type}"
+    folder = f"Phase-Trans-Results/{distribution}_{tsp_type}" if is_final else f"Phase-Trans-Continuation/{distribution}_{tsp_type}"
     
     if not os.path.exists(folder):
         os.makedirs(folder, exist_ok=True)
@@ -175,10 +175,10 @@ def save_partial(configuration, results, citysize, rang, time_spent,
     #If final => remove from Continuation
     if is_final:
         logger.info(f"Saved final results to: {full_path}")
-        cont_path = os.path.join("Continuation", f"{distribution}_{tsp_type}", base_name)
+        cont_path = os.path.join("Phase-Trans-Continuation", f"{distribution}_{tsp_type}", base_name)
         if os.path.exists(cont_path):
             os.remove(cont_path)
-            logger.info(f"Removed continuation file {cont_path}")
+            logger.info(f"Removed phase transition continuation file {cont_path}")
     else:
         logger.info(f"Saved partial results to: {full_path}")
 

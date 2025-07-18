@@ -1,5 +1,4 @@
 import json
-from utils.json_utils import custom_decoder
 import os
 import glob
 from icecream import ic
@@ -7,6 +6,33 @@ import pandas as pd
 from collections import defaultdict
 from typing import Tuple, Dict, List
 import re
+import numpy as np
+
+def custom_decoder(obj) -> Dict:
+    """
+    Custom decoder that converts "Infinity" to np.inf in nested structures.
+    """
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if v == "Infinity":
+                obj[k] = np.inf
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if value == "Infinity":
+                obj[key] = np.inf
+            elif isinstance(value, dict):
+                obj[key] = custom_decoder(value)
+            elif isinstance(value, list):
+                obj[key] = custom_decoder(value)
+    elif isinstance(obj, list):
+        for i, value in enumerate(obj):
+            if value == "Infinity":
+                obj[i] = np.inf
+            elif isinstance(value, dict):
+                obj[i] = custom_decoder(value)
+            elif isinstance(value, list):
+                obj[i] = custom_decoder(value)
+    return obj
 
 def fill_missing_config(data, file_path):
     """
@@ -219,8 +245,8 @@ def load_all_hard_instances() -> pd.DataFrame:
         pd.DataFrame: DataFrame containing each hardest instance's data merged with its configuration.
     """
     base_dirs = [
-        "./Continuation", 
-        "./Results"
+        "../data/Continuation", 
+        "../data/Results"
     ]
     all_instances = []
 
@@ -271,6 +297,57 @@ def load_all_hard_instances() -> pd.DataFrame:
 
     return pd.DataFrame(all_instances)
 
+def load_initial_and_hard_instances():
+    """
+    Load both initial and hardest instances from experiment JSONs.
+    Returns DataFrame with an extra column 'instance_type' = 'initial' or 'hardest'
+    """
+    all_instances = []
+    base_dirs = ["../data/Continuation", "../data/Results"]
+
+    for base_dir in base_dirs:
+        pattern = os.path.join(base_dir, '**', '*.json')
+        json_files = glob.glob(pattern, recursive=True)
+        for file_path in json_files:
+            data, errors, _ = load_json(file_path)
+            if data is None or errors:
+                continue
+            config = data.get('configuration', {})
+            results = data.get('results', {})
+            # Initial instance
+            if 'initial_matrix' in results:
+                all_iterations = results.get('all_iterations', [])
+                # Use the first iteration value if it exists, else fallback to 0
+                initial_iteration = all_iterations[0] if (isinstance(all_iterations, list) and len(all_iterations) > 0) else 0
+                entry = {
+                    "instance_type": "initial",
+                    "matrix": results['initial_matrix'],
+                    "optimal_cost": results.get('optimal_cost', None),  # If available
+                    "iteration": initial_iteration,
+                    "generation": 0,
+                    **config
+                }
+                all_instances.append(entry)
+
+            # Hardest instances
+            hard_instances = results.get('hard_instances', {})
+            for key, instance in hard_instances.items():
+                try:
+                    iteration_num = int(key.split('_')[-1])
+                except Exception:
+                    continue
+                entry = {
+                    "instance_type": "hardest",
+                    "matrix": instance.get('matrix'),
+                    "optimal_cost": instance.get('optimal_cost', None),
+                    "iteration": instance.get('iterations', None),
+                    "generation": iteration_num,
+                    **config
+                }
+                all_instances.append(entry)
+    print("Loaded", len(all_instances), "initial and hardest instances")
+    return pd.DataFrame(all_instances)
+
 def load_all_iteration():
     """
     Load all iterations from JSON files.
@@ -292,8 +369,9 @@ def load_phase_transition_iterations() -> pd.DataFrame:
     Load all iterations from Phase Transition experiments (all_iterations field).
     """
     base_dirs = [
-        "./Phase-Trans-Results",
-        "./Phase-Trans-Continuation"
+        #"../data/Phase-Trans-Results",
+        #"../data/Phase-Trans-Continuation"
+        "../data/Phase-Trans-Merged",
     ]
     all_entries = []
 
@@ -318,6 +396,40 @@ def load_phase_transition_iterations() -> pd.DataFrame:
                 all_entries.append(entry)
     
     ic("Loaded", len(all_entries), "phase transition iterations")
+    # print(all_entries)
+    return pd.DataFrame(all_entries)
+
+def load_hill_climb_iterations() -> pd.DataFrame:
+    """
+    Load all iterations from Hill Climbing experiments (all_iterations field) as well as its.
+    """
+    base_dirs = [
+        "../data/Results",
+        "../data/Continuation"
+    ]
+    all_entries = []
+
+    for base_dir in base_dirs:
+        pattern = os.path.join(base_dir, '**', '*.json')
+        json_files = glob.glob(pattern, recursive=True)
+
+        for file_path in json_files:
+            data, errors, _ = load_json(file_path)
+            if data is None or errors:
+                continue  # Skip invalid files
+            
+            config = data.get('configuration', {})
+            iterations = data.get('results', {}).get('all_iterations', [])
+            
+            for iteration_val in iterations:
+                entry = {
+                    'iteration': iteration_val,
+                    'file_path': file_path,
+                    **config
+                }
+                all_entries.append(entry)
+    
+    ic("Loaded", len(all_entries), "hill climbed Lital iterations")
     return pd.DataFrame(all_entries)
 
 def load_lon_data() -> Tuple[Dict, defaultdict]:

@@ -1,0 +1,109 @@
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: numpy in /home/tsijpkens/.local/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (2.2.3)
+Requirement already satisfied: icecream in /home/tsijpkens/.local/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (2.1.4)
+Requirement already satisfied: colorama>=0.3.9 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: pygments>=2.2.0 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (2.19.1)
+Requirement already satisfied: executing>=2.1.0 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: asttokens>=2.0.1 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (3.0.0)
+
+[notice] A new release of pip is available: 23.1.2 -> 25.0.1
+[notice] To update, run: pip install --upgrade pip
+icicic||| ic  f|ff" ""Running: fRunning: Running: {"{{'Running: '' {  ''''. ..join'joinjoin(.((cmdjoincmdcmd)())}cmd}}")"":}:: "  (:((' ''Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, (Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, ''''
+Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 
+
+                                  '                                                                    '
+''1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6,                                   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type asymmetric ''''
+1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 
+
+                                  '                                                                    '
+''4.8, 5.0] 25000  --tsp_type euclidean --distribution lognormal                                   4.8, 5.0] 25000  --tsp_type euclidean --distribution lognormal --distribution uniform --mutation_strategy swap''''
+4.8, 5.0] 25000  --tsp_type euclidean --distribution lognormal 
+)                                  '                                  
+'
+'--mutation_strategy scramble                                  --mutation_strategy scramble'ic'')|--mutation_strategy wouter)
+ '
+f)"
+Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type euclidean --distribution lognormal '
+                                  '--mutation_strategy wouter')
+icic||  ff""Running: Running: {{''  ''..joinjoin((cmdcmd))}}""::  ((''Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, ''
+
+                                                                    ''55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type asymmetric 55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type euclidean ''
+
+                                                                    ''--distribution uniform --mutation_strategy scramble--distribution uniform --mutation_strategy wouter''))
+
+ic| f"Running: {' '.join(cmdic)|} "f:" Running: ({''Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50,  ''
+.                                  join'(55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type euclidean cmd')
+}                                  "':--distribution uniform --mutation_strategy scramble '()'
+Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy scramble')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy swap')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type euclidean '
+                                  '--distribution uniform --mutation_strategy wouter')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type euclidean --distribution lognormal '
+                                  '--mutation_strategy swap')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy swap')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy scramble')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy wouter')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy wouter')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type euclidean '
+                                  '--distribution uniform --mutation_strategy swap')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy wouter')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy scramble')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy wouter')
+icic||  ff""Running: Running: {{''  ''..joinjoin((cmdcmd))}}""::  ((''Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, ''
+
+                                                                    ''55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type euclidean 55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 25000  --tsp_type euclidean ''
+
+                                                                    ''--distribution uniform --mutation_strategy scramble--distribution uniform --mutation_strategy swap''))
+
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy swap')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 25000  --tsp_type euclidean --distribution lognormal '
+                                  '--mutation_strategy swap')
+slurmstepd: error: *** JOB 10051864 ON tcn289 CANCELLED AT 2025-02-19T14:44:14 DUE TO TIME LIMIT ***
+
+JOB STATISTICS
+==============
+Job ID: 10051864
+Cluster: snellius
+User/Group: tsijpkens/tsijpkens
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 32
+CPU Utilized: 00:00:01
+CPU Efficiency: 0.00% of 32-00:03:12 core-walltime
+Job Wall-clock time: 1-00:00:06
+Memory Utilized: 34.93 GB
+Memory Efficiency: 62.37% of 56.00 GB

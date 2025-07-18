@@ -1,0 +1,770 @@
+icic|ic|ic | |f f "f""fRunning: Running: Running: "{{{Running: '''{   '''' ...'joinjoinjoin.(((joincmdcmdcmd()))cmd}}})"""}:::"   :((( '''(Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, ''''Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 
+
+
+'                                                                                                      
+'''                                  1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type euclidean 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, ''''1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 
+
+
+'                                                                                                      
+'''                                  4.8, 5.0] 23  --tsp_type euclidean --distribution lognormal --distribution uniform --mutation_strategy wouter4.8, 5.0] 23  --tsp_type euclidean --distribution lognormal ''''4.8, 5.0] 23  --tsp_type asymmetric --distribution lognormal 
+)
+'                                  
+                                  
+''                                  --mutation_strategy scramble--mutation_strategy swap'''--mutation_strategy scramble))'
+
+)
+icic||  ficf"|ic"Error in  |Error in {f {cmd"fcmd}Error in "}:{Error in :"cmd{":}cmd: :} (":(":""Error in [ :Error in ['( 'python3"(python3'Error in ["', 'Error in [, 'python3''-m'python3-m', '', ', , '-m''experiment'-mexperiment', '', ', , 'experiment''[20]'experiment[20]', '', ', , '[20]''[0.2, 0.4, 0.6, 0.8, 1.0, '[20][0.2, 0.4, 0.6, 0.8, 1.0, ", '"
+', 
+                         [0.2, 0.4, 0.6, 0.8, 1.0, '                         '"[5, 10, 15, 20, 25, 30, '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 
+"1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '                         
+'
+'                         
+                         1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, "                         "'35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]"4.2, 4.4, 4.6, 4.8, 5.0]
+'4.2, 4.4, 4.6, 4.8, 5.0]'                         , ', "', '4.2, 4.4, 4.6, 4.8, 5.0]23'23''23', , ', '', '23'''', ', , ", ''
+'--tsp_type'                         --tsp_type', "', '', '--tsp_type--tsp_type'euclidean''asymmetric', , ', '', "euclideaneuclidean"
+''
+                         , ,                          ""'"'
+--distribution'--distribution                         '--distribution'", ', '', '--distributionuniform'lognormal''lognormal', , ', '", 'lognormal
+'--mutation_strategy'                         --mutation_strategy', "', '', '--mutation_strategy--mutation_strategy'scramble''scramble', , ']:'']:"swapwouter")'')
+]:]:
+    ""    f))f"
+
+"{        {effe."".stderr{{stderr}ee}"..":stderrstderr: }} (""('::'Traceback (most recent call last):  Traceback (most recent call last):
+((
+                   ''                   'Traceback (most recent call last):Traceback (most recent call last):'
+
+
+
+                                                                              ''''  File 
+
+  File "                                        "<frozen runpy>''<frozen runpy>"  File   File ", line 198, in _run_module_as_main"", line 198, in _run_module_as_main
+<frozen runpy><frozen runpy>
+                   ""                   ', line 198, in _run_module_as_main, line 198, in _run_module_as_main'
+
+
+
+                                                                              ''''  File 
+
+  File "                                        "<frozen runpy>''<frozen runpy>"  File   File ", line 88, in _run_code"", line 88, in _run_code
+<frozen runpy><frozen runpy>
+                   ""                   ', line 88, in _run_code
+, line 88, in _run_code                   '
+
+'
+                                       
+                    ''                    '
+  File '  File                     "  File "'/gpfs/home3/tsijpkens/TSPHardener/experiment.py"/gpfs/home3/tsijpkens/TSPHardener/experiment.py  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py"", line 2, in ", line 2, in /gpfs/home3/tsijpkens/TSPHardener/experiment.py', line 2, in '"
+'
+, line 2, in                     
+                    ''                    '
+<module>'<module>                    
+<module>
+'                   
+                   <module>'                   '
+
+'
+                                       
+                    ''                    '
+    from core.experiment import experiment'    from core.experiment import experiment                    
+    from core.experiment import experiment
+'                   
+                       from core.experiment import experiment'                   '
+
+'
+                                       
+                    ''                    '
+  File '  File                     "  File "'/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py"/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py"", line 5, in ", line 5, in , line 5, in /gpfs/home3/tsijpkens/TSPHardener/core/experiment.py'''"
+
+
+, line 5, in                                                             ''''
+<module><module><module>                    
+
+
+'                                                         <module>'''
+
+
+
+                                                                               ''''
+    from .helpers import initialize_matrix_and_hardest,     from .helpers import initialize_matrix_and_hardest,     from .helpers import initialize_matrix_and_hardest,                     ''''
+
+
+    from .helpers import initialize_matrix_and_hardest,                                                             ''''
+run_litals_algorithmrun_litals_algorithmrun_litals_algorithm                    
+
+
+'                                                         run_litals_algorithm'''
+
+
+
+                                                                               ''''
+  File   File   File                     """'/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py  File """", line 1, in , line 1, in , line 1, in /gpfs/home3/tsijpkens/TSPHardener/core/helpers.py'''"
+
+
+, line 1, in                                                             ''''
+<module><module><module>                    
+
+
+'                                                         <module>
+'''                   
+
+
+'                                                            
+'''                        import numpy as np    import numpy as np    import numpy as np'
+
+
+    import numpy as np                                                         
+'''                   
+
+
+'                                                            
+"""                    ModuleNotFoundError: No module named ModuleNotFoundError: No module named ModuleNotFoundError: No module named "'''ModuleNotFoundError: No module named numpynumpynumpy''''numpy
+
+
+'                                                         
+"""                   )))"
+
+
+)
+ic| icfic|ic"| |Running:  f {f"f'"Running: " Running: {Running: '{'{.' 'join ' ('.'cmd.join.)join(join}(cmd("cmd)cmd:)}) }"}(":"': :Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50,  ( '('(
+'Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '                                  Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 'Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, ''
+'55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type euclidean 
+                                  
+'                                  '                                  
+'55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type euclidean '                                  1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, ''
+'--distribution uniform --mutation_strategy scramble
+                                  
+'                                  '                                  )'--distribution uniform --mutation_strategy swap'
+4.8, 5.0] 23  --tsp_type euclidean --distribution lognormal '4.8, 5.0] 23  --tsp_type asymmetric --distribution lognormal ')'
+
+
+                                                                    ''--mutation_strategy wouter--mutation_strategy wouter''))
+
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'euclidean', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'scramble']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', '[0.2, 0.4, 0.6, 0.8, 1.0, "
+                         '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '
+                         "4.2, 4.4, 4.6, 4.8, 5.0]', '23', '', '--tsp_type', 'asymmetric', "
+                         "'--distribution', 'lognormal', '--mutation_strategy', 'wouter']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    ic'|  File  "f<frozen runpy>""Running: , line 88, in _run_code{
+'                    ''
+.                    join'(  File cmd")/gpfs/home3/tsijpkens/TSPHardener/experiment.py}"", line 2, in :' 
+(                    ''Running: python3 -m experiment [20] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, <module>'
+
+                                                     ''
+1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6,                     ''
+    from core.experiment import experiment                                  
+'                   4.8, 5.0] 23  --tsp_type asymmetric --distribution lognormal ''
+
+                                                      ''  File --mutation_strategy swap"'/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py)"
+, line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy wouter')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', 'ic[0.2, 0.4, 0.6, 0.8, 1.0, |" 
+f                         "'Error in 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, {'cmd
+}                         :""4.2, 4.4, 4.6, 4.8, 5.0]:' , ('"23Error in ['', python3''', , ''-m--tsp_type'', , ''experimenteuclidean'', , '"[20]
+'                         , "''[5, 10, 15, 20, 25, 30, --distribution"'
+,                          '"lognormal35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]'', , ''--mutation_strategy23'', , ''wouter'', ]:""
+)                         
+"    'f--tsp_type"'{, e'.euclideanstderr'}, "':--distribution '(, ''Traceback (most recent call last):uniform
+'                   , '"
+
+                                             '"  File '"--mutation_strategy<frozen runpy>'", , line 198, in _run_module_as_main'
+swap                   '']:
+"                    )'
+  File     "f<frozen runpy>""{, line 88, in _run_codee
+.                   stderr'}
+"                    :'   File ("'/gpfs/home3/tsijpkens/TSPHardener/experiment.pyTraceback (most recent call last):"
+, line 2, in                    ''
+
+                                        ''<module>  File 
+"                   <frozen runpy>'"
+, line 198, in _run_module_as_main                    
+'                       from core.experiment import experiment'
+
+                                       ''
+  File                     "'<frozen runpy>  File "", line 88, in _run_code/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py
+"                   , line 5, in ''
+
+                                        ''  File <module>"
+/gpfs/home3/tsijpkens/TSPHardener/experiment.py                   "', line 2, in 
+'                    
+'                        from .helpers import initialize_matrix_and_hardest, ''<module>
+
+                                       ''run_litals_algorithm
+
+                                       ''    from core.experiment import experiment
+
+                                       ''  File 
+"                    /gpfs/home3/tsijpkens/TSPHardener/core/helpers.py'"  File , line 1, in "'/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py
+"                    , line 5, in ''<module>
+
+                                       ''<module>
+
+                                       ''    import numpy as np
+
+                                       ''    from .helpers import initialize_matrix_and_hardest, 
+'                    
+"                    ModuleNotFoundError: No module named ''run_litals_algorithmnumpy
+'                   
+'                   
+"                    )'
+  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  ic'|4.8, 5.0] 23  --tsp_type euclidean --distribution lognormal  'f
+"                                  Running: '{--mutation_strategy scramble'' )'
+.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 23  --tsp_type euclidean --distribution lognormal '
+                                  '--mutation_strategy swap')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', '[0.2, 0.4, 0.6, 0.8, 1.0, "
+                         '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '
+                         "4.2, 4.4, 4.6, 4.8, 5.0]', '23', '', '--tsp_type', 'asymmetric', "
+                         "'--distribution', 'lognormal', '--mutation_strategy', 'swap']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy scramble')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'asymmetric', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'wouter']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [20] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy swap')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[0.2, 0.4, 0.6, 0.8, 1.0, "
+                         '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '
+                         "4.2, 4.4, 4.6, 4.8, 5.0]', ic'|23 'f, "'Error in '{, cmd'}--tsp_type:'", :' euclidean('", Error in ["'
+python3                         '", ''--distribution-m'', , ''lognormalexperiment'', , ''--mutation_strategy[30]'', , ''scramble[0.2, 0.4, 0.6, 0.8, 1.0, '"]:
+"                         )'
+1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0,     'f
+"                         {"e4.2, 4.4, 4.6, 4.8, 5.0].'stderr, }'"23:' , ('''Traceback (most recent call last):, 
+'                   --tsp_type''
+,                     ''euclidean  File '", <frozen runpy>""
+, line 198, in _run_module_as_main                         
+"                   ''--distribution
+'                    , ''  File lognormal"'<frozen runpy>, "', line 88, in _run_code--mutation_strategy
+'                   , ''
+swap                    '']:  File "")/gpfs/home3/tsijpkens/TSPHardener/experiment.py
+"    , line 2, in f'"
+{                    e'.<module>stderr
+}                   "':
+                     (''    from core.experiment import experimentTraceback (most recent call last):
+
+                                      ''
+
+                                        ''  File   File ""/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py<frozen runpy>"", line 5, in , line 198, in _run_module_as_main'
+
+                                       ''
+<module>                    
+'                     File '"
+<frozen runpy>                    "', line 88, in _run_code    from .helpers import initialize_matrix_and_hardest, 
+'                   
+'                    
+'                    run_litals_algorithm'
+  File                    "'/gpfs/home3/tsijpkens/TSPHardener/experiment.py
+"                    , line 2, in ''  File 
+"                    /gpfs/home3/tsijpkens/TSPHardener/core/helpers.py'"<module>, line 1, in 
+'                   
+'                    
+'                    <module>'
+    from core.experiment import experiment                   
+'                   
+'                    
+'                        import numpy as np'
+  File                    "'/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py
+"                    , line 5, in "'ModuleNotFoundError: No module named 
+'                    numpy''<module>
+
+                                      "')
+
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 23  --tsp_type euclidean --distribution lognormal '
+                                  'ic--mutation_strategy wouter|' )f
+"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type euclidean '
+                                  '--distribution uniform --mutation_strategy scramble')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'asymmetric', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'scramble']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type euclidean '
+                                  '--distribution uniform --mutation_strategy wouter')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[20]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'asymmetric', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'swap']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 23  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy scramble')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[0.2, 0.4, 0.6, 0.8, 1.0, "
+                         '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '
+                         "4.2, 4.4, 4.6, 4.8, 5.0]', '23', '', '--tsp_type', 'euclidean', "
+                         "'--distribution', 'lognormal', '--mutation_strategy', 'wouter']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithmic
+|                    'f
+"                    Error in '{  File cmd"}/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py:"", line 1, in :' 
+(                    "'Error in [<module>'
+python3                   '', 
+'                    -m''    import numpy as np, 
+'                   experiment''
+,                     '"[30]ModuleNotFoundError: No module named '', numpy''[5, 10, 15, 20, 25, 30, 
+"                   
+"                         )"
+35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'euclidean', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'scramble']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+ic                    |'   File f""/gpfs/home3/tsijpkens/TSPHardener/core/experiment.pyRunning: "{, line 5, in '' 
+'                    .'join<module>(
+cmd                   )'}
+"                    :'     from .helpers import initialize_matrix_and_hardest, (''
+Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6,                     ''
+run_litals_algorithm                                  
+'                   1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, ''
+
+                                                      ''  File 4.8, 5.0] 23  --tsp_type asymmetric --distribution lognormal "'/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py
+"                                  , line 1, in ''--mutation_strategy swap
+'                    )'
+<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy wouter')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'euclidean', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'wouter']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type euclidean '
+                                  '--distribution uniform --mutation_strategy swap')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[0.2, 0.4, 0.6, 0.8, 1.0, "
+                         '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '
+                         "4.2, 4.4, 4.6, 4.8, 5.0]', '23', '', '--tsp_type', 'asymmetric', "
+                         "'--distribution', 'lognormal', '--mutation_strategy', 'scramble']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, '
+                                  '1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, '
+                                  '4.8, 5.0] 23  --tsp_type asymmetric --distribution lognormal '
+                                  '--mutation_strategy wouter')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'asymmetric', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'wouteric'|]: "f)"
+Error in     {fcmd"}{:e".:stderr }("":Error in [ '(python3''Traceback (most recent call last):, 
+'                   -m''
+,                     ''experiment  File '", <frozen runpy>'"[30], line 198, in _run_module_as_main'
+,                    ''[0.2, 0.4, 0.6, 0.8, 1.0, 
+"                    
+'                           File '"1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, <frozen runpy>'"
+, line 88, in _run_code                         
+"                   4.2, 4.4, 4.6, 4.8, 5.0]''
+,                     ''23  File '", /gpfs/home3/tsijpkens/TSPHardener/experiment.py'"', line 2, in , ''
+--tsp_type                    '', <module>'
+asymmetric                   '', 
+"                    
+'                             from core.experiment import experiment"
+'                   --distribution''
+,                     ''lognormal  File '", /gpfs/home3/tsijpkens/TSPHardener/core/experiment.py'"--mutation_strategy, line 5, in '', 
+'                    swap''<module>]:
+"                   )'
+
+                        f'"    from .helpers import initialize_matrix_and_hardest, {'e
+.                    stderr'}run_litals_algorithm"
+:                    '(
+'                    Traceback (most recent call last):'
+  File                    "'/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py
+"                    , line 1, in ''  File 
+"                    <frozen runpy>'"<module>, line 198, in _run_module_as_main
+
+                                      ''
+
+                                        ''    import numpy as np  File 
+"                   <frozen runpy>'"
+, line 88, in _run_code                    
+"                   ModuleNotFoundError: No module named ''
+numpy                    ''
+  File                    ""/gpfs/home3/tsijpkens/TSPHardener/experiment.py)"
+, line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy swap')
+ic| f"Running: {' '.join(cmd)}": ('Running: python3 -m experiment [30] [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, '
+                                  '55, 60, 65, 70, 75, 80, 85, 90, 95, 100] 23  --tsp_type asymmetric '
+                                  '--distribution uniform --mutation_strategy scramble')
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'euclidean', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'swap']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[0.2, 0.4, 0.6, 0.8, 1.0, "
+                         '1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, '
+                         "4.2, 4.4, 4.6, 4.8, 5.0]', '23', '', '--tsp_type', 'asymmetric', "
+                         "'--distribution', 'lognormal', '--mutation_strategy', 'wouter']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File "<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+ic| f"Error in {cmd}:": ("Error in ['python3', '-m', 'experiment', '[30]', '[5, 10, 15, 20, 25, 30, "
+                         "35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]', '23', '', "
+                         "'--tsp_type', 'asymmetric', '--distribution', 'uniform', "
+                         "'--mutation_strategy', 'swap']:")
+    f"{e.stderr}": ('Traceback (most recent call last):
+                   '
+                    '  File ic"|<frozen runpy> "f, line 198, in _run_module_as_main"
+Error in                    {'cmd
+}                    :'"  File :" <frozen runpy>("", line 88, in _run_codeError in [
+'                   python3''
+,                     ''-m  File '", /gpfs/home3/tsijpkens/TSPHardener/experiment.py'"experiment, line 2, in '', 
+'                    [30]''<module>, 
+'                   [5, 10, 15, 20, 25, 30, '"
+
+                                             '"    from core.experiment import experiment35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+'                   , ''
+23                    '',   File '"'/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py, "", line 5, in 
+'                         
+"                    ''--tsp_type<module>'
+,                    ''asymmetric
+'                    , ''    from .helpers import initialize_matrix_and_hardest, --distribution''
+,                     ''uniformrun_litals_algorithm'
+,                    "'
+
+                                             "''  File --mutation_strategy"'/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py, "', line 1, in scramble''
+]:                    "')<module>
+
+                       f'"
+{                    e'.    import numpy as npstderr
+}                   "':
+                     ("'ModuleNotFoundError: No module named Traceback (most recent call last):'
+numpy                   ''
+
+                                       "')  File 
+"<frozen runpy>", line 198, in _run_module_as_main
+                   '
+                    '  File "<frozen runpy>", line 88, in _run_code
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/experiment.py", line 2, in '
+                    '<module>
+                   '
+                    '    from core.experiment import experiment
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/experiment.py", line 5, in '
+                    '<module>
+                   '
+                    '    from .helpers import initialize_matrix_and_hardest, '
+                    'run_litals_algorithm
+                   '
+                    '  File "/gpfs/home3/tsijpkens/TSPHardener/core/helpers.py", line 1, in '
+                    '<module>
+                   '
+                    '    import numpy as np
+                   '
+                    "ModuleNotFoundError: No module named 'numpy'
+                   ")
+
+JOB STATISTICS
+==============
+Job ID: 10048612
+Cluster: snellius
+User/Group: tsijpkens/tsijpkens
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 32
+CPU Utilized: 00:00:05
+CPU Efficiency: 1.04% of 00:08:00 core-walltime
+Job Wall-clock time: 00:00:15
+Memory Utilized: 2.00 MB
+Memory Efficiency: 0.00% of 56.00 GB

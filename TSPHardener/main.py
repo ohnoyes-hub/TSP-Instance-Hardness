@@ -19,12 +19,12 @@ parser.add_argument('--tsp_type', type=str, choices=['euclidean', 'asymmetric'],
                     help='Type of TSP to generate: symmetric or asymmetric.')
 parser.add_argument('--distribution', type=str, choices=['uniform', 'lognormal'], required=True,
                     help='Distribution to use for generating the TSP instance.')
-parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble', 'wouter', 'random_sampling'], required=True,
+parser.add_argument('--mutation_strategy', type=str, choices=['swap', 'scramble', 'wouter'], required=True,
                     help='Mutation strategy to use.')
 
 
 def main():
-    init_logger('experiment.log') 
+    init_logger('phase-transition-experiment.log') 
     args = parser.parse_args()
     sizes = ast.literal_eval(args.sizes)
     ranges = ast.literal_eval(args.ranges)
@@ -45,7 +45,7 @@ def main():
                 continue  # Skip completed experiments
 
             # otherwise, load continuation file if it exists
-            continuation_file = os.path.join("Continuation", f"{args.distribution}_{args.tsp_type}", 
+            continuation_file = os.path.join("Phase-Trans-Continuation", f"{args.distribution}_{args.tsp_type}", 
                                             f"city{citysize}_range{rang}_{args.mutation_strategy}.json")
             if os.path.exists(continuation_file):
                 continuations.append(f"{citysize},{rang}") # partial results exist for this configuration

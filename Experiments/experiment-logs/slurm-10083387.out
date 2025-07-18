@@ -1,0 +1,15 @@
+slurmstepd: error: *** JOB 10083387 ON tcn463 CANCELLED AT 2025-02-19T17:16:03 ***
+
+JOB STATISTICS
+==============
+Job ID: 10083387
+Cluster: snellius
+User/Group: tsijpkens/tsijpkens
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 32
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:46:24 core-walltime
+Job Wall-clock time: 00:01:27
+Memory Utilized: 799.20 MB
+Memory Efficiency: 1.39% of 56.00 GB
