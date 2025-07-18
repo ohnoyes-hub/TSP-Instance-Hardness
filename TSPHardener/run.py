@@ -4,9 +4,7 @@ from multiprocessing import Pool
 import json
 from formulation.validate import ExperimentConfig, load_configs
 import logging
-from utils.log_util import init_logger, log_experiment_info
-
-NUM_PROCESSES = 32
+from utils.log_util import init_logger
 
 def run_experiment(config):
     # params
@@ -37,14 +35,13 @@ def run_experiment(config):
         logging.info(f"Completed: {cmd}")
         logging.debug(f"Output: {result.stdout}")
     except subprocess.CalledProcessError as e:
-        error_details = e.stderr if e.stderr else "No stderr captured."
-        log_experiment_info(config.__dict__, error_details)
+        logging.error(f"Error in {cmd}:", f"{e.stderr}")
     except Exception as e:
         logging.error(f"Unexpected error in {' '.join(cmd)}: {str(e)}")
 
 if __name__ == '__main__':
-    init_logger('run.log')
-    configs = load_configs('tsp-formulations.csv')
+    init_logger('final2.log')
+    configs = load_configs('tsp-formulations-old.csv')
     
-    with Pool(processes=NUM_PROCESSES) as pool:
+    with Pool(processes=48) as pool:
         pool.map(run_experiment, configs)

@@ -1,0 +1,24 @@
+size,range,mutations,continuation,tsp type,distribution,mutation strategy
+20,[4.2],93,,euclidean,lognormal,inplace
+20,[4.6],87,,euclidean,lognormal,inplace
+20,[4.8],87,,euclidean,lognormal,inplace
+30,[20],55,,euclidean,uniform,inplace
+20,[4.4],14,,euclidean,lognormal,inplace
+30,[1.8],82,,euclidean,lognormal,inplace
+30,[2.6],99,,euclidean,lognormal,inplace
+20,[3.6],90,,euclidean,lognormal,inplace
+30,[2.8],95,,euclidean,lognormal,inplace
+30,[0.6],50,,euclidean,lognormal,inplace
+20,[2.8],77,,euclidean,lognormal,inplace
+30,[5.0],96,,euclidean,lognormal,inplace
+20,[0.2],42,,euclidean,lognormal,inplace
+20,[4.0],82,,euclidean,lognormal,inplace
+30,[1.6],67,,euclidean,lognormal,inplace
+30,[10],30,,euclidean,uniform,inplace
+30,[25],55,,euclidean,uniform,inplace
+20,[5.0],77,,euclidean,lognormal,inplace
+20,[3.4],99,,euclidean,lognormal,inplace
+20,[2.0],2,,euclidean,lognormal,inplace
+30,[2.2],98,,euclidean,lognormal,inplace
+20,[3.8],88,,euclidean,lognormal,inplace
+30,[2.0],96,,euclidean,lognormal,inplace

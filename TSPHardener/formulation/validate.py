@@ -21,14 +21,14 @@ class ExperimentConfig:
         if self.size not in {20, 30}:
             raise ValueError(f"Invalid size: {self.size}. Only testing 20 or 30 for now")
             
-        if self.mutations != 1000:
+        if self.mutations > 100:
             raise ValueError(f"Unexpected mutation count: {self.mutations}")
 
         # Validate categorical values
         validators = {
             'tsp_type': ['euclidean', 'asymmetric'],
             'distribution': ['uniform', 'lognormal'],
-            'mutation_strategy': ['scramble', 'wouter', 'swap', 'random_sampling']
+            'mutation_strategy': ['scramble', 'wouter', 'swap']
         }
         
         for field, allowed in validators.items():

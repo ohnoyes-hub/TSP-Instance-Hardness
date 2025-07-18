@@ -2,8 +2,8 @@ import numpy as np
 import os
 import time
 import logging
-from .generate_tsp import TSPBuilder, TSPInstance
-from .mutate_tsp import get_mutation_strategy
+from .generate_tsp import generate_tsp
+from .mutate_tsp import apply_mutation
 from .algorithm import get_minimal_route
 from utils.json_utils import save_partial
 from utils.json_utils import load_partial
@@ -23,10 +23,10 @@ def initialize_matrix_and_hardest(citysize, rang, config):
             logger.error(f"Error loading partial: {e}")
     
     # fallback => new matrix
-    builder = TSPBuilder().set_city_size(citysize).set_generation_type(config['generation_type']).set_distribution(config['distribution']).set_control(rang)
-    tsp_instance = builder.build()
+    matrix = generate_tsp(citysize, config["generation_type"],
+                          config["distribution"], rang)
     hardest = 0
-    return hardest, tsp_instance.matrix
+    return hardest, matrix
 
 def process_mutation_iteration(j, matrix, hardest, hardest_matrix, 
                                mutation_type, generation_type, rang, distribution):
@@ -52,11 +52,8 @@ def process_mutation_iteration(j, matrix, hardest, hardest_matrix,
         iteration_result["is_hardest"] = True
     
     # Apply mutation to the hardest matrix
-    # TODO: check if .copy() is needed(copy is n)
-    tsp_instance = TSPInstance(hardest_matrix, generation_type)
-    #tsp_instance = TSPInstance(hardest_matrix.copy(), generation_type)
-    strategy = get_mutation_strategy(mutation_type, generation_type, distribution, rang)
-    new_matrix = strategy.mutate(tsp_instance).matrix
+    new_matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang, distribution)
+    
     return hardest, hardest_matrix, new_matrix, iteration_result
 
 def run_litals_algorithm(matrix):

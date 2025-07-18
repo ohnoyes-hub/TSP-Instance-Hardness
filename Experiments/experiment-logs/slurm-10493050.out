@@ -1,0 +1,59 @@
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: numpy in /home/tsijpkens/.local/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (2.2.3)
+Requirement already satisfied: icecream in /home/tsijpkens/.local/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (2.1.4)
+Collecting pandas (from -r requirements.txt (line 3))
+  Downloading pandas-2.2.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.1/13.1 MB 148.9 MB/s eta 0:00:00
+Collecting scikit-learn (from -r requirements.txt (line 4))
+  Downloading scikit_learn-1.6.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.5/13.5 MB 151.4 MB/s eta 0:00:00
+Collecting statsmodels (from -r requirements.txt (line 5))
+  Downloading statsmodels-0.14.4-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.8/10.8 MB 146.4 MB/s eta 0:00:00
+Requirement already satisfied: colorama>=0.3.9 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: pygments>=2.2.0 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (2.19.1)
+Requirement already satisfied: executing>=2.1.0 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: asttokens>=2.0.1 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (3.0.0)
+Collecting python-dateutil>=2.8.2 (from pandas->-r requirements.txt (line 3))
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 41.4 MB/s eta 0:00:00
+Collecting pytz>=2020.1 (from pandas->-r requirements.txt (line 3))
+  Downloading pytz-2025.1-py2.py3-none-any.whl (507 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 507.9/507.9 kB 79.9 MB/s eta 0:00:00
+Collecting tzdata>=2022.7 (from pandas->-r requirements.txt (line 3))
+  Downloading tzdata-2025.1-py2.py3-none-any.whl (346 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 346.8/346.8 kB 67.4 MB/s eta 0:00:00
+Collecting scipy>=1.6.0 (from scikit-learn->-r requirements.txt (line 4))
+  Downloading scipy-1.15.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 37.6/37.6 MB 5.5 MB/s eta 0:00:00
+Collecting joblib>=1.2.0 (from scikit-learn->-r requirements.txt (line 4))
+  Downloading joblib-1.4.2-py3-none-any.whl (301 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 301.8/301.8 kB 52.4 MB/s eta 0:00:00
+Collecting threadpoolctl>=3.1.0 (from scikit-learn->-r requirements.txt (line 4))
+  Downloading threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+Collecting patsy>=0.5.6 (from statsmodels->-r requirements.txt (line 5))
+  Downloading patsy-1.0.1-py2.py3-none-any.whl (232 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 232.9/232.9 kB 47.7 MB/s eta 0:00:00
+Requirement already satisfied: packaging>=21.3 in /sw/arch/RHEL8/EB_production/2023/software/Python/3.11.3-GCCcore-12.3.0/lib/python3.11/site-packages (from statsmodels->-r requirements.txt (line 5)) (23.1)
+Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas->-r requirements.txt (line 3))
+  Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: pytz, tzdata, threadpoolctl, six, scipy, patsy, joblib, scikit-learn, python-dateutil, pandas, statsmodels
+Successfully installed joblib-1.4.2 pandas-2.2.3 patsy-1.0.1 python-dateutil-2.9.0.post0 pytz-2025.1 scikit-learn-1.6.1 scipy-1.15.2 six-1.17.0 statsmodels-0.14.4 threadpoolctl-3.6.0 tzdata-2025.1
+
+[notice] A new release of pip is available: 23.1.2 -> 25.0.1
+[notice] To update, run: pip install --upgrade pip
+slurmstepd: error: *** JOB 10493050 ON tcn498 CANCELLED AT 2025-03-18T02:23:12 DUE TO NODE FAILURE, SEE SLURMCTLD LOG FOR DETAILS ***
+
+JOB STATISTICS
+==============
+Job ID: 10493050
+Cluster: snellius
+User/Group: tsijpkens/tsijpkens
+State: NODE_FAIL (exit code 1)
+Nodes: 1
+Cores per node: 64
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 283-12:25:36 core-walltime
+Job Wall-clock time: 4-10:19:09
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 112.00 GB (1.75 GB/core)

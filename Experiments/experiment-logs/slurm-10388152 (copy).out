@@ -1,0 +1,25 @@
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: numpy in /home/tsijpkens/.local/lib/python3.11/site-packages (from -r requirements.txt (line 1)) (2.2.3)
+Requirement already satisfied: icecream in /home/tsijpkens/.local/lib/python3.11/site-packages (from -r requirements.txt (line 2)) (2.1.4)
+Requirement already satisfied: colorama>=0.3.9 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: pygments>=2.2.0 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (2.19.1)
+Requirement already satisfied: executing>=2.1.0 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (2.2.0)
+Requirement already satisfied: asttokens>=2.0.1 in /home/tsijpkens/.local/lib/python3.11/site-packages (from icecream->-r requirements.txt (line 2)) (3.0.0)
+
+[notice] A new release of pip is available: 23.1.2 -> 25.0.1
+[notice] To update, run: pip install --upgrade pip
+slurmstepd: error: *** JOB 10388152 ON tcn466 CANCELLED AT 2025-03-09T10:14:44 DUE TO TIME LIMIT ***
+
+JOB STATISTICS
+==============
+Job ID: 10388152
+Cluster: snellius
+User/Group: tsijpkens/tsijpkens
+State: TIMEOUT (exit code 0)
+Nodes: 1
+Cores per node: 64
+CPU Utilized: 00:00:01
+CPU Efficiency: 0.00% of 32-00:13:52 core-walltime
+Job Wall-clock time: 12:00:13
+Memory Utilized: 44.06 GB
+Memory Efficiency: 39.34% of 112.00 GB

@@ -1,0 +1,14 @@
+
+JOB STATISTICS
+==============
+Job ID: 10663052
+Cluster: snellius
+User/Group: tsijpkens/tsijpkens
+State: CANCELLED (exit code 0)
+Nodes: 1
+Cores per node: 128
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:08:32 core-walltime
+Job Wall-clock time: 00:00:04
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 224.00 GB (1.75 GB/core)
