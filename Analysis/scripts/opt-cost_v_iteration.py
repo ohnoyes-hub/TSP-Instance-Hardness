@@ -4,6 +4,28 @@ import matplotlib.pyplot as plt
 import os
 from util.load_experiment import load_all_hard_instances
 
+sns.set_theme(
+        style="whitegrid",
+        context="talk",
+        palette="viridis",
+        rc={
+            "xtick.labelsize": 18,
+            "ytick.labelsize": 18,
+            "legend.fontsize": 14,
+            "font.size": 16,
+            'axes.titleweight': 'bold',
+            'axes.titlesize': 24,       # Title size for axes
+            'axes.titleweight': 'bold', # Bold axis titles
+            'axes.labelsize': 22,       # Axis label size
+            'axes.labelweight': 'bold', # Bold axis labels
+            'xtick.color': 'black',
+            'ytick.color': 'black',
+            'xtick.direction': 'out',
+            'ytick.direction': 'out',
+            'font.weight': 'bold',
+        }
+    )
+
 df = load_all_hard_instances()
 
 # Set log scale explicitly to avoid issues with zero values

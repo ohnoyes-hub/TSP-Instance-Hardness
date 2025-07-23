@@ -12,6 +12,28 @@ import matplotlib.pyplot as plt
 
 from util.load_experiment import load_all_hard_instances, load_initial_and_hard_instances
 
+sns.set_theme(
+        style="whitegrid",
+        context="talk",
+        palette="viridis",
+        rc={
+            "xtick.labelsize": 14,
+            "ytick.labelsize": 14,
+            "legend.fontsize": 14,
+            "font.size": 14,
+            'axes.titleweight': 'bold',
+            'axes.titlesize': 24,       # Title size for axes
+            'axes.titleweight': 'bold', # Bold axis titles
+            'axes.labelsize': 14,       # Axis label size
+            'axes.labelweight': 'bold', # Bold axis labels
+            'xtick.color': 'black',
+            'ytick.color': 'black',
+            'xtick.direction': 'out',
+            'ytick.direction': 'out',
+            'font.weight': 'bold'
+        }
+    )
+
 def triangle_inequality_violation(matrix):
     """
     Calculate the triangle inequality violation for a distance matrix.
@@ -244,7 +266,8 @@ def plot_tiq_vs_iterations_by_instance_type():
         y=tiq_value,
         hue="instance_type",
         style="instance_type",
-        alpha=0.7
+        alpha=0.7,
+        palette="binary_r"
     )
     plt.xlabel("Log Lital Iterations")
     plt.ylabel(f"Triangle Inequality {tiq_value.replace('_', ' ').title()}")

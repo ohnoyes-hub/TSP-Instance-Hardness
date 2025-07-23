@@ -12,6 +12,28 @@ import matplotlib.pyplot as plt
 
 from util.load_experiment import load_all_hard_instances, load_initial_and_hard_instances
 
+sns.set_theme(
+        style="whitegrid",
+        context="talk",
+        palette="viridis",
+        rc={
+            "xtick.labelsize": 14,
+            "ytick.labelsize": 14,
+            "legend.fontsize": 14,
+            "font.size": 14,
+            'axes.titleweight': 'bold',
+            'axes.titlesize': 24,       # Title size for axes
+            'axes.titleweight': 'bold', # Bold axis titles
+            'axes.labelsize': 14,       # Axis label size
+            'axes.labelweight': 'bold', # Bold axis labels
+            'xtick.color': 'black',
+            'ytick.color': 'black',
+            'xtick.direction': 'out',
+            'ytick.direction': 'out',
+            'font.weight': 'bold'
+        }
+    )
+
 def compute_symmetry_metrics(matrix):
     """
     How similar is the upper triangle to the lower triangle?
@@ -82,7 +104,7 @@ def plot_horizontal_jitter_symmetric_ratio():
 
     # Add small random jitter to symmetric_ratio = 1 to spread overlapping points
     mask_ones = df['symmetric_ratio'] == 1
-    df.loc[mask_ones, 'symmetric_ratio'] = df.loc[mask_ones, 'symmetric_ratio'] + np.random.normal(0, 0.0075, mask_ones.sum())
+    df.loc[mask_ones, 'symmetric_ratio'] = df.loc[mask_ones, 'symmetric_ratio'] + np.random.normal(0, 0.0005, mask_ones.sum())
 
     plt.figure(figsize=(10, 3))
 
@@ -121,6 +143,50 @@ def plot_horizontal_jitter_symmetric_ratio():
     plt.savefig('./plot/symmetry/jitter_violin_plot_symmetric_ratio.png', bbox_inches='tight')
     plt.show()
 
+def plot_barplot_mean_symmetric_ratio():
+    df = pd.read_csv("symmetric_ratios.csv")
+    
+    # Group by mutation_type, compute mean and SEM
+    bar_data = (
+        df.groupby('mutation_type')['symmetric_ratio']
+        .agg(['mean', 'count', 'std'])
+        .reset_index()
+    )
+    bar_data['sem'] = bar_data['std'] / np.sqrt(bar_data['count'])
+
+    plt.figure(figsize=(7, 4))
+    ax = sns.barplot(
+        x='mutation_type',
+        y='mean',
+        data=bar_data,
+        palette='pastel',
+        edgecolor='k'
+    )
+    # Add custom error bars
+    ax.errorbar(
+        x=np.arange(bar_data.shape[0]),
+        y=bar_data['mean'],
+        yerr=bar_data['sem'],
+        fmt='none',
+        c='k',
+        capsize=5,
+        lw=1.5,
+        zorder=10
+    )
+    plt.xlabel("Mutation Type", fontsize=12, fontweight='bold')
+    plt.ylabel("Mean Symmetric Ratio", fontsize=12, fontweight='bold')
+    plt.title("Mean Symmetric Ratio by Mutation Type", fontsize=13, fontweight='bold')
+    plt.xticks(fontsize=11)
+    plt.yticks(fontsize=11)
+    plt.ylim(0, 1.05)
+    plt.tight_layout()
+
+    os.makedirs('./plot/symmetry', exist_ok=True)
+    plt.savefig('./plot/symmetry/barplot_mean_symmetric_ratio.png', bbox_inches='tight')
+    ic("Saved barplot of mean symmetric ratio:", './plot/symmetry/barplot_mean_symmetric_ratio.png')
+    plt.show()
+
+# plot_barplot_mean_symmetric_ratio()
 
 # Run these to generate plot
 # compute_symmetric_ratios()

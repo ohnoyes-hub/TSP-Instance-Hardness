@@ -107,6 +107,7 @@ def visualize_differences():
         plt.title(f"SAD against Log Lital Iterations - {mutation}")
         plt.xlabel("Log Lital Iterations")
         plt.ylabel("Log SAD")
+        plt.legend(title='Mutation Type')
         plt.grid(True)
         plt.tight_layout()
         filename = f'scatter_sad_iterations_{mutation}.png'
@@ -292,6 +293,7 @@ def visualize_differences_improved():
         # g.ax_marg_x.set_title(title, y=1.2)
         
         # Adjust layout and save
+        plt.legend(title="Mutation Type")
         plt.tight_layout()
         plot_path = os.path.join('./plot/instance_diff', filename)
         g.savefig(plot_path, bbox_inches='tight')

@@ -3,6 +3,30 @@ from util.load_experiment import load_full, load_all_hard_instances
 import pandas as pd
 from collections import defaultdict
 
+plt.rcParams.update({
+    'font.size': 20,            # Base font size for all text
+    'axes.titlesize': 24,       # Title size for axes
+    'axes.titleweight': 'bold', # Bold axis titles
+    'axes.labelsize': 22,       # Axis label size
+    'axes.labelweight': 'bold', # Bold axis labels
+    'xtick.labelsize': 18,      # X tick label size
+    'ytick.labelsize': 18,      # Y tick label size
+    'xtick.color': 'black',
+    'ytick.color': 'black',
+    'xtick.direction': 'out',
+    'ytick.direction': 'out',
+    'legend.fontsize': 20,      # Legend font size
+    'legend.title_fontsize': 20,
+    'legend.edgecolor': 'black',
+    'legend.fancybox': True,
+    'font.weight': 'bold',      # Make all text bold by default
+})
+
+DISPLAY_NAME_MAP = {
+    'generation_type': 'tsp type',
+    'range': 'control',
+}
+
 # Load data
 all_data = load_full()
 hard_instances_df = load_all_hard_instances()
@@ -29,7 +53,7 @@ selected_configs = [
 #     print(f"{i}: {config_key}")
 
 n_rows, n_cols = 3, 2
-fig, axs = plt.subplots(n_rows, n_cols, figsize=(24, 18), sharex=True)
+fig, axs = plt.subplots(n_rows, n_cols, figsize=(26, 28), sharex=True)
 # Share y only within rows
 for row in range(n_rows):
     axs[row, 1].get_shared_y_axes().join(axs[row, 0], axs[row, 1])
@@ -72,13 +96,16 @@ for idx, config_key in enumerate(selected_configs):
         )
     
     # Title insdie the plot
-    title_text = '\n'.join([f"{k}: {v}" for k, v in config_dict.items()])
+    # title_text = '\n'.join([f"{k}: {v}" for k, v in config_dict.items()])
+    title_text = '\n'.join([
+        f"{DISPLAY_NAME_MAP.get(k, k)}: {v}" for k, v in config_dict.items()
+    ])
     ax.text(
         0.01,
         0.98,
         title_text,
         transform=ax.transAxes,  # Use axes coordinates
-        fontsize=9,
+        fontsize=16,
         verticalalignment='top',
         bbox=dict(
             boxstyle="round",
@@ -90,7 +117,7 @@ for idx, config_key in enumerate(selected_configs):
     )
 
     ax.grid(True, alpha=0.3)
-    if idx == 0:
+    if idx % n_cols == 0:
         ax.set_ylabel("Lital Iterations")
     if idx >= (n_rows-1)*n_cols:
         ax.set_xlabel("Generation")
@@ -104,7 +131,10 @@ for j in range(idx + 1, n_rows * n_cols):
     fig.delaxes(axs[j])
 
 # fig.suptitle("Hill Climbed Runs\nLital Iteration against Hill Climbing Generation", fontsize=16)
-fig.tight_layout(rect=[0, 0, 1, 0.96])
-fig.legend(['Lital Iteration', 'Hard Instances'])
+fig.tight_layout(rect=[0, 0, 1, 1])
+# fig.legend(['Lital Iteration', 'Hard Instances'])
+axs[0, 1].legend(loc='upper right', fontsize=14, frameon=True)
+
 plt.savefig("plot/hill_climbed_runs/hill_climbed_runs_combined.png")
+print("Plot saved to: ./plot/hill_climbed_runs/hill_climbed_runs_combined.png")
 plt.show()

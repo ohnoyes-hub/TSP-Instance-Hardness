@@ -202,13 +202,13 @@ def plot_combined_phase_transition():
                 )
 
                 if size_idx == 1:
-                    ax.set_xlabel(r"$rand_{max}$" if dist == 'uniform' else r"$\sigma$", fontsize=14)
+                    ax.set_xlabel(r"$rand_{max}$" if dist == 'uniform' else r"$\sigma$", fontsize=14, fontweight='bold')
                 else:
                     ax.set_xlabel("")
                     ax.set_xticklabels([])
 
                 if dist_idx == 0:
-                    ax.set_ylabel("Log Lital Iterations", fontsize=14)
+                    ax.set_ylabel("Log Lital Iterations", fontsize=14, fontweight='bold')
                 else:
                     ax.set_ylabel("")
         
@@ -216,7 +216,7 @@ def plot_combined_phase_transition():
             handles=custom_handles,
             labels=legend_labels,
             loc='lower center',
-            bbox_to_anchor=(0.5, -0.0001),
+            bbox_to_anchor=(0.5, 0.01),
             ncol=5,
             fontsize=14,
             frameon=True
