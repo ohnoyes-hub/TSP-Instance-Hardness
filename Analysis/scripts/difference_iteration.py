@@ -5,8 +5,32 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from icecream import ic
 from scipy.stats import zscore
+import numpy as np
+import joypy
 
 from util.load_experiment import load_json
+
+sns.set_theme(
+        style="whitegrid",
+        context="talk",
+        palette="viridis",
+        rc={
+            "xtick.labelsize": 18,
+            "ytick.labelsize": 18,
+            "legend.fontsize": 14,
+            "font.size": 16,
+            'axes.titleweight': 'bold',
+            'axes.titlesize': 24,       # Title size for axes
+            'axes.titleweight': 'bold', # Bold axis titles
+            'axes.labelsize': 22,       # Axis label size
+            'axes.labelweight': 'bold', # Bold axis labels
+            'xtick.color': 'black',
+            'ytick.color': 'black',
+            'xtick.direction': 'out',
+            'ytick.direction': 'out',
+            'font.weight': 'bold',
+        }
+    )
 
 def compute_differences(arr):
     """
@@ -57,34 +81,34 @@ def difference_between_iterations():
     # Violin plot by mutation type excluding 'scramble' with dotplot overlay
     # -----------------------
     # df_filtered = df[df['mutation_type'] != 'scramble']
+    bar_data = (
+        df.groupby('mutation_type')['difference']
+        .agg(['mean', 'count', 'std'])
+        .reset_index()
+    )
+    bar_data['sem'] = bar_data['std'] / np.sqrt(bar_data['count'])
 
-    plt.figure(figsize=(10, 2.5))
-    sns.violinplot(
-        y='mutation_type',     # <-- changed from x=
-        x='zscore_difference', # <-- changed from y=
+    plt.figure(figsize=(8, 5))
+    sns.barplot(
+        x='mutation_type',
+        y='difference',
         data=df,
-        cut=0,
-        scale='width',
+        estimator=np.mean,
+        errorbar=('se', 1),  # New Seaborn >=0.12; use ci=68 if old seaborn
         palette="pastel",
-        linewidth=0.6,
+        capsize=0.2,
+        edgecolor='k'
     )
-    # Overlay dotplot (stripplot) for individual data points
-    sns.stripplot(
-        y='mutation_type',     # <-- changed from x=
-        x='zscore_difference', # <-- changed from y=
-        data=df,
-        color='k',
-        size=2,
-        jitter=0.4,
-        alpha=0.7,
-        palette="pastel"
-    )
-    # plt.title("Z-score Scaled Generation Differences by Mutation Type")
-    plt.ylabel("Mutation Type")
-    plt.xlabel("Generation Difference of Lital Iterations (Z-score Scaled)")
+
+    plt.xlabel("Mutation Type", fontsize=12, fontweight='bold')
+    plt.ylabel("Mean Generation Difference(Lital Iterations)", fontsize=12, fontweight='bold')
+    plt.xticks(fontsize=11)
+    plt.yticks(fontsize=11)
+    # plt.title("Mean Generation Difference by Mutation Type", fontsize=13, fontweight='bold')
+    plt.tight_layout()
 
     os.makedirs('./plot/iteration_diff', exist_ok=True)
-    plot_path = os.path.join('./plot/iteration_diff', 'violin_zscore_diff_iteration_vertical.png')
+    plot_path = os.path.join('./plot/iteration_diff', 'bar_mean_diff_iteration.png')
     plt.savefig(plot_path, bbox_inches='tight')
     ic("Saved filtered mutation violin plot with dotplot (vertical):", plot_path)
     plt.close()

@@ -78,20 +78,36 @@ def plot_combined_hill_transition():
         palette="viridis",
         rc={
             "figure.figsize": (27, 24),
-            "axes.titlesize": 20,
-            "axes.labelsize": 18,
-            "xtick.labelsize": 14,
-            "ytick.labelsize": 14,
-            "legend.fontsize": 14
+            "xtick.labelsize": 18,
+            "ytick.labelsize": 18,
+            "legend.fontsize": 14,
+            "font.size": 20,
+            'axes.titleweight': 'bold',
+            'font.size': 20,            # Base font size for all text
+            'axes.titlesize': 24,       # Title size for axes
+            'axes.titleweight': 'bold', # Bold axis titles
+            'axes.labelsize': 22,       # Axis label size
+            'axes.labelweight': 'bold', # Bold axis labels
+            'xtick.color': 'black',
+            'ytick.color': 'black',
+            'xtick.direction': 'out',
+            'ytick.direction': 'out',
+            'legend.fontsize': 20,      # Legend font size
+            'legend.title_fontsize': 20,
+            'legend.edgecolor': 'black',
+            'legend.fancybox': True,
+            'font.weight': 'bold',
         }
     )
 
     df = load_hill_climb_iterations()
     df = fill_hc_missing_with_synthetic(df, min_count=20)
+    # Filter for inplace or wouter mutation types only
+    df = df[df['mutation_type'].isin(['inplace', 'wouter'])]
     distributions = ['uniform', 'lognormal']
     tsp_types = ['asymmetric', 'euclidean']
     city_sizes = [20, 30]
-    mutation_types = sorted(df['mutation_type'].unique())
+    # mutation_types = sorted(df['mutation_type'].unique())
     
     # For 4 rows: each is a unique (city_size, tsp_type) pair, columns: uniform (0), lognormal (1)
     row_combinations = [(city_size, tsp_type) for city_size in city_sizes for tsp_type in tsp_types]
@@ -185,12 +201,12 @@ def plot_combined_hill_transition():
                 ]
             # Inset: titles
             tsp_abbrev = {'euclidean': 'E', 'asymmetric': 'A'}[tsp_type]
-            inset_text = f"Hill-Climbing\n{tsp_abbrev}TSP\n{city_size}-City\n{distribution.capitalize()}"
+            inset_text = f"Inplace Hill-Climbing\n{tsp_abbrev}TSP\n{city_size}-City\n{distribution.capitalize()}"
             ax.text(
                 0.05, 0.95, inset_text,
                 ha='left', va='top',
                 transform=ax.transAxes,
-                fontsize=14, fontweight='bold',
+                fontsize=16, fontweight='bold',
                 bbox=dict(facecolor='white', edgecolor='gray', boxstyle='round,pad=0.3', alpha=0.7),
                 zorder=10
             )
@@ -210,14 +226,14 @@ def plot_combined_hill_transition():
         handles=custom_handles,
         labels=legend_labels,
         loc='lower center',
-        bbox_to_anchor=(0.5, -0.01),
+        bbox_to_anchor=(0.5, 0.01),
         ncol=5,
         fontsize=14,
         frameon=True
     )
-    plt.tight_layout(rect=[0, 0.05, 1, 0.98])
+    plt.tight_layout(rect=[0, 0.02, 1, 0.98])
     os.makedirs('./plot/hill_climb_transition', exist_ok=True)
-    save_path = os.path.join('./plot/hill_climb_transition', 'hill_climb_transition_combined.png')
+    save_path = os.path.join('./plot/hill_climb_transition', 'hill_climb_transition_inplace.png')
     plt.savefig(save_path, bbox_inches='tight')
     plt.close()
     ic("Saved:", save_path)

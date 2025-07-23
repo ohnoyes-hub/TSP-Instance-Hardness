@@ -7,3 +7,4 @@ networkx[default]
 scikit-learn
 statsmodels
 pillow
+joypy
