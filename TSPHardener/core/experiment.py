@@ -2,9 +2,9 @@ import time
 import os
 from collections import defaultdict
 import logging
-from .generate_tsp import TSPBuilder
+from .generate_tsp import TSPBuilder, TSPInstance
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
-from .mutate_tsp import apply_mutation
+from .mutate_tsp import get_mutation_strategy
 from utils.json_utils import save_partial, load_full_results
 from utils.file_utils import get_result_path
 
@@ -84,6 +84,15 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         )
 
     start_iter = len(partial_results["all_iterations"]) # start iteration from last generation
+    
+    # Instantiate mutation strategy
+    mutation_strategy = get_mutation_strategy(
+        mutation_type=configuration["mutation_type"],
+        generation_type=configuration["generation_type"],
+        distribution=configuration["distribution"],
+        control=rang
+    )
+    
     for j in range(start_iter, mutations):
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:
@@ -110,10 +119,10 @@ def run_single_experiment(configuration, citysize, rang, mutations):
         # log basin transitions
         track_basin_transition(hardest_matrix, matrix, partial_results)
 
-        # mutate hardest_matrix for next iteration
-        matrix = apply_mutation(hardest_matrix, configuration["mutation_type"],
-                                configuration["generation_type"], rang,
-                                configuration["distribution"])
+        # Mutation step
+        current_tsp_instance = TSPInstance(matrix = hardest_matrix, tsp_type=configuration["generation_type"])
+        mutated_tsp_instance = mutation_strategy.mutate(current_tsp_instance)        # mutate hardest_matrix for next iteration
+        matrix = mutated_tsp_instance.matrix.copy()
         
         # Always store the last_matrix for continuation
         partial_results["last_matrix"] = matrix.tolist()
@@ -131,8 +140,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
             }
         
         # Periodically (or when new hardest) do a partial save
-        # j % 100 == 0
-        # or "is_hardest" scenario:
+        # j % 100 == 0 or "is_hardest" scenario:
         if (j % 100 == 0) or is_hardest:
             elapsed = time.time() - start_time
             save_partial(

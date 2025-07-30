@@ -514,3 +514,5 @@ class TestHelpersIntegration(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+# Run unit test with: python -m unittest
