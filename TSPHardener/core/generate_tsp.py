@@ -40,7 +40,7 @@ class TSPBuilder:
     def set_generation_type(self, generation_type):
         """
         Set the type of TSP instance to generate (symmetric or asymmetric)."""
-        assert generation_type in ["euclidean", "asymmetric"], "Invalid generation type"
+        assert generation_type in ["euclidean", "asymmetric", "symmetric"], "Invalid generation type"
         self.generation_type = generation_type
         return self
 
@@ -76,6 +76,9 @@ class TSPBuilder:
         elif self.generation_type == "asymmetric":
             matrix = self._generate_asymmetric_tsp()
             return TSPInstance(matrix, "asymmetric")
+        elif self.generation_type == "symmetric":
+            matrix = self._generated_symmetric_tsp()
+            return TSPInstance(matrix, "symmetric")
         else:
             raise ValueError("Generation type not set or invalid")
 
@@ -124,6 +127,6 @@ class TSPBuilder:
         else: # lognormal
             upper_triangle = np.triu(np.around(np.random.lognormal(LOGNORMAL_MEAN, self.control, (self.city_size, self.city_size))), 1)
         
-        matrix = upper_triangle + upper_triangle.T
+        matrix = (upper_triangle + upper_triangle.T).astype(float)
         np.fill_diagonal(matrix, np.inf)
         return matrix

@@ -1,0 +1,987 @@
+{
+  "time": 5.217812538146973,
+  "configuration": {
+    "mutation_type": "swap",
+    "generation_type": "euclidean",
+    "distribution": "uniform",
+    "city_size": 8,
+    "range": 10
+  },
+  "results": {
+    "initial_matrix": [],
+    "hard_instances": {
+      "iteration_0": {
+        "iterations": 16,
+        "hardest": 16,
+        "optimal_tour": [
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            7
+          ]
+        ],
+        "optimal_cost": 54.0,
+        "matrix": [
+          [
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            8.0,
+            7.0
+          ],
+          [
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            6.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            8.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            8.0,
+            7.0
+          ],
+          [
+            8.0,
+            6.0,
+            7.0,
+            7.0,
+            7.0,
+            8.0,
+            Infinity,
+            6.0
+          ],
+          [
+            7.0,
+            7.0,
+            8.0,
+            7.0,
+            7.0,
+            7.0,
+            6.0,
+            Infinity
+          ]
+        ],
+        "is_hardest": true
+      },
+      "iteration_5": {
+        "iterations": 31,
+        "hardest": 31,
+        "optimal_tour": [
+          [
+            5,
+            7
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            7,
+            2
+          ]
+        ],
+        "optimal_cost": 56.0,
+        "matrix": [
+          [
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            8.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            8.0,
+            Infinity
+          ]
+        ],
+        "is_hardest": true
+      },
+      "iteration_59": {
+        "iterations": 52,
+        "hardest": 52,
+        "optimal_tour": [
+          [
+            5,
+            6
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            7,
+            5
+          ]
+        ],
+        "optimal_cost": 53.0,
+        "matrix": [
+          [
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            6.0,
+            8.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            7.0,
+            8.0,
+            6.0
+          ],
+          [
+            7.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            8.0,
+            7.0,
+            7.0
+          ],
+          [
+            7.0,
+            6.0,
+            7.0,
+            7.0,
+            Infinity,
+            7.0,
+            7.0,
+            8.0
+          ],
+          [
+            7.0,
+            8.0,
+            7.0,
+            8.0,
+            7.0,
+            Infinity,
+            6.0,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            8.0,
+            7.0,
+            7.0,
+            6.0,
+            Infinity,
+            7.0
+          ],
+          [
+            7.0,
+            7.0,
+            6.0,
+            7.0,
+            8.0,
+            7.0,
+            7.0,
+            Infinity
+          ]
+        ],
+        "is_hardest": true
+      }
+    },
+    "local_optima": {
+      "7919245256444928461": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": true
+      },
+      "8056135058399629079": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "1937560963191031917": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "3899626620183148197": {
+        "iterations": 15,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "601862980879297477": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-9009421301887034890": {
+        "iterations": 31,
+        "cost": 56.0,
+        "is_hardest": true
+      },
+      "-2342288530259893111": {
+        "iterations": 15,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "2892106204795718700": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-5511233898434207155": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "6094106858569002076": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-459898321677205633": {
+        "iterations": 15,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-3763297541756348993": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "6819458074680631794": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-1060685052299432127": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "6894333340321621428": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-7204300989643682980": {
+        "iterations": 23,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "1548348497863046748": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "766384382467746222": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-7304127441333139058": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-6437671846346943632": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "5815500225571544850": {
+        "iterations": 16,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "-368719021954728696": {
+        "iterations": 13,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-2221745174369528779": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-8064296937463768507": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-4717816673243873452": {
+        "iterations": 16,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "1414743811516760432": {
+        "iterations": 13,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "-532404634462285950": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "4590316513572878854": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-3039346191184256066": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "8863308836712833770": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-5849846988729278346": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-9024498119392579108": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "5468065454939711115": {
+        "iterations": 25,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "-8747136217474790220": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "4365536613818705241": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-4052405500215683966": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-7950965264878131203": {
+        "iterations": 24,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "4666976628126399046": {
+        "iterations": 12,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-8227937228703663479": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-2503219613759144129": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-6757959699162050637": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-411389232843436790": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "726534548094610991": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "5343913760266556443": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-2965668023330134241": {
+        "iterations": 22,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "2689499839377891904": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "3002523657511536659": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-7654052527494841646": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "5578015403577629464": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "725851994122561211": {
+        "iterations": 29,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "911651476870668732": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "2958960918334087230": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "7929316393572117610": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-559960523491682843": {
+        "iterations": 20,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "1946894533435040465": {
+        "iterations": 14,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-578738024728628381": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "3165100493264752468": {
+        "iterations": 11,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-3384574691283242055": {
+        "iterations": 20,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-1749822343962301036": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-2139635522616246807": {
+        "iterations": 52,
+        "cost": 53.0,
+        "is_hardest": true
+      },
+      "-1480517653547845591": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-569025859377693409": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "697749378439146222": {
+        "iterations": 14,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "8721101599244283050": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-8843165413330128857": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "76896778992466744": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "6001929742467282455": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-4322280251606676447": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-5402242904287706541": {
+        "iterations": 15,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "5539406791058550708": {
+        "iterations": 13,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "306373814311362074": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-4871211899472273122": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-2783332272252885570": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-7350967053039504789": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "4644825142655722011": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-6117512729406772461": {
+        "iterations": 14,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-5655705205197635100": {
+        "iterations": 20,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-1168297103014278966": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-4907943426286607070": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-8737060987953331393": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "1340829420198589042": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "-6179818319394855770": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-1155944355861173977": {
+        "iterations": 20,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "4181812927679030490": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "3071211153509178005": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "9157216283058718017": {
+        "iterations": 20,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "7665418780415914374": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-5387171876592184236": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "9185140503012376973": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-2593949543457814670": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-6314386779726718604": {
+        "iterations": 16,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "-7652762183172900223": {
+        "iterations": 21,
+        "cost": 56.0,
+        "is_hardest": false
+      },
+      "1183669565454586219": {
+        "iterations": 20,
+        "cost": 54.0,
+        "is_hardest": false
+      },
+      "5753082783480190215": {
+        "iterations": 18,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "-895784021572951330": {
+        "iterations": 16,
+        "cost": 55.0,
+        "is_hardest": false
+      },
+      "-8825561730579667178": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "6325411120685045190": {
+        "iterations": 21,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "8756607402341435522": {
+        "iterations": 15,
+        "cost": 53.0,
+        "is_hardest": false
+      },
+      "8097707264707162716": {
+        "iterations": 22,
+        "cost": 52.0,
+        "is_hardest": false
+      },
+      "-6222668921244966361": {
+        "iterations": 20,
+        "cost": 54.0,
+        "is_hardest": false
+      }
+    },
+    "transitions": {},
+    "last_matrix": [],
+    "all_iterations": [
+      16,
+      15,
+      16,
+      15,
+      15,
+      31,
+      15,
+      21,
+      16,
+      21,
+      15,
+      16,
+      16,
+      16,
+      16,
+      23,
+      16,
+      21,
+      16,
+      16,
+      16,
+      13,
+      16,
+      16,
+      16,
+      13,
+      16,
+      16,
+      16,
+      16,
+      21,
+      16,
+      25,
+      16,
+      21,
+      16,
+      24,
+      12,
+      16,
+      16,
+      16,
+      16,
+      16,
+      15,
+      22,
+      16,
+      16,
+      16,
+      16,
+      29,
+      21,
+      16,
+      16,
+      20,
+      14,
+      15,
+      11,
+      20,
+      16,
+      52,
+      16,
+      16,
+      14,
+      21,
+      16,
+      16,
+      16,
+      21,
+      15,
+      13,
+      16,
+      16,
+      16,
+      21,
+      16,
+      14,
+      20,
+      16,
+      16,
+      21,
+      21,
+      15,
+      20,
+      16,
+      15,
+      20,
+      16,
+      16,
+      16,
+      16,
+      16,
+      21,
+      20,
+      18,
+      16,
+      15,
+      21,
+      15,
+      22,
+      20
+    ]
+  }
+}
