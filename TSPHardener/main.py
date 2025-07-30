@@ -15,7 +15,7 @@ parser.add_argument('mutations', type=int,
                     help='An integer number of mutations, e.g., 500')
 parser.add_argument('continuation', type=str, default="", nargs='?', 
                     help='A list of matrix continuations, e.g., "[(7,10),(50,10)]".')
-parser.add_argument('--tsp_type', type=str, choices=['euclidean', 'asymmetric'], required=True,
+parser.add_argument('--tsp_type', type=str, choices=['euclidean', 'asymmetric', 'symmetric'], required=True,
                     help='Type of TSP to generate: symmetric or asymmetric.')
 parser.add_argument('--distribution', type=str, choices=['uniform', 'lognormal'], required=True,
                     help='Distribution to use for generating the TSP instance.')

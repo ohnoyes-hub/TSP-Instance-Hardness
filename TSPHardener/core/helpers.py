@@ -3,7 +3,6 @@ import os
 import time
 import logging
 from .generate_tsp import TSPBuilder
-# from .mutate_tsp import apply_mutation
 from .algorithm import get_minimal_route
 from utils.json_utils import save_partial
 from utils.json_utils import load_partial
@@ -33,37 +32,8 @@ def initialize_matrix_and_hardest(citysize, rang, config):
         )
 
     matrix = tsp_instance.matrix
-    #generate_tsp(citysize, config["generation_type"], config["distribution"], rang)
     hardest = 0
     return hardest, matrix
-
-# def process_mutation_iteration(j, matrix, hardest, hardest_matrix, 
-#                                mutation_type, generation_type, rang, distribution):
-#     """Process a single mutation iteration and return updated state."""
-#     iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
-#     if error:
-#         logger.error(f"Error in iteration {j}: {error}")
-#         return hardest, hardest_matrix, matrix, None  # No results to record
-    
-#     iteration_result = {
-#         "iterations": iterations,
-#         "hardest": hardest,
-#         "optimal_tour": optimal_tour,
-#         "optimal_cost": optimal_cost,
-#         "matrix": matrix.tolist(),
-#         "is_hardest": False
-#     }
-    
-#     # Update hardest matrix if needed
-#     if iterations > hardest:
-#         hardest = iterations
-#         hardest_matrix = matrix.copy()
-#         iteration_result["is_hardest"] = True
-    
-#     # Apply mutation to the hardest matrix
-#     new_matrix = apply_mutation(hardest_matrix, mutation_type, generation_type, rang, distribution)
-    
-#     return hardest, hardest_matrix, new_matrix, iteration_result
 
 def run_litals_algorithm(matrix):
     """Run Lital's algorithm and return results with error handling."""
