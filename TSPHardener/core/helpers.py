@@ -2,7 +2,7 @@ import numpy as np
 import os
 import time
 import logging
-from .generate_tsp import generate_tsp
+from .generate_tsp import TSPBuilder
 from .mutate_tsp import apply_mutation
 from .algorithm import get_minimal_route
 from utils.json_utils import save_partial
@@ -23,8 +23,17 @@ def initialize_matrix_and_hardest(citysize, rang, config):
             logger.error(f"Error loading partial: {e}")
     
     # fallback => new matrix
-    matrix = generate_tsp(citysize, config["generation_type"],
-                          config["distribution"], rang)
+    tsp_instance = (
+            TSPBuilder()
+            .set_city_size(citysize)
+            .set_generation_type(config["generation_type"])
+            .set_distribution(config["distribution"])
+            .set_control(rang)
+            .build()
+        )
+
+    matrix = tsp_instance.matrix
+    #generate_tsp(citysize, config["generation_type"], config["distribution"], rang)
     hardest = 0
     return hardest, matrix
 
