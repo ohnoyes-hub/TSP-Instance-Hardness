@@ -7,7 +7,7 @@ from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
 from .mutate_tsp import get_mutation_strategy
 from utils.json_utils import save_partial, load_full_results
 from utils.file_utils import get_result_path
-
+import numpy as np
 logger = logging.getLogger(__name__)
 
 def track_basin_transition(source_matrix, mutated_matrix, partial_results):
@@ -212,19 +212,25 @@ def run_single_phase_transition_experiment(configuration, citysize, rang, mutati
     start_iter = len(partial_results["all_iterations"])
     hardest = 0
     hardest_matrix = None
+    # Create Random Sampler
+    random_sampler = get_mutation_strategy(
+        mutation_type="random_sampling",
+        generation_type=configuration["generation_type"],
+        distribution=configuration["distribution"],
+        control=rang
+    )
+    random_sampler.tsp_builder.set_city_size(citysize)
+
+    # Dummy instance (matrix is not used, will be replaced in first mutation)
+    tsp_instance = TSPInstance(
+        matrix=np.zeros((citysize, citysize)),
+        tsp_type=configuration["generation_type"]
+    )
 
     for j in range(start_iter, mutations):
         # Generate a new matrix for each iteration
         # _, matrix = initialize_matrix_and_hardest(citysize, rang, configuration)
-        tsp_instance = (
-            TSPBuilder()
-            .set_city_size(citysize)
-            .set_generation_type(configuration["generation_type"])
-            .set_distribution(configuration["distribution"])
-            .set_control(rang)
-            .build()
-        )
-
+        tsp_instance = random_sampler.mutate(tsp_instance)
         matrix = tsp_instance.matrix.copy()
 
         # Run the algorithm on the new matrix
@@ -307,7 +313,7 @@ def experiment(_cities, _ranges, _mutations, continuations, distribution, tsp_ty
     for citysize in _cities:
         for rang in _ranges:
             if f"{citysize},{rang}" in continuations:
-                run_single_experiment(config, citysize, rang, _mutations)
+                run_single_phase_transition_experiment(config, citysize, rang, _mutations)
                 continue
 
             results_file = get_result_path(
