@@ -2,7 +2,7 @@ import time
 import os
 from collections import defaultdict
 import logging
-
+from .generate_tsp import TSPBuilder
 from .helpers import initialize_matrix_and_hardest, run_litals_algorithm
 from .mutate_tsp import apply_mutation
 from utils.json_utils import save_partial, load_full_results
@@ -207,8 +207,18 @@ def run_single_phase_transition_experiment(configuration, citysize, rang, mutati
 
     for j in range(start_iter, mutations):
         # Generate a new matrix for each iteration
-        _, matrix = initialize_matrix_and_hardest(citysize, rang, configuration)
-        
+        # _, matrix = initialize_matrix_and_hardest(citysize, rang, configuration)
+        tsp_instance = (
+            TSPBuilder()
+            .set_city_size(citysize)
+            .set_generation_type(configuration["generation_type"])
+            .set_distribution(configuration["distribution"])
+            .set_control(rang)
+            .build()
+        )
+
+        matrix = tsp_instance.matrix.copy()
+
         # Run the algorithm on the new matrix
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
         if error:

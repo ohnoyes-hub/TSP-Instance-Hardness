@@ -1,0 +1,987 @@
+{
+  "time": 1.5537281036376953,
+  "configuration": {
+    "mutation_type": "swap",
+    "generation_type": "asymmetric",
+    "distribution": "uniform",
+    "city_size": 8,
+    "range": 10
+  },
+  "results": {
+    "initial_matrix": [],
+    "hard_instances": {
+      "iteration_0": {
+        "iterations": 6,
+        "hardest": 6,
+        "optimal_tour": [
+          [
+            0,
+            6
+          ],
+          [
+            7,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            6,
+            5
+          ]
+        ],
+        "optimal_cost": 10.0,
+        "matrix": [
+          [
+            Infinity,
+            10.0,
+            3.0,
+            1.0,
+            4.0,
+            2.0,
+            1.0,
+            5.0
+          ],
+          [
+            8.0,
+            Infinity,
+            7.0,
+            2.0,
+            1.0,
+            0.0,
+            9.0,
+            5.0
+          ],
+          [
+            5.0,
+            5.0,
+            Infinity,
+            6.0,
+            7.0,
+            5.0,
+            3.0,
+            7.0
+          ],
+          [
+            1.0,
+            8.0,
+            5.0,
+            Infinity,
+            6.0,
+            5.0,
+            6.0,
+            8.0
+          ],
+          [
+            8.0,
+            3.0,
+            0.0,
+            0.0,
+            Infinity,
+            2.0,
+            0.0,
+            8.0
+          ],
+          [
+            4.0,
+            6.0,
+            4.0,
+            5.0,
+            2.0,
+            Infinity,
+            9.0,
+            2.0
+          ],
+          [
+            7.0,
+            8.0,
+            5.0,
+            0.0,
+            7.0,
+            0.0,
+            Infinity,
+            2.0
+          ],
+          [
+            6.0,
+            4.0,
+            0.0,
+            7.0,
+            9.0,
+            9.0,
+            4.0,
+            Infinity
+          ]
+        ],
+        "is_hardest": true
+      },
+      "iteration_2": {
+        "iterations": 15,
+        "hardest": 15,
+        "optimal_tour": [
+          [
+            2,
+            3
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            6,
+            4
+          ]
+        ],
+        "optimal_cost": 15.0,
+        "matrix": [
+          [
+            Infinity,
+            8.0,
+            0.0,
+            1.0,
+            4.0,
+            7.0,
+            3.0,
+            7.0
+          ],
+          [
+            8.0,
+            Infinity,
+            5.0,
+            10.0,
+            9.0,
+            8.0,
+            0.0,
+            10.0
+          ],
+          [
+            9.0,
+            8.0,
+            Infinity,
+            3.0,
+            0.0,
+            8.0,
+            7.0,
+            10.0
+          ],
+          [
+            8.0,
+            3.0,
+            6.0,
+            Infinity,
+            1.0,
+            7.0,
+            0.0,
+            0.0
+          ],
+          [
+            6.0,
+            4.0,
+            6.0,
+            9.0,
+            Infinity,
+            10.0,
+            7.0,
+            10.0
+          ],
+          [
+            0.0,
+            8.0,
+            4.0,
+            5.0,
+            6.0,
+            Infinity,
+            7.0,
+            10.0
+          ],
+          [
+            0.0,
+            0.0,
+            9.0,
+            8.0,
+            0.0,
+            6.0,
+            Infinity,
+            7.0
+          ],
+          [
+            8.0,
+            6.0,
+            9.0,
+            6.0,
+            3.0,
+            6.0,
+            0.0,
+            Infinity
+          ]
+        ],
+        "is_hardest": true
+      },
+      "iteration_13": {
+        "iterations": 28,
+        "hardest": 28,
+        "optimal_tour": [
+          [
+            6,
+            2
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            4,
+            6
+          ]
+        ],
+        "optimal_cost": 22.0,
+        "matrix": [
+          [
+            Infinity,
+            4.0,
+            2.0,
+            6.0,
+            3.0,
+            1.0,
+            10.0,
+            5.0
+          ],
+          [
+            9.0,
+            Infinity,
+            6.0,
+            5.0,
+            10.0,
+            8.0,
+            6.0,
+            7.0
+          ],
+          [
+            0.0,
+            10.0,
+            Infinity,
+            10.0,
+            4.0,
+            8.0,
+            2.0,
+            6.0
+          ],
+          [
+            2.0,
+            7.0,
+            4.0,
+            Infinity,
+            7.0,
+            9.0,
+            10.0,
+            10.0
+          ],
+          [
+            10.0,
+            6.0,
+            10.0,
+            8.0,
+            Infinity,
+            10.0,
+            7.0,
+            10.0
+          ],
+          [
+            5.0,
+            8.0,
+            5.0,
+            0.0,
+            8.0,
+            Infinity,
+            7.0,
+            5.0
+          ],
+          [
+            3.0,
+            6.0,
+            0.0,
+            10.0,
+            0.0,
+            2.0,
+            Infinity,
+            7.0
+          ],
+          [
+            6.0,
+            4.0,
+            9.0,
+            2.0,
+            0.0,
+            5.0,
+            6.0,
+            Infinity
+          ]
+        ],
+        "is_hardest": true
+      }
+    },
+    "local_optima": {
+      "2161167262816059085": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": true
+      },
+      "-7375114566733334415": {
+        "iterations": 6,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "-1693889206386232036": {
+        "iterations": 15,
+        "cost": 15.0,
+        "is_hardest": true
+      },
+      "-5933673441042403667": {
+        "iterations": 14,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "-85522564489678385": {
+        "iterations": 6,
+        "cost": 7.0,
+        "is_hardest": false
+      },
+      "6214004352216360971": {
+        "iterations": 6,
+        "cost": 16.0,
+        "is_hardest": false
+      },
+      "-3873911363270605522": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-8872842193980888300": {
+        "iterations": 6,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "-3726330474924953559": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "532740926973369400": {
+        "iterations": 13,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "-6569132542790805017": {
+        "iterations": 7,
+        "cost": 16.0,
+        "is_hardest": false
+      },
+      "-8471414608466839331": {
+        "iterations": 9,
+        "cost": 16.0,
+        "is_hardest": false
+      },
+      "-2314435736251299262": {
+        "iterations": 8,
+        "cost": 9.0,
+        "is_hardest": false
+      },
+      "721951172301107774": {
+        "iterations": 28,
+        "cost": 22.0,
+        "is_hardest": true
+      },
+      "-1282807933855803532": {
+        "iterations": 15,
+        "cost": 20.0,
+        "is_hardest": false
+      },
+      "-4092909795636532574": {
+        "iterations": 11,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "-8878914087046804649": {
+        "iterations": 8,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "4638315520040449019": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-4080995420654504436": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "9134317501566016311": {
+        "iterations": 6,
+        "cost": 12.0,
+        "is_hardest": false
+      },
+      "-5506721540996917958": {
+        "iterations": 6,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "3704291985072088664": {
+        "iterations": 12,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "-3569064172102425131": {
+        "iterations": 8,
+        "cost": 20.0,
+        "is_hardest": false
+      },
+      "3724264292333547823": {
+        "iterations": 12,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "6728040421123696941": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-1979099069438829785": {
+        "iterations": 10,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "6003181293131550947": {
+        "iterations": 13,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-1947715293359252113": {
+        "iterations": 8,
+        "cost": 9.0,
+        "is_hardest": false
+      },
+      "-7637405128543066013": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-5903608986550498484": {
+        "iterations": 13,
+        "cost": 16.0,
+        "is_hardest": false
+      },
+      "7656961901208542434": {
+        "iterations": 22,
+        "cost": 21.0,
+        "is_hardest": false
+      },
+      "-102868539304448088": {
+        "iterations": 6,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "-7438661891141818840": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-6158517415785507755": {
+        "iterations": 6,
+        "cost": 17.0,
+        "is_hardest": false
+      },
+      "8338609109111971843": {
+        "iterations": 6,
+        "cost": 19.0,
+        "is_hardest": false
+      },
+      "8215901438340096386": {
+        "iterations": 6,
+        "cost": 9.0,
+        "is_hardest": false
+      },
+      "-7825802639855775637": {
+        "iterations": 11,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-2401423222321621350": {
+        "iterations": 6,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "5010839004101631560": {
+        "iterations": 10,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "5734911636510879093": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-4675593053628304976": {
+        "iterations": 13,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "6452864579103914542": {
+        "iterations": 6,
+        "cost": 12.0,
+        "is_hardest": false
+      },
+      "-2902102397480798891": {
+        "iterations": 6,
+        "cost": 21.0,
+        "is_hardest": false
+      },
+      "-6150538868271608655": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-5446326566617592777": {
+        "iterations": 10,
+        "cost": 26.0,
+        "is_hardest": false
+      },
+      "-2427856484348509185": {
+        "iterations": 13,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "8905252061405991663": {
+        "iterations": 14,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "-5897212287811522004": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-5223936787576424407": {
+        "iterations": 6,
+        "cost": 17.0,
+        "is_hardest": false
+      },
+      "4489118428337591538": {
+        "iterations": 8,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "8234050878899628697": {
+        "iterations": 6,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "-7794162942247949546": {
+        "iterations": 10,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "1609681346719820499": {
+        "iterations": 9,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "-4163133247816164526": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-1375632343671220242": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "6519098868810209166": {
+        "iterations": 9,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "-8414938311934543370": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "8929341820881225482": {
+        "iterations": 6,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "7990812717084294491": {
+        "iterations": 9,
+        "cost": 7.0,
+        "is_hardest": false
+      },
+      "6862288648588557621": {
+        "iterations": 6,
+        "cost": 15.0,
+        "is_hardest": false
+      },
+      "536332229833757972": {
+        "iterations": 8,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-2312116760966102795": {
+        "iterations": 7,
+        "cost": 19.0,
+        "is_hardest": false
+      },
+      "2766553126440710780": {
+        "iterations": 10,
+        "cost": 20.0,
+        "is_hardest": false
+      },
+      "-8091080233999870600": {
+        "iterations": 6,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "-5157852416264135654": {
+        "iterations": 10,
+        "cost": 12.0,
+        "is_hardest": false
+      },
+      "9097353151629774155": {
+        "iterations": 6,
+        "cost": 11.0,
+        "is_hardest": false
+      },
+      "-7341320540544318245": {
+        "iterations": 9,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "-1492988167072918094": {
+        "iterations": 10,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "5687996533117058010": {
+        "iterations": 7,
+        "cost": 7.0,
+        "is_hardest": false
+      },
+      "546941681519518098": {
+        "iterations": 9,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "8133615851999288220": {
+        "iterations": 7,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "-1833590857247520513": {
+        "iterations": 17,
+        "cost": 17.0,
+        "is_hardest": false
+      },
+      "-4776938408582366386": {
+        "iterations": 9,
+        "cost": 17.0,
+        "is_hardest": false
+      },
+      "373574930017620210": {
+        "iterations": 11,
+        "cost": 21.0,
+        "is_hardest": false
+      },
+      "2050211924000106658": {
+        "iterations": 14,
+        "cost": 8.0,
+        "is_hardest": false
+      },
+      "2028095818761652812": {
+        "iterations": 10,
+        "cost": 23.0,
+        "is_hardest": false
+      },
+      "1736300256192832234": {
+        "iterations": 11,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "885092341970326552": {
+        "iterations": 10,
+        "cost": 9.0,
+        "is_hardest": false
+      },
+      "3348333852526173984": {
+        "iterations": 12,
+        "cost": 16.0,
+        "is_hardest": false
+      },
+      "3043681007841079174": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-3728377002028122428": {
+        "iterations": 6,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "8773755220208985533": {
+        "iterations": 6,
+        "cost": 13.0,
+        "is_hardest": false
+      },
+      "-7035673206951054595": {
+        "iterations": 10,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "-6896122853159682748": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "1757851136268914937": {
+        "iterations": 13,
+        "cost": 12.0,
+        "is_hardest": false
+      },
+      "-6760347077323635075": {
+        "iterations": 12,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "-3153783935390899581": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-3087296108252392253": {
+        "iterations": 10,
+        "cost": 17.0,
+        "is_hardest": false
+      },
+      "-9006273625660349848": {
+        "iterations": 9,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "3423681924000900688": {
+        "iterations": 12,
+        "cost": 15.0,
+        "is_hardest": false
+      },
+      "1031065491740288594": {
+        "iterations": 16,
+        "cost": 23.0,
+        "is_hardest": false
+      },
+      "8077271994470857842": {
+        "iterations": 14,
+        "cost": 19.0,
+        "is_hardest": false
+      },
+      "-9081839300031368193": {
+        "iterations": 8,
+        "cost": 14.0,
+        "is_hardest": false
+      },
+      "9111598944786939584": {
+        "iterations": 6,
+        "cost": 7.0,
+        "is_hardest": false
+      },
+      "8201495896141783922": {
+        "iterations": 14,
+        "cost": 19.0,
+        "is_hardest": false
+      },
+      "8548911047220523818": {
+        "iterations": 6,
+        "cost": 4.0,
+        "is_hardest": false
+      },
+      "1879927140616225892": {
+        "iterations": 13,
+        "cost": 17.0,
+        "is_hardest": false
+      },
+      "3078225027558940117": {
+        "iterations": 24,
+        "cost": 18.0,
+        "is_hardest": false
+      },
+      "980023872027127219": {
+        "iterations": 8,
+        "cost": 10.0,
+        "is_hardest": false
+      },
+      "-1080945673056013062": {
+        "iterations": 6,
+        "cost": 10.0,
+        "is_hardest": false
+      }
+    },
+    "transitions": {},
+    "last_matrix": [],
+    "all_iterations": [
+      6,
+      6,
+      15,
+      14,
+      6,
+      6,
+      6,
+      6,
+      6,
+      13,
+      7,
+      9,
+      8,
+      28,
+      15,
+      11,
+      8,
+      6,
+      6,
+      6,
+      6,
+      12,
+      8,
+      12,
+      6,
+      10,
+      13,
+      8,
+      6,
+      13,
+      22,
+      6,
+      6,
+      6,
+      6,
+      6,
+      11,
+      6,
+      10,
+      6,
+      13,
+      6,
+      6,
+      6,
+      10,
+      13,
+      14,
+      6,
+      6,
+      8,
+      6,
+      10,
+      9,
+      6,
+      6,
+      9,
+      6,
+      6,
+      9,
+      6,
+      8,
+      7,
+      10,
+      6,
+      10,
+      6,
+      9,
+      10,
+      7,
+      9,
+      7,
+      17,
+      9,
+      11,
+      14,
+      10,
+      11,
+      10,
+      12,
+      6,
+      6,
+      6,
+      10,
+      6,
+      13,
+      12,
+      6,
+      10,
+      9,
+      12,
+      16,
+      14,
+      8,
+      6,
+      14,
+      6,
+      13,
+      24,
+      8,
+      6
+    ]
+  }
+}
