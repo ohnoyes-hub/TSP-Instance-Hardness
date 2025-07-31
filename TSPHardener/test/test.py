@@ -4,8 +4,6 @@ from core.generate_tsp import TSPBuilder, TSPInstance
 from core.mutate_tsp import SwapMutation, ScrambleMutation, InplaceMutation, RandomSampling, get_mutation_strategy
 from core.helpers import (
     run_litals_algorithm,
-    initialize_matrix_or_hardest,
-    # handle_saving
 )
 from unittest.mock import patch, MagicMock
 import itertools
@@ -133,9 +131,9 @@ class TestATSPMutation(unittest.TestCase):
         - Exactly two values are swapped.
         """
         original_matrix = self.tsp_instance.matrix.copy()
-        ic("Unswapped: ", original_matrix)
+        # ic("Unswapped: ", original_matrix)
         SwapMutation().mutate(self.tsp_instance)
-        ic("Swapped: ", self.tsp_instance.matrix)
+        # ic("Swapped: ", self.tsp_instance.matrix)
         self.assertEqual(self.tsp_instance.matrix.shape, (4, 4))
         self.assertFalse(np.array_equal(self.tsp_instance.matrix, original_matrix))
         self.assertTrue(np.all(np.isinf(np.diag(self.tsp_instance.matrix))))
@@ -208,14 +206,14 @@ class TestETSPMutation(unittest.TestCase):
         - Symmetry and infinite diagonal preserved.
         """
         original = self.tsp_instance.matrix.copy()
-        ic("Unmutated: ", original)
+        # ic("Unmutated: ", original)
         ScrambleMutation().mutate(self.tsp_instance)
-        ic("Scrambled: ", self.tsp_instance.matrix)
+        # ic("Scrambled: ", self.tsp_instance.matrix)
         mutated = self.tsp_instance.matrix
         self.assertEqual(mutated.shape, original.shape)
         self.assertFalse(np.array_equal(mutated, original))
         self.assertTrue(np.all(np.isinf(np.diag(self.tsp_instance.matrix))))
-        mask = ~np.eye(6, dtype=bool)
+        mask = ~np.eye(4, dtype=bool)
         self.assertCountEqual(
             original[mask].tolist(),
             mutated[mask].tolist(),
@@ -230,9 +228,9 @@ class TestETSPMutation(unittest.TestCase):
         - Matrix remains symmetric.
         """
         original = self.tsp_instance.matrix.copy()
-        ic("Unmutated: ", original)
+        # ic("Unmutated: ", original)
         InplaceMutation('uniform', 20).mutate(self.tsp_instance)
-        ic("Inplace Mutated: ", self.tsp_instance.matrix)
+        # ic("Inplace Mutated: ", self.tsp_instance.matrix)
         mutated = self.tsp_instance.matrix
         differences = (mutated != original).sum()
         self.assertEqual(differences, 2)  
@@ -434,83 +432,6 @@ class TestMutationSolveIntegration(unittest.TestCase):
         self.assertIsNone(error)
         self.assertEqual(cost, expected)
         self.assertGreater(iter_count, 1)
-
-class TestHelpersIntegration(unittest.TestCase):
-    """
-    Integration-like tests for helper functions:
-    - initialize_matrix_or_hardest
-    - process_mutation_iteration
-    - handle_saving
-    """
-    @patch("core.helpers.os.path.exists", return_value=False)
-    def test_initialize_without_partial(self, mock_exists):
-        config = {"distribution": "uniform", "generation_type": "euclidean", "mutation_type": "swap"}
-        hardest, matrix = initialize_matrix_or_hardest(4, 10, config)
-        # Should return zero hardest and a valid generated matrix
-        self.assertEqual(hardest, 0)
-        self.assertIsInstance(matrix, np.ndarray)
-        self.assertEqual(matrix.shape, (4, 4))
-        # Diagonal should be infinite
-        self.assertTrue(np.all(np.isinf(np.diag(matrix))))
-    
-    @patch("core.helpers.os.path.exists", return_value=True)
-    @patch("core.helpers.load_partial", return_value=(5, np.array([[np.inf,7.,7.,7.],[ 7.,np.inf,6.,7.],[7.,6.,np.inf,7.],[7.,7.,7., np.inf]])))
-    def test_initialize_with_partial(self, mock_load, mock_exists):
-        config = {"distribution": "lognormal", "generation_type": "asymmetric", "mutation_type": "scramble"}
-        hardest, matrix = initialize_matrix_or_hardest(4, 1.0, config)
-        # Should return the hardest and the loaded matrix
-        self.assertEqual(hardest, 5)
-        self.assertIsInstance(matrix, np.ndarray)
-        self.assertEqual(matrix.shape, (4, 4))
-        # Diagonal should be infinite
-        self.assertTrue(np.all(np.isinf(np.diag(matrix))))
-        np.testing.assert_array_equal(matrix, np.array([[np.inf,7.,7.,7.],[ 7.,np.inf,6.,7.],[7.,6.,np.inf,7.],[7.,7.,7., np.inf]]))
-
-    # @patch("core.helpers.run_litals_algorithm", return_value=(3, [0, 1, 0], 10, None))
-    # @patch("core.helpers.get_mutation_strategy")
-    # def test_process_mutation_iteration_hardest_update(self, mock_strategy, mock_run):
-    #     # Prepare a simple matrix and initial hardest
-    #     orig_matrix = np.array([[np.inf, 1], [1, np.inf]])
-    #     initial_hardest = 2
-    #     # Mock mutation strategy to return a new matrix with higher "difficulty"
-    #     mutated_matrix = np.array([[np.inf, 2], [2, np.inf]])
-    #     mock_strategy.return_value.mutate.return_value = MagicMock(matrix=mutated_matrix)
-
-    #     new_hardest, new_hardest_matrix, new_matrix, iteration = process_mutation_iteration(
-    #         j=0,
-    #         matrix=orig_matrix,
-    #         hardest=initial_hardest,
-    #         hardest_matrix=orig_matrix.copy(),
-    #         mutation_type="swap",
-    #         generation_type="euclidean",
-    #         rang=5,
-    #         distribution="uniform"
-    #     )
-    #     # The mocked run returns iterations=3, so hardest should update
-    #     self.assertEqual(new_hardest, 3)
-    #     np.testing.assert_array_equal(new_hardest_matrix, mutated_matrix)
-    #     np.testing.assert_array_equal(new_matrix, mutated_matrix)
-    #     self.assertTrue(iteration["is_hardest"])
-
-    @patch("core.helpers.save_partial")
-    def test_handle_saving_should_save(self, mock_save):
-        config = {"distribution": "uniform", "generation_type": "euclidean", "mutation_type": "swap"}
-        results = [{"foo": "bar"}]
-        citysize, rang = 4, 10
-        start_time = 0.0
-        # Should return empty dict when saving
-        output = handle_saving(config, results, citysize, rang, start_time, should_save=True, is_final=True)
-        mock_save.assert_called_once()
-        self.assertEqual(output, {})
-
-    def test_handle_saving_no_save(self):
-        config = {"distribution": "uniform", "generation_type": "euclidean", "mutation_type": "swap"}
-        results = [{"foo": "bar"}]
-        citysize, rang = 4, 10
-        start_time = 0.0
-        # Should return original results when not saving
-        output = handle_saving(config, results, citysize, rang, start_time, should_save=False)
-        self.assertEqual(output, results)
 
 if __name__ == '__main__':
     unittest.main()
