@@ -56,7 +56,7 @@ class ScrambleMutation(MutationStrategy):
     def mutate(self, tsp_instance):
         if tsp_instance.tsp_type == 'euclidean':
             tsp_instance.matrix = permute_symmetric_matrix(tsp_instance.matrix)
-        else:
+        else: # 'asymmetric'
             tsp_instance.matrix = permute_matrix(tsp_instance.matrix)
         return tsp_instance
 
