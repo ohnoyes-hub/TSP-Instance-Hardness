@@ -1,0 +1,14 @@
+size,range,mutations,continuation,tsp type,distribution,mutation strategy
+20,[2.4],1000,,symmetric,lognormal,scramble
+20,[2.6],1000,,symmetric,lognormal,scramble
+20,[2.8],1000,,symmetric,lognormal,scramble
+20,[3.0],1000,,symmetric,lognormal,scramble
+20,[3.2],1000,,symmetric,lognormal,scramble
+20,[3.4],1000,,symmetric,lognormal,scramble
+20,[3.6],1000,,symmetric,lognormal,scramble
+20,[3.8],1000,,symmetric,lognormal,scramble
+20,[4.0],1000,,symmetric,lognormal,scramble
+20,[4.2],1000,,symmetric,lognormal,scramble
+20,[4.4],1000,,symmetric,lognormal,scramble
+20,[4.6],1000,,symmetric,lognormal,scramble
+20,[4.8],1000,,symmetric,lognormal,scramble
