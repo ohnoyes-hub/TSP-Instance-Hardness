@@ -98,7 +98,7 @@ def plot_combined_phase_transition():
     df = fill_missing_with_synthetic(df, min_count=100)
 
     distributions = ['uniform', 'lognormal']
-    tsp_types = ['euclidean', 'asymmetric']
+    tsp_types = ['euclidean', 'asymmetric', 'symmetric']
     city_sizes = [20, 30]
 
     for tsp_type in tsp_types:

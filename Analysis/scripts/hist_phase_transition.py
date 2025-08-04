@@ -132,7 +132,7 @@ def plot_compare_tsp_types(df, size, tsp_types, dist, output_dir):
     plt.close()
 
 
-def histogram_phase_transition(dist: str = 'uniform'):
+def histogram_phase_transition(dist: str = 'uniform', log_scale: bool = True):
     # apply consistent styling
     sns.set_theme(
         style="whitegrid",
@@ -160,7 +160,7 @@ def histogram_phase_transition(dist: str = 'uniform'):
         return
 
     city_sizes = [20, 30]
-    tsp_types = ['euclidean', 'asymmetric']
+    tsp_types = ['euclidean', 'asymmetric', 'symmetric']
     output_dir = "./plot/histograms_random_sampling/"
     os.makedirs(output_dir, exist_ok=True)
 
@@ -179,22 +179,28 @@ def histogram_phase_transition(dist: str = 'uniform'):
             # median_iter = subset['iteration'].median()
 
             plt.figure()
-            subset['log_iteration'] = np.log(subset['iteration'])
-            mean_iter = subset['log_iteration'].mean()
-            median_iter = subset['log_iteration'].median()
+            if log_scale:
+                subset['plot_iteration'] = np.log(subset['iteration'])
+                xlabel = "Log (Lital Iterations)"
+            else:
+                subset['plot_iteration'] = subset['iteration']
+                xlabel = "Lital Iterations"
+
+            mean_iter = subset['plot_iteration'].mean()
+            median_iter = subset['plot_iteration'].median()
 
             ax = sns.histplot(
                 data=subset,
-                x='log_iteration',
+                x='plot_iteration',
                 bins='auto',
                 # kde
                 element='bars',
                 alpha=0.7,
                 stat='count'
             )
-            plt.title(f"Frequency of Log Lital Iterations for {tsp_type[0].capitalize()}TSP\n City size {size}, {dist.capitalize()} Distributed")
-            plt.xlabel("Log (Lital Iterations)")
+            plt.title(f"Frequency of {'Log ' if log_scale else ''}Lital Iterations for {tsp_type[0].capitalize()}TSP\n City size {size}, {dist.capitalize()} Distributed")            
             plt.ylabel("Frequency")
+            plt.xlabel(xlabel)
             plt.axvline(mean_iter, color='r', linestyle='--', label=f'Log-Mean: {mean_iter:.2f}')
             plt.axvline(median_iter, color='g', linestyle='-', label=f'Log-Median: {median_iter:.2f}')
             ax.legend(loc='best')
@@ -210,7 +216,7 @@ def histogram_phase_transition(dist: str = 'uniform'):
 
     ic("All histograms saved to:", output_dir)
 
-def histogram_phase_transition_combined(dist: str = 'uniform'):
+def histogram_phase_transition_combined(dist: str = 'uniform', log_scale: bool = True):
     sns.set_theme(
         style="whitegrid",
         context="talk",
@@ -234,11 +240,12 @@ def histogram_phase_transition_combined(dist: str = 'uniform'):
         return
 
     city_sizes = [20, 30]
-    tsp_types = ['euclidean', 'asymmetric']
+    tsp_types = ['euclidean', 'asymmetric', 'symmetric']
     output_dir = "./plot/histograms_random_sampling_combined/"
     os.makedirs(output_dir, exist_ok=True)
 
-    fig, axes = plt.subplots(2, 2, figsize=(16, 12), sharex=True, sharey=True)
+    fig, axes = plt.subplots(2, 3,  sharex=True, sharey=True)
+    # """figsize=(16, 12),"""
 
     for row, size in enumerate(city_sizes):
         for col, tsp_type in enumerate(tsp_types):
@@ -251,10 +258,16 @@ def histogram_phase_transition_combined(dist: str = 'uniform'):
                 ax.set_visible(False)
                 continue
 
-            subset['log_iteration'] = np.log(subset['iteration'])
+            if log_scale:
+                subset['plot_iteration'] = np.log(subset['iteration'])
+                xlabel = "Log (Lital Iterations)"
+            else:
+                subset['plot_iteration'] = subset['iteration']
+                xlabel = "Lital Iterations"
+            # subset['log_iteration'] = np.log(subset['iteration'])
             sns.histplot(
                 data=subset,
-                x='log_iteration',
+                x='plot_iteration',
                 bins='auto',
                 ax=ax,
                 stat='count',
@@ -262,10 +275,10 @@ def histogram_phase_transition_combined(dist: str = 'uniform'):
                 element='bars'
             )
 
-            mean_iter = subset['log_iteration'].mean()
-            median_iter = subset['log_iteration'].median()
-            ax.axvline(mean_iter, color='r', linestyle='--', label=f'Log-Mean: {mean_iter:.2f}')
-            ax.axvline(median_iter, color='g', linestyle='-', label=f'Log-Median: {median_iter:.2f}')
+            mean_iter = subset['plot_iteration'].mean()
+            median_iter = subset['plot_iteration'].median()
+            ax.axvline(mean_iter, color='r', linestyle='--', label=f'{"Log-" if log_scale else ""}Mean: {mean_iter:.2f}')
+            ax.axvline(median_iter, color='g', linestyle='-', label=f'{"Log-" if log_scale else ""}Median: {median_iter:.2f}')
 
             # Inset title (top left)
             inset_text = f"Random sampling\n{tsp_type[0].capitalize()}TSP\nCity: {size}\n{dist.capitalize()}"
@@ -283,7 +296,7 @@ def histogram_phase_transition_combined(dist: str = 'uniform'):
             if row == 0:
                 ax.set_xlabel("")
             else:
-                ax.set_xlabel("Log (Lital Iterations)", fontsize=16)
+                ax.set_xlabel(xlabel, fontsize=16)
 
 
             # Remove y label for right column
@@ -306,7 +319,7 @@ def histogram_phase_transition_combined(dist: str = 'uniform'):
     plt.close()
     print("Saved:", save_path)
 
-def histogram_with_normal_fit(dist: str = 'uniform'):
+def histogram_with_normal_fit(dist: str = 'uniform', log_scale: bool = True):
     sns.set_theme(
         style="whitegrid",
         context="talk",
@@ -328,7 +341,7 @@ def histogram_with_normal_fit(dist: str = 'uniform'):
     ]
 
     city_sizes = [20, 30]
-    tsp_types = ['euclidean', 'asymmetric']
+    tsp_types = ['euclidean', 'asymmetric', 'symmetric']
     output_dir = "./plot/histograms_normal_fit/"
     os.makedirs(output_dir, exist_ok=True)
 
@@ -342,14 +355,18 @@ def histogram_with_normal_fit(dist: str = 'uniform'):
             if subset.empty:
                 print("No data for:", tsp_type, size)
                 continue
-
-            subset['log_iteration'] = np.log(subset['iteration'])
+            if log_scale:
+                subset['plot_iteration'] = np.log(subset['iteration'])
+                xlabel = "Log (Lital Iterations)"
+            else:
+                subset['plot_iteration'] = subset['iteration']
+                xlabel = "Lital Iterations"
 
             plt.figure()
 
             # Plot histogram
             sns.histplot(
-                subset['log_iteration'],
+                subset['plot_iteration'],
                 bins='auto',
                 kde=False,
                 stat='density',
@@ -358,7 +375,7 @@ def histogram_with_normal_fit(dist: str = 'uniform'):
             )
 
             # Fit normal distribution
-            mu, std = stats.norm.fit(subset['log_iteration'])
+            mu, std = stats.norm.fit(subset['plot_iteration'])
 
             # Plot normal distribution curve
             xmin, xmax = plt.xlim()
@@ -367,14 +384,14 @@ def histogram_with_normal_fit(dist: str = 'uniform'):
             plt.plot(x, p, 'k', linewidth=2, label=f'Normal fit\n$\mu$={mu:.2f}, $\sigma$={std:.2f}')
 
             # Mean and median lines
-            mean_iter = subset['log_iteration'].mean()
-            median_iter = subset['log_iteration'].median()
+            mean_iter = subset['plot_iteration'].mean()
+            median_iter = subset['plot_iteration'].median()
 
             plt.axvline(mean_iter, color='r', linestyle='--', linewidth=1.5, label=f'Log-Mean: {mean_iter:.2f}')
             plt.axvline(median_iter, color='g', linestyle=':', linewidth=1.5, label=f'Log-Median: {median_iter:.2f}')
 
-            plt.title(f"Log Iterations with Normal Fit\n{tsp_type.capitalize()} TSP, City Size: {size}, {dist.capitalize()} Distribution")
-            plt.xlabel("Log (Lital Iterations)")
+            plt.title(f"{xlabel} with Normal Fit\n{tsp_type.capitalize()} TSP, City Size: {size}, {dist.capitalize()} Distribution")
+            plt.xlabel(xlabel)
             plt.ylabel("Density")
             plt.legend(loc='best')
 
@@ -385,7 +402,7 @@ def histogram_with_normal_fit(dist: str = 'uniform'):
 
             print("Saved:", save_path)
 
-def histogram_with_normal_fit_combined(dist: str = 'uniform'):
+def histogram_with_normal_fit_combined(dist: str = 'uniform', log_scale: bool = True):
     sns.set_theme(
         style="whitegrid",
         context="talk",
@@ -407,11 +424,11 @@ def histogram_with_normal_fit_combined(dist: str = 'uniform'):
     ]
 
     city_sizes = [20, 30]
-    tsp_types = ['euclidean', 'asymmetric']
+    tsp_types = ['euclidean', 'asymmetric', 'symmetric']
     output_dir = "./plot/histograms_normal_fit_combined/"
     os.makedirs(output_dir, exist_ok=True)
 
-    fig, axes = plt.subplots(2, 2, sharex=True, sharey=True)
+    fig, axes = plt.subplots(2, 3, sharex=True, sharey=True)
 
     for row, size in enumerate(city_sizes):
         for col, tsp_type in enumerate(tsp_types):
@@ -425,10 +442,15 @@ def histogram_with_normal_fit_combined(dist: str = 'uniform'):
                 ax.set_visible(False)
                 continue
 
-            subset['log_iteration'] = np.log(subset['iteration'])
+            if log_scale:
+                subset['plot_iteration'] = np.log(subset['iteration'])
+                xlabel = "Log (Lital Iterations)"
+            else:
+                subset['plot_iteration'] = subset['iteration']
+                xlabel = "Lital Iterations"
 
             sns.histplot(
-                subset['log_iteration'],
+                subset['plot_iteration'],
                 bins='auto',
                 kde=False,
                 stat='density',
@@ -437,15 +459,15 @@ def histogram_with_normal_fit_combined(dist: str = 'uniform'):
                 ax=ax
             )
 
-            mu, std = stats.norm.fit(subset['log_iteration'])
+            mu, std = stats.norm.fit(subset['plot_iteration'])
 
             xmin, xmax = ax.get_xlim()
             x = np.linspace(xmin, xmax, 100)
             p = stats.norm.pdf(x, mu, std)
             ax.plot(x, p, 'k', linewidth=2, label=f'Normal fit\n$\mu$={mu:.2f}, $\sigma$={std:.2f}')
 
-            mean_iter = subset['log_iteration'].mean()
-            median_iter = subset['log_iteration'].median()
+            mean_iter = subset['plot_iteration'].mean()
+            median_iter = subset['plot_iteration'].median()
 
             ax.axvline(mean_iter, color='r', linestyle='--', linewidth=1.5, label=f'Log-Mean: {mean_iter:.2f}')
             ax.axvline(median_iter, color='g', linestyle=':', linewidth=1.5, label=f'Log-Median: {median_iter:.2f}')
@@ -460,7 +482,7 @@ def histogram_with_normal_fit_combined(dist: str = 'uniform'):
             )
 
             if row == 1:
-                ax.set_xlabel("Log (Lital Iterations)")
+                ax.set_xlabel(xlabel)
             else:
                 ax.set_xlabel("")
 
@@ -479,11 +501,27 @@ def histogram_with_normal_fit_combined(dist: str = 'uniform'):
     print("Saved combined plot:", save_path)
 
 if __name__ == "__main__":
-    # histogram_phase_transition()
-    # histogram_phase_transition('lognormal')
-    # histogram_phase_transition_combined('uniform')
-    # histogram_phase_transition_combined('lognormal')
-    # histogram_with_normal_fit('uniform')
-    # histogram_with_normal_fit('lognormal')
-    histogram_with_normal_fit_combined('uniform')
-    histogram_with_normal_fit_combined('lognormal')
+    # histogram_phase_transition('uniform', log_scale=True)    # Log-scale
+    # histogram_phase_transition('uniform', log_scale=False)   # Raw iterations
+
+    # histogram_phase_transition_combined('uniform', log_scale=True)
+    # histogram_phase_transition_combined('uniform', log_scale=False)
+
+    # histogram_with_normal_fit('uniform', log_scale=True)
+    # histogram_with_normal_fit('uniform', log_scale=False)
+
+    histogram_with_normal_fit_combined('uniform', log_scale=True)
+    # histogram_with_normal_fit_combined('uniform', log_scale=False)
+    histogram_phase_transition_combined('lognormal', log_scale=True)
+    # histogram_with_normal_fit_combined('lognormal', log_scale=False)
+
+
+# if __name__ == "__main__":
+#     # histogram_phase_transition()
+#     # histogram_phase_transition('lognormal')
+#     # histogram_phase_transition_combined('uniform')
+#     # histogram_phase_transition_combined('lognormal')
+#     # histogram_with_normal_fit('uniform')
+#     # histogram_with_normal_fit('lognormal')
+#     histogram_with_normal_fit_combined('uniform')
+#     histogram_with_normal_fit_combined('lognormal')
