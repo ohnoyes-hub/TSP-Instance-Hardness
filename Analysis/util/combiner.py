@@ -47,7 +47,7 @@ def check_iteration_count(threshold=100):
                     print(f"🟨 Incomplete: {file_path} ({count} iterations)")
                 else:
                     valid_files += 1
-                    # # Optional: Uncomment to see valid files
+                    # Uncomment to see valid files
                     # print(f"🟩 Valid: {file_path} ({count} iterations)")
             except KeyError:
                 invalid_files += 1
@@ -98,7 +98,7 @@ def group_key(cfg):
     # Keep all distinguishing factors except mutation_type
     return (
         cfg.get('distribution'),
-        cfg.get('generation_type'),   # <- this is your ETSP/ATSP distinction
+        cfg.get('generation_type'),
         cfg.get('city_size'),
         cfg.get('range'),
     )
@@ -133,7 +133,7 @@ for group_id, files in groups.items():
 
     # Build merged config (preserve all info except mutation_type)
     merged_config = dict(base_data['configuration'])
-    merged_config['mutation_type'] = 'random_sampling'  # <-- As requested!
+    merged_config['mutation_type'] = 'random_sampling'
 
     # Build merged data object
     merged_data = dict(base_data)
