@@ -1,0 +1,13 @@
+generation_type,distribution,mutation_type,city_size,count_zero,count_nonzero,avg_log_iter_zero,avg_log_iter_nonzero
+asymmetric,lognormal,random_sampling,20,0,2525,,4.162892230520744
+asymmetric,lognormal,random_sampling,30,0,2525,,5.805866750055105
+asymmetric,uniform,random_sampling,20,0,2020,,4.413363604924619
+asymmetric,uniform,random_sampling,30,0,2020,,6.026214410564776
+euclidean,lognormal,random_sampling,20,1013,0,7.946503577394896,
+euclidean,lognormal,random_sampling,30,26,0,11.142061384058717,
+euclidean,uniform,random_sampling,20,2017,0,6.21144160040027,
+euclidean,uniform,random_sampling,30,1638,0,9.292356655474162,
+symmetric,lognormal,random_sampling,20,3,2521,6.399778942784745,5.782720112812561
+symmetric,lognormal,random_sampling,30,0,2524,,8.278070092721885
+symmetric,uniform,random_sampling,20,0,2020,,6.05082212754919
+symmetric,uniform,random_sampling,30,0,2020,,8.41013286905472

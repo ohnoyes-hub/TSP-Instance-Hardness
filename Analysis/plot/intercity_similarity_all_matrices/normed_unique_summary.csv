@@ -1,0 +1,7 @@
+generation_type,distribution,count_≤0.6,avg_log_iter_≤0.6,count_>0.6,avg_log_iter_>0.6
+asymmetric,lognormal,0,,5050,4.9843794902879255
+asymmetric,uniform,4040,5.219789007744698,0,
+euclidean,lognormal,1039,8.02646941278783,0,
+euclidean,uniform,3655,7.592163586778118,0,
+symmetric,lognormal,0,,5048,7.030761817602786
+symmetric,uniform,4040,7.230477498301955,0,
