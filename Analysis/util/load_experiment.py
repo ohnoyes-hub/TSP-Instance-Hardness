@@ -8,6 +8,7 @@ from typing import Tuple, Dict, List
 import re
 import numpy as np
 
+
 def custom_decoder(obj) -> Dict:
     """
     Custom decoder that converts "Infinity" to np.inf in nested structures.
@@ -369,9 +370,8 @@ def load_phase_transition_iterations() -> pd.DataFrame:
     Load all iterations from Phase Transition experiments (all_iterations field).
     """
     base_dirs = [
-        #"../data/Phase-Trans-Results",
-        #"../data/Phase-Trans-Continuation"
-        "../data/Phase-Trans-Merged",
+        # "../data/Phase-Trans-Merged", # From Phase Transition experiments : Final Thesis
+        "../data/ResearchProject" # Research project phase 1
     ]
     all_entries = []
 
@@ -522,3 +522,120 @@ def filter_transitions(lon_data, cost_threshold=0.01):
     lon_data["filtered_transitions"] = {k: list(v) for k, v in cleaned_transitions.items()}
     return lon_data
 
+def load_all_matrices() -> pd.DataFrame:
+    """
+    Load ALL generated matrices from phase transition experiments, along with their configuration and Lital iteration
+    """
+    base_dirs= [
+        "../data/ResearchProject/Research-Project-Continuation",
+        "../data/ResearchProject/Research-Project-Results"
+    ]
+
+    rows = []
+
+    for base_dir in base_dirs:
+        pattern = os.path.join(base_dir, '**', '*.json')
+        for file_path in glob.glob(pattern, recursive=True):
+            data, errors, _ = load_json(file_path)
+            if data is None or errors:
+                continue
+
+            config = data.get('configuration', {})
+            results = data.get('results', {}) or {}
+            all_mats = results.get('all_matrices')
+
+            if all_mats is None:
+                # Fall back: capture initial/hardest as a minimal baseline if needed.
+                # Comment out if you only want runs that actually have all_matrices.
+                init_mat = results.get('initial_matrix')
+                if isinstance(init_mat, list):
+                    rows.append({
+                        'generation': 0,
+                        'iteration': None,
+                        'matrix': init_mat,
+                        **config
+                    })
+                # Also capture last_matrix (optional)
+                last_mat = results.get('last_matrix')
+                if isinstance(last_mat, list):
+                    rows.append({
+                        'generation': -1,
+                        'iteration': None,
+                        'matrix': last_mat,
+                        **config
+                    })
+                continue
+
+            # Optional: map generation -> iteration value if you stored all_iterations
+            all_iterations = results.get('all_iterations', [])
+            def iteration_for(gen_idx):
+                try:
+                    return all_iterations[gen_idx] if isinstance(all_iterations, list) else None
+                except Exception:
+                    return None
+
+            # Case A: all_matrices is a list
+            if isinstance(all_mats, list):
+                for gen_idx, entry in enumerate(all_mats):
+                    if isinstance(entry, list):
+                        # raw matrix
+                        rows.append({
+                            'generation': gen_idx,
+                            'iteration': iteration_for(gen_idx),
+                            'matrix': entry,
+                            **config
+                        })
+                    elif isinstance(entry, dict):
+                        # dict with potential fields
+                        mat = entry.get('matrix', entry.get('mat', entry.get('M')))
+                        if isinstance(mat, list):
+                            rows.append({
+                                'generation': gen_idx,
+                                'iteration': entry.get('iterations', iteration_for(gen_idx)),
+                                'matrix': mat,
+                                **config
+                            })
+
+            # Case B: all_matrices is a dict (e.g., {"iteration_0": {...}, ...})
+            elif isinstance(all_mats, dict):
+                for key, entry in all_mats.items():
+                    # try to parse generation index from key like "iteration_12"
+                    gen_idx = None
+                    if isinstance(key, str):
+                        m = re.search(r'(\d+)', key)
+                        if m:
+                            gen_idx = int(m.group(1))
+                    # fallback if no digits in key; push None which you can filter later
+                    if isinstance(entry, list):
+                        # raw matrix
+                        rows.append({
+                            'generation': gen_idx if gen_idx is not None else -2,
+                            'iteration': iteration_for(gen_idx) if gen_idx is not None else None,
+                            'matrix': entry,
+                            **config
+                        })
+                    elif isinstance(entry, dict):
+                        mat = entry.get('matrix', entry.get('mat', entry.get('M')))
+                        if isinstance(mat, list):
+                            rows.append({
+                                'generation': gen_idx if gen_idx is not None else -2,
+                                'iteration': entry.get('iterations', iteration_for(gen_idx) if gen_idx is not None else None),
+                                'matrix': mat,
+                                **config
+                            })
+
+    df = pd.DataFrame(rows)
+
+    # (Optional) ensure dtypes you care about
+    if 'generation' in df.columns:
+        df['generation'] = pd.to_numeric(df['generation'], errors='coerce').astype('Int64')
+
+    # (Optional) convert matrix lists to numpy arrays for easier numeric analysis
+    # Comment out if you prefer to keep Python lists
+    try:
+        df['matrix'] = df['matrix'].apply(lambda m: np.array(m, dtype=float) if isinstance(m, list) else m)
+    except Exception:
+        pass
+
+    print("Loaded", len(df), "matrices from all experiments")
+    return df

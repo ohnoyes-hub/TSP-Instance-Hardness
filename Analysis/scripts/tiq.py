@@ -259,7 +259,7 @@ def plot_tiq_vs_iterations_by_instance_type():
     df['instance_type'] = pd.Categorical(df['instance_type'], categories=['hardest', 'initial'], ordered=True)
     df = df.sort_values('instance_type') 
     
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 6))
     sns.scatterplot(
         data=df,
         x="log_iterations",

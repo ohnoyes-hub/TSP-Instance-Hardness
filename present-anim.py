@@ -12,60 +12,66 @@ Integer.set_default(color=BLACK)
 
 
 def get_reduction_steps(matrix):
-    # Records every step as (current_matrix, ('row', i, min_val)) or ('col', j, min_val)
     steps = []
     mat = matrix.copy()
+    lower_bound = 0
     # Row reduction
     for i in range(mat.shape[0]):
         row = mat[i, :]
         min_val = np.min(row)
         if not np.isinf(min_val) and min_val > 0:
             mat[i, :] -= min_val
-            steps.append((mat.copy(), ('row', i, min_val)))
+            lower_bound += min_val
+            steps.append((mat.copy(), ('row', i, min_val), lower_bound))
     # Column reduction
     for j in range(mat.shape[1]):
         col = mat[:, j]
         min_val = np.min(col)
         if not np.isinf(min_val) and min_val > 0:
             mat[:, j] -= min_val
-            steps.append((mat.copy(), ('col', j, min_val)))
+            lower_bound += min_val
+            steps.append((mat.copy(), ('col', j, min_val), lower_bound))
     return steps
 
 class ReduceMatrixAnimation(Scene):
     def construct(self):
         self.camera.background_color = WHITE
-        # Use your example matrix
-        matrix = np.array([[np.inf, 27, 43, 16, 30, 26],
-                           [7, np.inf, 16, 1, 30, 25],
-                           [20, 13, np.inf, 35, 5, 0],
-                           [21, 16, 25, np.inf, 18, 18],
-                           [12, 46, 27, 48, np.inf, 5],
-                           [23, 5, 5, 9, 5, np.inf]])
+        # Example matrix
+        matrix = np.array([
+            [np.inf, 27, 43, 16, 30, 26],
+            [7, np.inf, 16, 1, 30, 25],
+            [20, 13, np.inf, 35, 5, 0],
+            [21, 16, 25, np.inf, 18, 18],
+            [12, 46, 27, 48, np.inf, 5],
+            [23, 5, 5, 9, 5, np.inf]
+        ])
         steps = get_reduction_steps(matrix)
         
-        # Setup table
         def make_table(mat):
             disp = [[("∞" if np.isinf(x) else str(int(x))) for x in row] for row in mat]
+            row_labels = [MathTex(f"{i+1}", color=BLACK).scale(0.65)
+                        for i in range(mat.shape[0])]
+            col_labels = [MathTex(f"{j+1}", color=BLACK).scale(0.65)
+                        for j in range(mat.shape[1])]
             return Table(
                 disp,
                 include_outer_lines=True,
-                # element_to_mobject=lambda x: MathTex(str(x), color=BLACK) if x != "∞" else MathTex(r"\infty", color=BLACK),
+                row_labels=row_labels,
+                col_labels=col_labels,
             )
         
         table = make_table(matrix)
         table.scale(0.7)
+        table.to_edge(UP, buff=0.1)
         self.play(Create(table))
-        row_labels = VGroup(*[MathTex(f"C_{{{i+1}}}", color=BLACK).scale(0.7) for i in range(matrix.shape[0])])
-        col_labels = VGroup(*[MathTex(f"C_{{{j+1}}}", color=BLACK).scale(0.7) for j in range(matrix.shape[1])])
-        # Position row labels to the left of each row
-        for i, label in enumerate(row_labels):
-            label.next_to(table.get_rows()[i], LEFT, buff=0.2)
-        # Position col labels above each column
-        for j, label in enumerate(col_labels):
-            label.next_to(table.get_columns()[j], UP, buff=0.2)
+        # self.play(*[FadeIn(label) for label in row_labels + col_labels])
+        # self.wait(1)
 
-        self.play(*[FadeIn(label) for label in row_labels + col_labels])
-        self.wait(1)
+        # Initial lower bound display
+        lower_bound = 0
+        lower_bound_tex = MathTex(f"\\text{{Lower Bound: }} {lower_bound}", color=BLACK)
+        lower_bound_tex.next_to(table, DOWN, buff=1.1)
+        self.play(FadeIn(lower_bound_tex))
 
         current_op = steps[0][1]
         if current_op[0] == 'row':
@@ -75,9 +81,8 @@ class ReduceMatrixAnimation(Scene):
         desc.next_to(table, DOWN)
         self.play(FadeIn(desc))
 
-        # Animate each step, always updating desc
-        for idx, (new_mat, op) in enumerate(steps):
-            # Highlight row or column
+        # Animate each step, updating lower bound
+        for idx, (new_mat, op, lb) in enumerate(steps):
             if op[0] == 'row':
                 highlight = table.get_rows()[op[1]]
                 new_desc = MathTex(f"\\text{{Subtract}}\\ {int(op[2])}\\ \\text{{from Row}}\\ {op[1]+1}", color=BLACK)
@@ -87,14 +92,22 @@ class ReduceMatrixAnimation(Scene):
             new_desc.next_to(table, DOWN)
             self.play(highlight.animate.set_fill(RED), Transform(desc, new_desc))
             
-            # Update all entries
+            # Update table
             new_table = make_table(new_mat)
             new_table.scale(0.7)
+            new_table.move_to(table.get_center())
             self.play(Transform(table, new_table))
             self.play(highlight.animate.set_fill(BLACK))
-            self.wait(0.6)
-        
+            self.wait(0.1)
+
+            # Animate lower bound
+            new_lb_tex = MathTex(f"\\text{{Lower Bound: }} {lb}", color=BLACK)
+            new_lb_tex.next_to(table, DOWN, buff=1.1)
+            self.play(Transform(lower_bound_tex, new_lb_tex))
+            self.wait(0.1)
+
         self.wait(2)
+
 
 class BranchingStepAnimation(Scene):
     def construct(self):
@@ -121,6 +134,7 @@ class BranchingStepAnimation(Scene):
 
         table = make_table(matrix)
         table.scale(0.6)
+        table.to_edge(UP, buff=0.6)
         self.play(Create(table))
         self.wait(1)
         
@@ -208,10 +222,19 @@ class ThetaCalculation(Scene):
             [13, 0, 0, 4, 0, np.inf]
         ])
 
+        def MT_NUMBER(x, size=34):
+            # uniform MathTeX for all numeric entries
+            return MathTex(str(int(x)), color=BLACK, font_size=size)
+
+        def MT_INF(size=34):
+            return MathTex(r"\infty", color=BLACK, font_size=size)
+
         # Cost matrix
-        mat = Matrix(matrix, element_to_mobject=lambda x: MathTex(r"\infty", color=BLACK) if x == np.inf else BlackInteger(int(x)))
+        mat = Matrix(
+            matrix, 
+            element_to_mobject=lambda x: MT_INF() if x == np.inf else MT_NUMBER(x)
+        )
         mat.scale(0.7).to_edge(LEFT)
-        mat_label = Text("Reduced Matrix", color=BLACK).scale(0.6).next_to(mat, UP)
 
         # Initial empty theta matrix (all entries are "-")
         theta_matrix = np.full(matrix.shape, None)
@@ -220,11 +243,26 @@ class ThetaCalculation(Scene):
             element_to_mobject=lambda x: MathTex(str(x), color=BLACK),
         )
         theta_display_matrix.scale(0.7).to_edge(RIGHT)
-        theta_label = MathTex(r"\text{Calculated } \theta \text{ Values}", color=BLACK).scale(0.6).next_to(theta_display_matrix, UP)
 
         # Display both matrices
-        self.play(Create(mat), FadeIn(mat_label), Create(theta_display_matrix), FadeIn(theta_label))
-        self.wait(1)
+        # Labels above each matrix — use Text for both so fonts match
+        mat_label = Text("Reduced Matrix", color=BLACK, font_size=28).next_to(mat, UP)
+        theta_label = Text("Calculated θ Values", color=BLACK, font_size=28).next_to(theta_display_matrix, UP)
+
+        # Two-line explainer at the very top (centered)
+        top_explainer = Text(
+            "Each candidate sum their lowest adjacent column and row distance\n"
+            "Max θ is city pair we branch with",
+            color=BLACK,
+            font_size=28,
+            line_spacing=0.8
+        ).to_edge(UP, buff=0.3)
+
+        # When displaying:
+        self.play(Create(mat), Create(theta_display_matrix))
+        # self.play(FadeIn(mat_label), FadeIn(theta_label), FadeIn(top_explainer))
+
+        # self.wait(1)
 
         zeros = np.argwhere(matrix == 0)
         for zero_pos in zeros:
@@ -232,7 +270,7 @@ class ThetaCalculation(Scene):
 
             zero_entry = mat.get_entries()[x * matrix.shape[1] + y]
             zero_rect = SurroundingRectangle(zero_entry, color=RED)
-            self.play(Create(zero_rect), run_time=0.5)
+            self.play(Create(zero_rect), run_time=0.2)
 
             # --- Find min in row, excluding the current zero and infs ---
             row_vals = [(j, matrix[x, j]) for j in range(matrix.shape[1]) if j != y and matrix[x, j] != np.inf]
@@ -255,12 +293,12 @@ class ThetaCalculation(Scene):
             if col_vals:
                 col_entry = mat.get_entries()[min_col_idx * matrix.shape[1] + y]
                 highlights.append(SurroundingRectangle(col_entry, color=YELLOW))
-            self.play(*(Create(h) for h in highlights), run_time=0.5)
-            self.wait(0.5)
+            self.play(*(Create(h) for h in highlights), run_time=0.2)
+            self.wait(0.2)
 
             # Update theta_display_matrix in-place
             theta_entry = theta_display_matrix.get_entries()[x * matrix.shape[1] + y]
-            new_theta = MathTex(str(theta), color=BLACK) if (row_vals and col_vals) else MathTex("-", color=BLACK)
+            new_theta = MathTex(str(theta), color=BLACK, font_size=34)
             new_theta.move_to(theta_entry)
             self.play(Transform(theta_entry, new_theta), run_time=0.5)
 
@@ -299,7 +337,7 @@ class BranchingGraphSceneWithTree(Scene):
             vertices.keys(), edges, layout=vertices,
             vertex_config={"color": BLUE},
             edge_config={"color": GREY}, labels=True
-        ).scale(0.9).shift(graph_pos)
+        ).scale(0.8).shift(graph_pos)
 
         self.play(Create(g))
         self.wait(0.5)
@@ -327,7 +365,7 @@ class BranchingGraphSceneWithTree(Scene):
             vertex_config={"color": BLUE},
             edge_config={"color": GREY},
             labels=True
-        ).scale(0.4).shift(RIGHT * x_offset + child_y_shift)
+        ).scale(0.5).shift(RIGHT * x_offset + child_y_shift)
 
         # Tree edges (arrows from root to children)
         left_arrow = Arrow(

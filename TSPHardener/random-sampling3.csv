@@ -1,0 +1,15 @@
+size,range,mutations,continuation,tsp type,distribution,mutation strategy
+30,[2.8],100,,euclidean,lognormal,random_sampling
+30,[3.0],100,,euclidean,lognormal,random_sampling
+30,[3.2],100,,euclidean,lognormal,random_sampling
+30,[3.4],100,,euclidean,lognormal,random_sampling
+30,[3.6],100,,euclidean,lognormal,random_sampling
+30,[3.8],100,,euclidean,lognormal,random_sampling
+30,[4.0],100,,euclidean,lognormal,random_sampling
+30,[4.2],100,,euclidean,lognormal,random_sampling
+30,[4.4],100,,euclidean,lognormal,random_sampling
+30,[4.6],100,,euclidean,lognormal,random_sampling
+30,[4.8],100,,euclidean,lognormal,random_sampling
+30,[5.0],100,,euclidean,lognormal,random_sampling
+30,[2.4],100,,euclidean,lognormal,random_sampling
+30,[2.6],100,,euclidean,lognormal,random_sampling

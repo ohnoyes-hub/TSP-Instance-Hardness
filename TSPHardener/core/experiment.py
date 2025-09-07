@@ -172,6 +172,7 @@ def run_single_experiment(configuration, citysize, rang, mutations):
 
     logger.info(f"Completed up to {mutations} mutations for citysize={citysize}, range={rang}.")
 
+# Change the following to record all the hardest instances
 def run_single_phase_transition_experiment(configuration, citysize, rang, mutations):
     """
     Modified Hill-climber above to not Hill-climb where each iteration will new instance instead of mutating the hardest.
@@ -184,7 +185,8 @@ def run_single_phase_transition_experiment(configuration, citysize, rang, mutati
         "local_optima": {},
         "transitions": defaultdict(list),
         "last_matrix": [],
-        "all_iterations": []
+        "all_iterations": [],
+        "all_matrices": []
     }
 
     # Load from partial or generate new
@@ -229,9 +231,9 @@ def run_single_phase_transition_experiment(configuration, citysize, rang, mutati
 
     for j in range(start_iter, mutations):
         # Generate a new matrix for each iteration
-        # _, matrix = initialize_matrix_and_hardest(citysize, rang, configuration)
         tsp_instance = random_sampler.mutate(tsp_instance)
         matrix = tsp_instance.matrix.copy()
+        partial_results["all_matrices"].append(matrix.tolist())
 
         # Run the algorithm on the new matrix
         iterations, optimal_tour, optimal_cost, error = run_litals_algorithm(matrix)
@@ -241,35 +243,8 @@ def run_single_phase_transition_experiment(configuration, citysize, rang, mutati
         else:
             partial_results["all_iterations"].append(iterations)
 
-        # Check if this is the hardest instance so far
-        is_hardest = False
-        if iterations > hardest:
-            hardest = iterations
-            hardest_matrix = matrix.copy()
-            is_hardest = True
-
-        # Track local optima (no transitions)
-        matrix_hash = hash(matrix.tobytes())
-        partial_results["local_optima"][matrix_hash] = {
-            "iterations": iterations,
-            "cost": optimal_cost,
-            "is_hardest": is_hardest
-        }
-
-        # Store as a hard instance if it's the hardest
-        if is_hardest:
-            iteration_key = f"iteration_{j}"
-            partial_results["hard_instances"][iteration_key] = {
-                "iterations": iterations,
-                "hardest": hardest,
-                "optimal_tour": optimal_tour,
-                "optimal_cost": optimal_cost,
-                "matrix": hardest_matrix.tolist(),
-                "is_hardest": True
-            }
-
         # Periodically save partial results
-        if (j % 100 == 0) or is_hardest:
+        if (j % 20 == 0):
             elapsed = time.time() - start_time
             save_partial(
                 configuration, 
@@ -284,19 +259,18 @@ def run_single_phase_transition_experiment(configuration, citysize, rang, mutati
             )
 
     # Final save
-    if partial_results["hard_instances"]:
-        elapsed = time.time() - start_time
-        save_partial(
-            configuration, 
-            partial_results,
-            citysize, 
-            rang,
-            time_spent=elapsed,
-            distribution=configuration["distribution"],
-            tsp_type=configuration["generation_type"],
-            mutation_strategy=configuration["mutation_type"],
-            is_final=True
-        )
+    elapsed = time.time() - start_time
+    save_partial(
+        configuration, 
+        partial_results,
+        citysize, 
+        rang,
+        time_spent=elapsed,
+        distribution=configuration["distribution"],
+        tsp_type=configuration["generation_type"],
+        mutation_strategy=configuration["mutation_type"],
+        is_final=True
+    )
 
     logger.info(f"Completed up to {mutations} new instances for citysize={citysize}, range={rang}.")
 
