@@ -1,25 +1,3 @@
-size,range,mutations,continuation,tsp type,distribution,mutation strategy
-20,[4.2],89,,euclidean,lognormal,swap
-20,[4.6],81,,euclidean,lognormal,swap
-20,[4.8],81,,euclidean,lognormal,swap
-30,[20],54,,euclidean,uniform,swap
-30,[4.4],99,,euclidean,lognormal,swap
-30,[1.8],82,,euclidean,lognormal,swap
-30,[2.6],99,,euclidean,lognormal,swap
-20,[3.6],86,,euclidean,lognormal,swap
-30,[2.8],95,,euclidean,lognormal,swap
-30,[0.6],50,,euclidean,lognormal,swap
-20,[2.8],20,,euclidean,lognormal,swap
-30,[5.0],96,,euclidean,lognormal,swap
-20,[0.2],39,,euclidean,lognormal,swap
-20,[4.0],81,,euclidean,lognormal,swap
-30,[1.6],67,,euclidean,lognormal,swap
-30,[10],15,,euclidean,uniform,swap
-30,[25],55,,euclidean,uniform,swap
-20,[5.0],67,,euclidean,lognormal,swap
-20,[3.4],98,,euclidean,lognormal,swap
-20,[2.0],1,,euclidean,lognormal,swap
-30,[2.2],98,,euclidean,lognormal,swap
-20,[3.8],78,,euclidean,lognormal,swap
-30,[2.0],96,,euclidean,lognormal,swap
-20,[4.4],11,,euclidean,lognormal,swap
+version https://git-lfs.github.com/spec/v1
+oid sha256:d4d27f98a906c7e19cfadb7eea5b6a4dc05bc18f4f52a629c105cd43e0b99f23
+size 999

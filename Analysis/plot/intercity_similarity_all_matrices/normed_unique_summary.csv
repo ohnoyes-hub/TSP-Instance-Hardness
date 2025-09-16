@@ -1,7 +1,3 @@
-generation_type,distribution,count_≤0.6,avg_log_iter_≤0.6,count_>0.6,avg_log_iter_>0.6
-asymmetric,lognormal,0,,5050,4.9843794902879255
-asymmetric,uniform,4040,5.219789007744698,0,
-euclidean,lognormal,1039,8.02646941278783,0,
-euclidean,uniform,3655,7.592163586778118,0,
-symmetric,lognormal,0,,5048,7.030761817602786
-symmetric,uniform,4040,7.230477498301955,0,
+version https://git-lfs.github.com/spec/v1
+oid sha256:d14fe3cc8922792a3f015c3bd2776256d08a8d80017dff220b0bdda41ddca255
+size 363
