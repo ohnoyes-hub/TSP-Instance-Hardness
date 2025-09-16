@@ -9,3 +9,4 @@ statsmodels
 pillow
 joypy
 manim
+plotly
