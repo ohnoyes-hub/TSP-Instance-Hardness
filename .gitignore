@@ -256,3 +256,5 @@ Aux/
 # Data folders
 **/Result/
 **/Continuation/
+
+Analysis/*.csv
