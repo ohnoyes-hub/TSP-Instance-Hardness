@@ -8,5 +8,9 @@ scikit-learn
 statsmodels
 pillow
 joypy
+<<<<<<< HEAD
 manim
 plotly
+=======
+manim
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a

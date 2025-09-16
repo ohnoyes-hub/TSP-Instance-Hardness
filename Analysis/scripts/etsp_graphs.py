@@ -1,30 +1,56 @@
+<<<<<<< HEAD
 # --- Enhanced ETSP graph export utilities -------------------------------------------------
+=======
+# --- ETSP graph export utilities -------------------------------------------------
+# Drop this whole block at the end of load_experiment.py (after load_all_matrices)
+# and run the module. It will:
+#   1) Load all matrices via load_all_matrices().
+#   2) Filter to 'generation_type' that means Euclidean TSP (ETSP).
+#   3) Pick the top 1% hardest (highest 'iteration').
+#   4) Reconstruct 2D coordinates from the distance matrix via Classical MDS.
+#   5) Plot a clean node graph (optionally k-NN edges) and save into a folder.
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
 
 import os
 import re
 import math
+<<<<<<< HEAD
 import json
 from typing import Iterable, Tuple, List, Optional, Dict, Any
 from sklearn.manifold import MDS, TSNE
 from scipy.spatial import ConvexHull, Voronoi
 from matplotlib.patches import Polygon
 import warnings
+=======
+from typing import Iterable, Tuple, List
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from util.load_experiment import load_all_matrices
 
+<<<<<<< HEAD
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore', category=FutureWarning)
 
 # ---------- Coordinate reconstruction methods ---------------------------
+=======
+
+# ---------- Coordinate reconstruction (Classical MDS) ---------------------------
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
 
 def _classical_mds_from_distance(D: np.ndarray, output_dim: int = 2) -> np.ndarray:
     """
     Classical MDS (a.k.a. Torgerson–Gower) from a full distance matrix.
     Returns coordinates in R^output_dim that best (in least-squares sense)
     reproduce the given pairwise distances.
+<<<<<<< HEAD
+=======
+    Notes:
+        - Expects a symmetric, non-negative matrix with zeros on the diagonal.
+        - Negative eigenvalues can appear due to noise/rounding; we clamp them.
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
     """
     n = D.shape[0]
     if n == 0:
@@ -58,6 +84,7 @@ def _classical_mds_from_distance(D: np.ndarray, output_dim: int = 2) -> np.ndarr
     return X
 
 
+<<<<<<< HEAD
 def _nonmetric_mds_from_distance(D: np.ndarray, output_dim: int = 2,
                                  n_init: int = 4, max_iter: int = 300) -> np.ndarray:
     """
@@ -106,6 +133,9 @@ def reconstruct_coordinates(D: np.ndarray, method: str = 'classical_mds', **kwar
 
 
 # ---------- Graph analysis and metrics ----------------------------------
+=======
+# ---------- Lightweight graph drawing helpers ----------------------------------
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
 
 def _knn_undirected_edges(D: np.ndarray, k: int = 3) -> List[Tuple[int, int]]:
     """
@@ -118,6 +148,10 @@ def _knn_undirected_edges(D: np.ndarray, k: int = 3) -> List[Tuple[int, int]]:
     for i in range(n):
         row = D[i].copy()
         row[i] = np.inf  # exclude self
+<<<<<<< HEAD
+=======
+        # ignore inf/0 (0 only happens on the diagonal after symmetrization)
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
         nbrs = np.argsort(row)
         added = 0
         for j in nbrs:
@@ -130,6 +164,7 @@ def _knn_undirected_edges(D: np.ndarray, k: int = 3) -> List[Tuple[int, int]]:
     return sorted(edges)
 
 
+<<<<<<< HEAD
 def calculate_clustering_coefficient(D: np.ndarray, k: int = 5) -> float:
     """Calculate clustering coefficient on k-NN graph."""
     n = D.shape[0]
@@ -263,6 +298,9 @@ def _calculate_kurtosis(data: np.ndarray) -> float:
 
 def _safe_filename_from_row(row: pd.Series) -> str:
     """Generate safe filename from DataFrame row."""
+=======
+def _safe_filename_from_row(row: pd.Series) -> str:
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
     parts = []
     for key in [
         'distribution', 'generation_type', 'city_size', 'range',
@@ -285,6 +323,7 @@ def _plot_etsp_graph(coords: np.ndarray,
                       figsize: Tuple[int, int] = (6, 6),
                       show_edge_lengths: bool = False,
                       edge_length_fmt: str = ".1f",
+<<<<<<< HEAD
                       show_axes: bool = False,
                       show_grid: bool = True,
                       show_heatmap: bool = False,
@@ -310,6 +349,22 @@ def _plot_etsp_graph(coords: np.ndarray,
             x1, y1 = coords[i, 0], coords[i, 1]
             x2, y2 = coords[j, 0], coords[j, 1]
             ax.plot([x1, x2], [y1, y2], 'gray', lw=0.6, alpha=0.35, zorder=1)
+=======
+                      annotate_xy: bool = False,
+                      coord_fmt: str = ".1f",
+                      show_axes: bool = False,
+                      show_grid: bool = True) -> plt.Figure:
+    fig, ax = plt.subplots(figsize=figsize)
+    
+    drawn_edges = []
+    # Optional k-NN edges for readability (complete graph would be too busy)
+    if k_edges and k_edges > 0:
+        drawn_edges = _knn_undirected_edges(D, k=k_edges)
+        for i, j in drawn_edges:
+            x1, y1 = coords[i, 0], coords[i, 1]
+            x2, y2 = coords[j, 0], coords[j, 1]
+            ax.plot([x1, x2], [y1, y2], lw=0.6, alpha=0.35)
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
 
             if show_edge_lengths:
                 xm, ym = (x1 + x2) / 2.0, (y1 + y2) / 2.0
@@ -319,6 +374,7 @@ def _plot_etsp_graph(coords: np.ndarray,
                     bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none", alpha=0.6),
                     zorder=3
                 )
+<<<<<<< HEAD
     
     # Draw tour if provided
     if tour is not None:
@@ -339,6 +395,15 @@ def _plot_etsp_graph(coords: np.ndarray,
                    zorder=11, fontweight='bold')
     
     # Axes configuration
+=======
+
+    ax.scatter(coords[:, 0], coords[:, 1], s=32, zorder=2)
+    if annotate:
+        for i, (x, y) in enumerate(coords):
+            ax.text(x, y, str(i + 1), fontsize=8, ha='center', va='center', zorder=4)
+        
+    # tick coordinates
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
     if show_axes:
         ax.axis('on')
         if show_grid:
@@ -347,6 +412,7 @@ def _plot_etsp_graph(coords: np.ndarray,
         ax.set_xticks([])
         ax.set_yticks([])
         ax.axis('off')
+<<<<<<< HEAD
     
     ax.set_aspect('equal', adjustable='datalim')
     if title:
@@ -549,17 +615,176 @@ def save_etsp_figures_enhanced(
 ) -> int:
     """
     Enhanced version with multiple embedding methods and export options.
+=======
+
+    ax.set_aspect('equal', adjustable='datalim')
+    if title:
+        ax.set_title(title)
+    return fig
+
+
+# ---------- Public API ----------------------------------------------------------
+
+def save_hardest_etsp_figures(
+    df: pd.DataFrame,
+    out_dir: str = "../figures/ETSP-Top1Pct",
+    top_fraction: float = 0.01,
+    k_edges: int = 3,
+    annotate: bool = True,
+) -> int:
+    """
+    From the full matrices DataFrame produced by load_all_matrices(),
+    select the top `top_fraction` hardest ETSP matrices (by 'iteration'),
+    reconstruct 2D coordinates from the distance matrix, and save figures.
+
+    Args:
+        df: DataFrame from load_all_matrices(); requires columns 'generation_type',
+            'iteration', and 'matrix'.
+        out_dir: Folder to save PNG figures.
+        top_fraction: Fraction to keep (e.g., 0.01 for 1%).
+        k_edges: Draw k-NN edges per node for readability (None/0 to disable).
+        annotate: Whether to label nodes 1..n.
+
+    Returns:
+        Number of figures written.
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
     """
     if df is None or len(df) == 0:
         print("No data to process.")
         return 0
 
+<<<<<<< HEAD
     # Filter ETSP instances
     etsp_aliases = {'etsp', 'euclidean', 'euclidean_tsp', 'euclidean-tsp', 'euclidean tsp'}
     df = df.copy()
     df['__gtype_norm'] = df['generation_type'].astype(str).str.lower()
     df['iteration'] = pd.to_numeric(df['iteration'], errors='coerce')
     
+=======
+    gtype = df.get('generation_type')
+    if gtype is None:
+        print("DataFrame lacks 'generation_type'.")
+        return 0
+
+    # Normalize the generation type for matching ETSP
+    etsp_aliases = {
+        'etsp', 'euclidean', 'euclidean_tsp', 'euclidean-tsp', 'euclidean tsp'
+    }
+    df = df.copy()
+    df['__gtype_norm'] = df['generation_type'].astype(str).str.lower()
+    etsp_df = df[df['__gtype_norm'].isin(etsp_aliases)]
+
+    # Keep only rows that have iteration values and a matrix
+    etsp_df = etsp_df[(etsp_df['iteration'].notna()) & (etsp_df['matrix'].notna())]
+
+    if etsp_df.empty:
+        print("No ETSP rows with iterations & matrices found.")
+        return 0
+
+    # Determine threshold for top X% hardest (by highest iteration)
+    q = max(0.0, min(1.0, 1.0 - top_fraction))
+    thr = etsp_df['iteration'].quantile(q)
+    hardest = etsp_df[etsp_df['iteration'] >= thr]
+
+    # Guarantee at least one selection
+    if hardest.empty:
+        take_n = max(1, int(math.ceil(len(etsp_df) * top_fraction)))
+        hardest = etsp_df.nlargest(take_n, 'iteration')
+
+    os.makedirs(out_dir, exist_ok=True)
+
+    saved = 0
+    for _, row in hardest.sort_values('iteration', ascending=False).iterrows():
+        M = row['matrix']
+        if isinstance(M, list):
+            M = np.array(M, dtype=float)
+        if not isinstance(M, np.ndarray):
+            continue
+
+        # Symmetrize & clean for MDS
+        M = np.minimum(M, M.T)
+        M = M.copy()
+        np.fill_diagonal(M, 0.0)
+
+        coords = _classical_mds_from_distance(M, output_dim=2)
+
+        title = (
+            f"ETSP—gen={row.get('generation', 'NA')}, "
+            f"Lital Iter={row.get('iteration', 'NA')}, "
+            f"size={row.get('city_size', 'NA')}, {row.get('distribution', '')}, control={row.get('range', 'NA')}"
+        )
+        #fig = _plot_etsp_graph(coords, M, title=title, k_edges=k_edges, annotate=annotate)
+        fig = _plot_etsp_graph(coords, M, title=title, k_edges=2, annotate=True, show_edge_lengths=True)
+
+        fname = _safe_filename_from_row(row) + ".png"
+        save_path = os.path.join(out_dir, fname)
+        fig.savefig(save_path, dpi=220, bbox_inches='tight')
+        plt.close(fig)
+        saved += 1
+
+    print(f"Saved {saved} figure(s) to: {os.path.abspath(out_dir)}")
+    return saved
+
+
+def generate_and_save_hardest_etsp(
+    out_dir: str = "../figures/ETSP-Top1Pct",
+    top_fraction: float = 0.01,
+    k_edges: int = 3,
+    annotate: bool = True,
+) -> int:
+    """
+    Convenience wrapper that calls load_all_matrices() and then
+    save_hardest_etsp_figures(...).
+    """
+    df = load_all_matrices()
+    return save_hardest_etsp_figures(
+        df,
+        out_dir=out_dir,
+        top_fraction=top_fraction,
+        k_edges=k_edges,
+        annotate=annotate,
+    )
+
+def save_easiest_etsp_figures(
+    df: pd.DataFrame,
+    out_dir: str = "../figures/ETSP-Bottom5Pct",
+    bottom_fraction: float = 0.05,
+    k_edges: int = 3,
+    annotate: bool = True,
+) -> int:
+    """
+    From the full matrices DataFrame produced by load_all_matrices(),
+    select the bottom `bottom_fraction` easiest ETSP matrices (by lowest 'iteration'),
+    reconstruct 2D coordinates, and save figures.
+
+    Args:
+        df: DataFrame from load_all_matrices(); needs 'generation_type', 'iteration', 'matrix'.
+        out_dir: Folder to save PNG figures.
+        bottom_fraction: Fraction to keep from the *lowest* iterations (e.g., 0.05 for 5%).
+        k_edges: Draw k-NN edges per node (None/0 to disable).
+        annotate: Whether to label nodes 1..n.
+
+    Returns:
+        Number of figures written.
+    """
+    if df is None or len(df) == 0:
+        print("No data to process.")
+        return 0
+
+    if 'generation_type' not in df.columns:
+        print("DataFrame lacks 'generation_type'.")
+        return 0
+
+    # Normalize generation type to match ETSP
+    etsp_aliases = {
+        'etsp', 'euclidean', 'euclidean_tsp', 'euclidean-tsp', 'euclidean tsp'
+    }
+    df = df.copy()
+    df['__gtype_norm'] = df['generation_type'].astype(str).str.lower()
+    # Be safe if iteration accidentally loaded as string
+    df['iteration'] = pd.to_numeric(df['iteration'], errors='coerce')
+
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
     etsp_df = df[
         df['__gtype_norm'].isin(etsp_aliases)
         & df['iteration'].notna()
@@ -570,6 +795,7 @@ def save_etsp_figures_enhanced(
         print("No ETSP rows with iterations & matrices found.")
         return 0
 
+<<<<<<< HEAD
     # Select instances based on type
     if selection_type == 'hardest':
         q = max(0.0, min(1.0, 1.0 - fraction))
@@ -602,17 +828,38 @@ def save_etsp_figures_enhanced(
     
     saved = 0
     for _, row in selected.iterrows():
+=======
+    # Threshold for bottom X% easiest (by lowest iteration)
+    bottom_fraction = max(0.0, min(1.0, float(bottom_fraction)))
+    thr = etsp_df['iteration'].quantile(bottom_fraction)
+    easiest = etsp_df[etsp_df['iteration'] <= thr]
+
+    # Guarantee at least one selection (handles tiny datasets / quantile edge cases)
+    if easiest.empty:
+        take_n = max(1, int(math.ceil(len(etsp_df) * bottom_fraction)))
+        easiest = etsp_df.nsmallest(take_n, 'iteration')
+
+    os.makedirs(out_dir, exist_ok=True)
+
+    saved = 0
+    for _, row in easiest.sort_values('iteration', ascending=True).iterrows():
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
         M = row['matrix']
         if isinstance(M, list):
             M = np.array(M, dtype=float)
         if not isinstance(M, np.ndarray):
             continue
 
+<<<<<<< HEAD
         # Symmetrize & clean
+=======
+        # Symmetrize & clean for MDS (ETSP should be symmetric; this guards noise)
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
         M = np.minimum(M, M.T)
         M = M.copy()
         np.fill_diagonal(M, 0.0)
 
+<<<<<<< HEAD
         # Reconstruct coordinates using specified method
         try:
             coords = reconstruct_coordinates(M, method=embedding_method)
@@ -675,10 +922,28 @@ def save_etsp_figures_enhanced(
         metrics_df.to_csv(metrics_path, index=False)
         print(f"Saved metrics to {metrics_path}")
 
+=======
+        coords = _classical_mds_from_distance(M, output_dim=2)
+
+        title = (
+            f"ETSP—gen={row.get('generation', 'NA')}, "
+            f"Lital Iter={row.get('iteration', 'NA')}, "
+            f"size={row.get('city_size', 'NA')}, {row.get('distribution', '')}, control={row.get('range', 'NA')}"
+        )
+        fig = _plot_etsp_graph(coords, M, title=title, k_edges=k_edges, annotate=annotate, show_edge_lengths=True)
+
+        fname = _safe_filename_from_row(row) + ".png"
+        save_path = os.path.join(out_dir, fname)
+        fig.savefig(save_path, dpi=220, bbox_inches='tight')
+        plt.close(fig)
+        saved += 1
+
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
     print(f"Saved {saved} figure(s) to: {os.path.abspath(out_dir)}")
     return saved
 
 
+<<<<<<< HEAD
 # ---------- Interactive visualization --------------------------------------
 
 def create_interactive_html(coords: np.ndarray, D: np.ndarray,
@@ -1052,3 +1317,38 @@ if __name__ == "__main__":
         
         # Create comparison
         create_difficulty_comparison(df)
+=======
+def generate_and_save_easiest_etsp(
+    out_dir: str = "../figures/ETSP-Bottom5Pct",
+    bottom_fraction: float = 0.05,
+    k_edges: int = 3,
+    annotate: bool = True,
+) -> int:
+    """
+    Convenience wrapper that calls load_all_matrices() and then
+    save_easiest_etsp_figures(...).
+    """
+    df = load_all_matrices()
+    return save_easiest_etsp_figures(
+        df,
+        out_dir=out_dir,
+        bottom_fraction=bottom_fraction,
+        k_edges=k_edges,
+        annotate=annotate,
+    )
+
+# ---------- CLI ---------------------------------------------------------
+if __name__ == "__main__":
+    # generate_and_save_hardest_etsp(
+    #     out_dir="../figures/ETSP-Top5Pct",
+    #     top_fraction=0.05,   # top 5%
+    #     k_edges=3,           # 3-NN edges for legibility; set 0 to disable
+    #     annotate=True,
+    # )
+    generate_and_save_easiest_etsp(
+        out_dir="../figures/ETSP-Bottom5Pct",
+        bottom_fraction=0.05,   # 5% easiest
+        k_edges=3,
+        annotate=True,
+    )
+>>>>>>> a254e8852e74aa2d4f9baa764837b285f9ad6b3a
